@@ -52,8 +52,8 @@ public class Floricultura implements Serializable {
 
 	//Associação Many To One com Usuario
 	@ManyToOne
-	@JoinColumn(name="idUsuario")
-	private Usuario usuario;
+	@JoinColumn(name="USER_ID")
+	private User user;
 
 	protected Floricultura() {
 	}
@@ -98,12 +98,12 @@ public class Floricultura implements Serializable {
 		this.nome = nome;
 	}
 
-	public Usuario getUsuario() {
-		return this.usuario;
+	public User getUser() {
+		return this.user;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

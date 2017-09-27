@@ -35,8 +35,8 @@ public class Permissao implements Serializable {
 	private String nome;
 
 	//Associação Many To Many com Usuario
-	@ManyToMany(mappedBy="permissoes")
-	private List<Usuario> usuarios;
+	@ManyToMany(mappedBy="permissions")
+	private List<User> users;
 
 	protected Permissao() {
 	}
@@ -57,12 +57,12 @@ public class Permissao implements Serializable {
 		this.nome = nome;
 	}
 
-	public List<Usuario> getUsuarios() {
-		return this.usuarios;
+	public List<User> getUser() {
+		return this.users;
 	}
 
-	public void setUsuarios(List<Usuario> usuarios) {
-		this.usuarios = usuarios;
+	public void setUser(List<User> users) {
+		this.users = users;
 	}
 
 }

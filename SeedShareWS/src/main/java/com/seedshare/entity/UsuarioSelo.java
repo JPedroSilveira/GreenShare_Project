@@ -32,8 +32,8 @@ public class UsuarioSelo implements Serializable {
 
 	//Associação Many To One com Usuario
 	@ManyToOne
-	@JoinColumn(name="ID_USUARIO")
-	private Usuario usuario;
+	@JoinColumn(name="USER_ID")
+	private User user;
 
 	//Associação Many To One com Selo
 	@ManyToOne
@@ -59,12 +59,12 @@ public class UsuarioSelo implements Serializable {
 		this.pontuacao = pontuacao;
 	}
 
-	public Usuario getUsuario() {
-		return this.usuario;
+	public User getUser() {
+		return this.user;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Selo getSelo() {

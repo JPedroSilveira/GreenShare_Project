@@ -47,8 +47,8 @@ public class Solicitacao implements Serializable {
 
 	//Associação Many To One com Usuario
 	@ManyToOne
-	@JoinColumn(name="ID_USUARIO")
-	private Usuario usuario;
+	@JoinColumn(name="USER_ID")
+	private User user;
 
 	protected Solicitacao() {
 	}
@@ -85,12 +85,12 @@ public class Solicitacao implements Serializable {
 		this.oferta = oferta;
 	}
 
-	public Usuario getUsuario() {
-		return this.usuario;
+	public User getUser() {
+		return this.user;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

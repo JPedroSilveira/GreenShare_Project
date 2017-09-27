@@ -12,8 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.seedshare.entity.Usuario;
-import com.seedshare.service.Usuario.UsuarioServiceImpl;
+import com.seedshare.service.user.UserServiceImpl;
 
 /**
  * Classe de serviço para a autenticação do Usuario
@@ -23,12 +22,12 @@ import com.seedshare.service.Usuario.UsuarioServiceImpl;
 public class UserSecurityService implements UserDetailsService {
     
 	@Autowired
-    UsuarioServiceImpl usuarioService;
+    UserServiceImpl userService;
     
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         List<GrantedAuthority> grants = new ArrayList<>();
-        Usuario usuario = usuarioService.findOneByEmail(username);
-        return new User(usuario.getEmail(),usuario.getSenha(),grants);
+        com.seedshare.entity.User user = userService.findOneByEmail(email);
+        return new User(user.getEmail(),user.getPassword(),grants);
     }
 }
