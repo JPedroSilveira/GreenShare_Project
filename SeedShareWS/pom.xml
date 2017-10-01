@@ -79,11 +79,6 @@
 	        <artifactId>spring-security-web</artifactId>
 	        <version>5.0.0.M4</version>
 	    </dependency>
-	    <dependency>
-		    <groupId>com.uploadcare</groupId>
-		    <artifactId>uploadcare</artifactId>
-		    <version>3.1</version>
-		</dependency>
 		<dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
