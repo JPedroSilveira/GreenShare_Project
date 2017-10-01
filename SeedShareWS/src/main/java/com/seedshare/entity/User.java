@@ -7,23 +7,35 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seedshare.helpers.CPFHelper;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 /**
- * Classe de persistência para a tabela Usuario
+ * Persistence class for the table USER
  * @author joao.silva
  */
 @Entity
-@Table(name = "USER", uniqueConstraints = { @UniqueConstraint(columnNames = {"EMAIL"})})
+@Table(name = "GREENSHARE_USER")
 public class User extends BasicEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_USER";
+	private static final String SEQUENCE_NAME = "USER_SEQ";
 	
-	private static final String URL_FOTO_PADRAO = "3e577c3e-a5a4-4390-8f25-64f6abd883bf";
+	private static final String DEFAULT_PHOTO_URL = "3e577c3e-a5a4-4390-8f25-64f6abd883bf";
+	
+	private static final String EMAIL_PATTERN = "(?:(?:\\r\\n)?[ \\t])*(?:(?:(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*|(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)*\\<(?:(?:\\r\\n)?[ \\t])*(?:@(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*(?:,@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*)*:(?:(?:\\r\\n)?[ \\t])*)?(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*\\>(?:(?:\\r\\n)?[ \\t])*)|(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)*:(?:(?:\\r\\n)?[ \\t])*(?:(?:(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*|(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)*\\<(?:(?:\\r\\n)?[ \\t])*(?:@(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*(?:,@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*)*:(?:(?:\\r\\n)?[ \\t])*)?(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*\\>(?:(?:\\r\\n)?[ \\t])*)(?:,\\s*(?:(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*|(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)*\\<(?:(?:\\r\\n)?[ \\t])*(?:@(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*(?:,@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*)*:(?:(?:\\r\\n)?[ \\t])*)?(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\"(?:[^\\\"\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\"(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()<>@,;:\\\\\".\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\"()<>@,;:\\\\\".\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*\\>(?:(?:\\r\\n)?[ \\t])*))*)?;\\s*)";
+	
+	private static final Pattern PATTERN = Pattern.compile(EMAIL_PATTERN);
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
@@ -31,59 +43,72 @@ public class User extends BasicEntity implements Serializable {
     @Basic(optional = false)
 	@Column(name = "USER_ID")
 	private Long id;
+	
+	@Basic(optional = false)
+	@NotNull
+	@Size(max = 100)
+	@Column(name = "NAME", length = 100)
+	private String name;
 
 	@Basic(optional = true)
 	@Size(min = 11, max = 11)
-	@Column(name = "CPF")
+	@Column(name = "CPF", length = 11, unique = true)
 	private String cpf;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 100)
-	@Column(name = "EMAIL")
+	@Column(name = "EMAIL", length = 100, unique = true)
 	private String email;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "PHOTO_ID", columnDefinition="TEXT")
+	@Column(name = "PHOTO_ID", columnDefinition="TEXT", length = 2500)
 	private String photoId;
 
+	@JsonIgnore
 	@Basic(optional = false)
 	@NotNull
 	@Size(min = 8, max = 250)
-	@Column(name = "PASSWORD")
+	@Column(name = "PASSWORD", length = 250)
 	private String password;
 
 	@Basic(optional = false)
 	@NotNull
 	@Column(name = "LEGAL_PERSON")
-	private Boolean legalPerson;
-
-	//Associação One To Many com Endereco
-	@OneToMany(mappedBy="user")
-	private List<Endereco> addresses;
-
-	//Associação One To Many com Floricultura
-	@OneToMany(mappedBy="user")
-	private List<Floricultura> flowerShops;
-
-	//Associação One To Many com Oferta
-	@OneToMany(mappedBy="user")
-	private List<Oferta> offers;
-
-	//Associação One To Many com Solicitacao
-	@OneToMany(mappedBy="user")
-	private List<Solicitacao> requests;
-
-	//Associação One To Many com Sugestao
-	@OneToMany(mappedBy="user")
-	private List<Sugestao> suggestions;
+	private Boolean isLegalPerson;
 	
-	@Transient
-	private List<String> errorMessages;
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "APPROVED")
+	private Boolean isApproved;
 
-	//Associação Many To Many com Permissao
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "CREATION_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date creationDate;
+	
+	@OneToMany(mappedBy="user")
+	private List<Address> addresses;
+
+	@OneToMany(mappedBy="user")
+	private List<FlowerShop> flowerShops;
+
+	@OneToMany(mappedBy="user")
+	private List<Offer> offers;
+
+	@OneToMany(mappedBy="user")
+	private List<Request> requests;
+
+	@OneToMany(mappedBy="user")
+	private List<Suggestion> suggestions;
+	
+	@JsonIgnore
+	@Transient
+	private List<String> validationErrors;
+
 	@ManyToMany
 	@JoinTable(
 		name="USER_PERMISSION"
@@ -94,38 +119,62 @@ public class User extends BasicEntity implements Serializable {
 			@JoinColumn(name="ID_PERMISSION")
 			}
 		)
-	private List<Permissao> permissions;
+	private List<Permission> permissions;
 
-	//Associação One To Many UsuarioSelo
 	@OneToMany(mappedBy="user")
-	private List<UsuarioSelo> userAchievements;
+	private List<UserAchievement> userAchievements;
 		
 	protected User() {
+		this.validationErrors = new ArrayList<String>();
 	}
-	
-	public User(String cpf, String email, String password, String photoId, Boolean legalPerson) {
+
+	public User(String cpf, String name, String email, String password, Boolean isLegalPerson) {
 		this.email = email;
+		this.name = name;
 		this.password = password;
-		this.photoId = (photoId != null) ? photoId : URL_FOTO_PADRAO;
-		this.cpf = legalPerson ? null : cpf;
-		this.legalPerson = legalPerson;
-		this.errorMessages = new ArrayList<String>();
+		this.photoId = DEFAULT_PHOTO_URL;
+		this.isLegalPerson = (isLegalPerson == null) ? false : isLegalPerson;
+		this.isApproved = this.isLegalPerson ? false : true;
+		this.cpf = (isLegalPerson != null) ? (isLegalPerson ? null : cpf) : cpf;
+		this.validationErrors = new ArrayList<String>();
+		this.creationDate = new Date();
+		if(this.password != null) {
+			this.encodePassword();
+		}
 	}
 	
-	public Boolean validator() {
-		if(isNullOrEmpty(this.email) || this.email.length()>100){
-			this.errorMessages.add("Email inválido");
+	public static PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	public User generateNewValidation() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.email) || this.email.length()>100 || !isValidEmail()){
+			this.validationErrors.add("Email inválido");
 		}
 		if(isNullOrEmpty(this.password) || this.password.length() < 8 || this.password.length() > 250) {
-			this.errorMessages.add("Senha inválida");
+			this.validationErrors.add("Senha inválida");
 		}
 		if(isNullOrEmpty(this.photoId)) {
-			this.errorMessages.add("Erro inexperado ao salvar foto de perfil");
+			this.validationErrors.add("Erro inexperado ao salvar foto de perfil");
 		}
-		if(!this.legalPerson && (isNullOrEmpty(this.cpf) || this.cpf.length() != 11)) {
-			this.errorMessages.add("CPF inválido");
+		if(!this.isLegalPerson && (isNullOrEmpty(this.cpf) || !CPFHelper.isCPF(this.cpf))) {
+			this.validationErrors.add("CPF inválido");
 		}
-		return this.errorMessages.isEmpty();
+		if(isNullOrEmpty(this.name) || this.name.length()>100) {
+			this.validationErrors.add("Nome inválido");
+		}
+		if(this.creationDate == null || this.creationDate.after(new Date())) {
+			this.validationErrors.add("Data de criação inválida");
+		}
+		
+		return this;
+	}
+	
+	@JsonIgnore
+	public Boolean isValid() {
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
@@ -135,6 +184,10 @@ public class User extends BasicEntity implements Serializable {
 	public String getCpf() {
 		return this.cpf;
 	}
+	
+	public String getName() {
+		return name;
+	}
 
 	public String getEmail() {
 		return this.email;
@@ -142,6 +195,10 @@ public class User extends BasicEntity implements Serializable {
 
 	public String getPhotoId() {
 		return this.photoId;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setPhotoId(String photoId) {
@@ -156,148 +213,188 @@ public class User extends BasicEntity implements Serializable {
 		return this.password;
 	}
 	
-	public Boolean isLegalPerson() {
-		return this.legalPerson;
+	public Boolean getIsLegalPerson() {
+		return isLegalPerson;
 	}
 
-	public List<Endereco> getAddresses() {
+	public void setIsLegalPerson(Boolean isLegalPerson) {
+		this.isLegalPerson = isLegalPerson;
+	}
+
+	public Boolean getIsApproved() {
+		return isApproved;
+	}
+
+	public void setIsApproved(Boolean isApproved) {
+		this.isApproved = isApproved;
+	}
+
+	public List<Address> getAddresses() {
 		return this.addresses;
 	}
 
-	public void setAddresses(List<Endereco> addresses) {
+	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
 	}
 
-	public Endereco addAddress(Endereco address) {
+	public Address addAddress(Address address) {
 		getAddresses().add(address);
 		address.setUser(this);
 
 		return address;
 	}
 
-	public Endereco removeAddress(Endereco address) {
+	public Address removeAddress(Address address) {
 		getAddresses().remove(address);
 		address.setUser(null);
 
 		return address;
 	}
 
-	public List<Floricultura> getFlowerShops() {
+	public List<FlowerShop> getFlowerShops() {
 		return this.flowerShops;
 	}
 
-	public void setFlowerShops(List<Floricultura> flowerShops) {
+	public void setFlowerShops(List<FlowerShop> flowerShops) {
 		this.flowerShops = flowerShops;
 	}
 
-	public Floricultura addFlowerShop(Floricultura flowerShop) {
+	public FlowerShop addFlowerShop(FlowerShop flowerShop) {
 		getFlowerShops().add(flowerShop);
 		flowerShop.setUser(this);
 
 		return flowerShop;
 	}
 
-	public Floricultura removeFlowerShop(Floricultura flowerShop) {
+	public FlowerShop removeFlowerShop(FlowerShop flowerShop) {
 		getFlowerShops().remove(flowerShop);
 		flowerShop.setUser(null);
 
 		return flowerShop;
 	}
 
-	public List<Oferta> getOffers() {
+	public List<Offer> getOffers() {
 		return this.offers;
 	}
 
-	public void setOffers(List<Oferta> offers) {
+	public void setOffers(List<Offer> offers) {
 		this.offers = offers;
 	}
 
-	public Oferta addOffer(Oferta offer) {
+	public Offer addOffer(Offer offer) {
 		getOffers().add(offer);
 		offer.setUser(this);
 
 		return offer;
 	}
 
-	public Oferta removeOferta(Oferta offer) {
+	public Offer removeOffer(Offer offer) {
 		getOffers().remove(offer);
 		offer.setUser(null);
 
 		return offer;
 	}
 
-	public List<Solicitacao> getRequests() {
+	public List<Request> getRequests() {
 		return this.requests;
 	}
 
-	public void setRequests(List<Solicitacao> requests) {
+	public void setRequests(List<Request> requests) {
 		this.requests = requests;
 	}
 
-	public Solicitacao addRequests(Solicitacao requests) {
+	public Request addRequests(Request requests) {
 		getRequests().add(requests);
 		requests.setUser(this);
 
 		return requests;
 	}
 
-	public Solicitacao removeRequests(Solicitacao requests) {
+	public Request removeRequests(Request requests) {
 		getRequests().remove(requests);
 		requests.setUser(null);
 
 		return requests;
 	}
 
-	public List<Sugestao> getSuggestions() {
+	public List<Suggestion> getSuggestions() {
 		return this.suggestions;
 	}
 
-	public void setSuggestions(List<Sugestao> suggestions) {
+	public void setSuggestions(List<Suggestion> suggestions) {
 		this.suggestions = suggestions;
 	}
 
-	public Sugestao addSuggestions(Sugestao suggestion) {
+	public Suggestion addSuggestions(Suggestion suggestion) {
 		getSuggestions().add(suggestion);
 		suggestion.setUser(this);
 
 		return suggestion;
 	}
 
-	public Sugestao removeSuggestions(Sugestao suggestion) {
+	public Suggestion removeSuggestions(Suggestion suggestion) {
 		getSuggestions().remove(suggestion);
 		suggestion.setUser(null);
 
 		return suggestion;
 	}
 
-	public List<Permissao> getPermissions() {
+	public List<Permission> getPermissions() {
 		return this.permissions;
 	}
 
-	public void setPermissions(List<Permissao> permissions) {
+	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
 	}
 
-	public List<UsuarioSelo> getUserAchievements() {
+	public List<UserAchievement> getUserAchievements() {
 		return this.userAchievements;
 	}
 
-	public void setUserAchievements(List<UsuarioSelo> userAchievements) {
+	public void setUserAchievements(List<UserAchievement> userAchievements) {
 		this.userAchievements = userAchievements;
 	}
 
-	public UsuarioSelo addUserAchievement(UsuarioSelo userAchievement) {
+	public UserAchievement addUserAchievement(UserAchievement userAchievement) {
 		getUserAchievements().add(userAchievement);
 		userAchievement.setUser(this);
 
 		return userAchievement;
 	}
 
-	public UsuarioSelo removeUserAchievement(UsuarioSelo userAchievement) {
+	public UserAchievement removeUserAchievement(UserAchievement userAchievement) {
 		getUserAchievements().remove(userAchievement);
 		userAchievement.setUser(null);
 
 		return userAchievement;
+	}
+	
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+	
+	public List<String> getValidationErrors() {
+		return validationErrors;
+	}
+	
+	public void addValidationError(String message) {
+		this.validationErrors.add(message);
+	}
+	
+	private Boolean isValidEmail(){
+	    return PATTERN.matcher(this.email).matches();
+	}
+	
+	private void encodePassword() {
+    	this.setPassword(passwordEncoder().encode(this.password));
+	}
+	
+	public void cleanPassword() {
+		this.password = null;
 	}
 
 }

@@ -3,59 +3,66 @@ package com.seedshare.entity;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
 /**
- * Classe de persistência para a tabela Floricultura
+ * Persistence class for the table FLOWER_SHOP
  * @author joao.silva
  */
 @Entity
-@Table(name = "FLORICULTURA")
-public class Floricultura implements Serializable {
+@Table(name = "FLOWER_SHOP")
+public class FlowerShop implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_FLORICULTURA";
+	private static final String SEQUENCE_NAME = "FLOWER_SHOP_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_FLORICULTURA")
+	@Column(name = "FLOWER_SHOP_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(min = 14, max = 14)
-	@Column(name = "CNPJ")
+	@Column(name = "CNPJ", length = 14, unique = true)
 	private String cnpj;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRICAO", columnDefinition="TEXT")
-	private String descricao;
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	private String description;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "LOGO_URL", columnDefinition="TEXT")
+	@Column(name = "LOGO_URL", columnDefinition="TEXT", length = 2500)
 	private String logoURL;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 50)
-	@Column(name = "NOME")
-	private String nome;
+	@Column(name = "NAME", length = 50)
+	private String name;
 
-	//Associação Many To One com Usuario
 	@ManyToOne
 	@JoinColumn(name="USER_ID")
 	private User user;
+	
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "RECORD_CREATION_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date recordCreationDate;
 
-	protected Floricultura() {
+	protected FlowerShop() {
 	}
 
 	public Long getId() {
@@ -74,12 +81,12 @@ public class Floricultura implements Serializable {
 		this.cnpj = cnpj;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getLogoURL() {
@@ -90,12 +97,12 @@ public class Floricultura implements Serializable {
 		this.logoURL = logoURL;
 	}
 
-	public String getNome() {
-		return this.nome;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNome(String name) {
+		this.name = name;
 	}
 
 	public User getUser() {
@@ -106,4 +113,11 @@ public class Floricultura implements Serializable {
 		this.user = user;
 	}
 
+	public Date getRecordCreationDate() {
+		return this.recordCreationDate;
+	}
+
+	public void setRecordCreationDate(Date recordCreationDate) {
+		this.recordCreationDate = recordCreationDate;
+	}
 }

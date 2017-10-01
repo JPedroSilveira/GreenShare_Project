@@ -31,8 +31,8 @@ public class UserControllerImpl extends Controller implements UserController{
 	@Override
 	@GetMapping(value = "/photo/get")
     public User getPhoto(@RequestBody User user) {
-		User currentUser = getCurrentUser();
-       currentUser.setPassword(user.getPassword());
-       return userService.save(user);  
+	    User currentUser = getCurrentUser();
+        currentUser.setPassword(user.getPassword());
+        return userService.save(user);  
     }
 }

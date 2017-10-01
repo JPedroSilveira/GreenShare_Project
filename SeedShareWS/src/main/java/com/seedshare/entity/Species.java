@@ -7,134 +7,126 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 
 /**
- * Classe de persistência para a tabela Especie
+ * Persistence class for the table SPECIES
  * @author joao.silva
  */
 @Entity
-@Table(name = "ESPECIE")
-public class Especie implements Serializable {
+@Table(name = "SPECIES")
+public class Species implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_ESPECIE";
+	private static final String SEQUENCE_NAME = "SPECIES_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_ESPECIE")
+	@Column(name = "SPECIES_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "APROVADA")
-	private Boolean aprovada;
+	@Column(name = "APPROVED")
+	private Boolean isApproved;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "ATRAI_PASSAROS")
-	private Boolean atraiPassaros;
+	@Column(name = "ATTRACT_BIRDS")
+	private Boolean attractBirds;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "DATA_INSERCAO")
+	@Column(name = "INSERTION_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataInsercao;
+	private Date insertionDate;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRICAO", columnDefinition="TEXT")
-	private String descricao;
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	private String description;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "FOTO_URL", columnDefinition="TEXT")
-	private String fotoUrl;
+	@Column(name = "PHOTO_URL", columnDefinition="TEXT", length = 2500)
+	private String photoUrl;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 5000)
-	@Column(name = "GUIA_CULTIVO", columnDefinition="TEXT")
-	private String guiaCultivo;
+	@Column(name = "CULTIVATION_GUIDE", columnDefinition="TEXT", length = 5000)
+	private String cultivationGuide;
 
 	@Basic(optional = false)
 	@NotNull
 	@Column(name = "MEDICINAL")
-	private Boolean medicinal;
+	private Boolean isMedicinal;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "MELIFERA")
-	private Boolean melifera;
+	@Column(name = "ATTRACT_BEES")
+	private Boolean attractBees;
 
 	@Basic(optional = false)
 	@NotNull
-	@Size(max = 50)
-	@Column(name = "NOME_CIENTIFICO")
-	private String nomeCientifico;
+	@Size(max = 100)
+	@Column(name = "SCIENTIFIC_NAME", length = 100)
+	private String scientificName;
 
 	@Basic(optional = false)
 	@NotNull
-	@Size(max = 50)
-	@Column(name = "NOME_POPULAR")
-	private String nomePopular;
+	@Size(max = 100)
+	@Column(name = "COMMON_NAME", length = 100)
+	private String commonName;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "ORNALMENTAL")
-	private Boolean ornamental;
+	@Column(name = "ORNAMENTAL")
+	private Boolean isOrnamental;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "PORTE")
-	private BigDecimal porte;
+	@Column(name = "AVERAGE_HEIGHT")
+	private Long averageHeight;
 
-	//Associação Many To One com Crescimento
 	@ManyToOne
-	@JoinColumn(name="ID_CRESCIMENTO")
-	private Crescimento crescimento;
+	@JoinColumn(name="GROWTH_ID")
+	private Growth growth;
 
-	//Associação Many To Many com Clima
 	@ManyToMany
 	@JoinTable(
-		name="ESPECIE_CLIMA"
+		name="SPECIES_CLIMATE"
 		, joinColumns={
-			@JoinColumn(name="ID_ESPECIE")
+			@JoinColumn(name="SPECIES_ID")
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="ID_CLIMA")
+			@JoinColumn(name="CLIMATE_ID")
 			}
 		)
-	private List<Clima> climas;
+	private List<Climate> climates;
 	
-	//Associção Many To Many com Solo
-	@ManyToMany(mappedBy="especies")
-	private List<Solo> solos;
+	@ManyToMany(mappedBy="species")
+	private List<Soil> soils;
 
-	//Associção One To Many com com Flor
-	@OneToMany(mappedBy="especie")
-	private List<Flor> flores;
+	@OneToMany(mappedBy="species")
+	private List<Flower> flowers;
 
-	//Associção One To Many com Fruto
-	@OneToMany(mappedBy="especie")
-	private List<Fruto> frutos;
+	@OneToMany(mappedBy="species")
+	private List<Fruit> fruits;
 
-	//Associção One To Many com Oferta
-	@OneToMany(mappedBy="especie")
-	private List<Oferta> ofertas;
+	@OneToMany(mappedBy="species")
+	private List<Offer> offers;
 
-	//Associção One To Many com Sugestao
-	@OneToMany(mappedBy="especie")
-	private List<Sugestao> sugestoes;
+	@OneToMany(mappedBy="species")
+	private List<Suggestion> suggestions;
 
-	protected Especie() {
+	protected Species() {
 	}
 
 	public Long getId() {
@@ -145,212 +137,212 @@ public class Especie implements Serializable {
 		this.id = id;
 	}
 
-	public Boolean getAprovada() {
-		return this.aprovada;
+	public Boolean getIsApproved() {
+		return this.isApproved;
 	}
 
-	public void setAprovada(Boolean aprovada) {
-		this.aprovada = aprovada;
+	public void setIsApproved(Boolean isApproved) {
+		this.isApproved = isApproved;
 	}
 
-	public Boolean getAtraiPassaros() {
-		return this.atraiPassaros;
+	public Boolean getAttractBirds() {
+		return this.attractBirds;
 	}
 
-	public void setAtraiPassaros(Boolean atraiPassaros) {
-		this.atraiPassaros = atraiPassaros;
+	public void setAttractBirds(Boolean attractBirds) {
+		this.attractBirds = attractBirds;
 	}
 
-	public Date getDataInsercao() {
-		return this.dataInsercao;
+	public Date getInsertionDate() {
+		return this.insertionDate;
 	}
 
-	public void setDataInsercao(Date dataInsercao) {
-		this.dataInsercao = dataInsercao;
+	public void setInsertionDate(Date insertionDate) {
+		this.insertionDate = insertionDate;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getFotoUrl() {
-		return this.fotoUrl;
+	public String getPhotoUrl() {
+		return this.photoUrl;
 	}
 
-	public void setFotoUrl(String fotoUrl) {
-		this.fotoUrl = fotoUrl;
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
 	}
 
-	public String getGuiaCultivo() {
-		return this.guiaCultivo;
+	public String getCultivationGuide() {
+		return this.cultivationGuide;
 	}
 
-	public void setGuiaCultivo(String guiaCultivo) {
-		this.guiaCultivo = guiaCultivo;
+	public void setCultivationGuide(String cultivationGuide) {
+		this.cultivationGuide = cultivationGuide;
 	}
 
-	public Boolean getMedicinal() {
-		return this.medicinal;
+	public Boolean getIsMedicinal() {
+		return this.isMedicinal;
 	}
 
-	public void setMedicinal(Boolean medicinal) {
-		this.medicinal = medicinal;
+	public void setIsMedicinal(Boolean isMedicinal) {
+		this.isMedicinal = isMedicinal;
 	}
 
-	public Boolean getMelifera() {
-		return this.melifera;
+	public Boolean getAttractBees() {
+		return this.attractBees;
 	}
 
-	public void setMelifera(Boolean melifera) {
-		this.melifera = melifera;
+	public void setAttractBees(Boolean attractBees) {
+		this.attractBees = attractBees;
 	}
 
-	public String getNomeCientifico() {
-		return this.nomeCientifico;
+	public String getScientificName() {
+		return this.scientificName;
 	}
 
-	public void setNomeCientifico(String nomeCientifico) {
-		this.nomeCientifico = nomeCientifico;
+	public void setScientificName(String scientificName) {
+		this.scientificName = scientificName;
 	}
 
-	public String getNomePopular() {
-		return this.nomePopular;
+	public String getCommonName() {
+		return this.commonName;
 	}
 
-	public void setNomePopular(String nomePopular) {
-		this.nomePopular = nomePopular;
+	public void setCommonName(String commonName) {
+		this.commonName = commonName;
 	}
 
-	public Boolean getOrnamental() {
-		return this.ornamental;
+	public Boolean getIsOrnamental() {
+		return this.isOrnamental;
 	}
 
-	public void setOrnamental(Boolean ornamental) {
-		this.ornamental = ornamental;
+	public void setIsOrnamental(Boolean isOrnamental) {
+		this.isOrnamental = isOrnamental;
 	}
 
-	public BigDecimal getPorte() {
-		return this.porte;
+	public Long getAverageHeight() {
+		return this.averageHeight;
 	}
 
-	public void setPorte(BigDecimal porte) {
-		this.porte = porte;
+	public void setAverageHeight(Long averageHeight) {
+		this.averageHeight = averageHeight;
 	}
 
-	public Crescimento getCrescimento() {
-		return this.crescimento;
+	public Growth getGrowth() {
+		return this.growth;
 	}
 
-	public void setCrescimento(Crescimento crescimento) {
-		this.crescimento = crescimento;
+	public void setGrowth(Growth growth) {
+		this.growth = growth;
 	}
 
-	public List<Clima> getClimas() {
-		return this.climas;
+	public List<Climate> getClimates() {
+		return this.climates;
 	}
 
-	public void setClimas(List<Clima> climas) {
-		this.climas = climas;
+	public void setClimas(List<Climate> climates) {
+		this.climates = climates;
 	}
 
-	public List<Solo> getSolos() {
-		return this.solos;
+	public List<Soil> getSoils() {
+		return this.soils;
 	}
 
-	public void setSolos(List<Solo> solos) {
-		this.solos = solos;
+	public void setSoils(List<Soil> soils) {
+		this.soils = soils;
 	}
 
-	public List<Flor> getFlores() {
-		return this.flores;
+	public List<Flower> getFlowers() {
+		return this.flowers;
 	}
 
-	public void setFlores(List<Flor> flores) {
-		this.flores = flores;
+	public void setFlowers(List<Flower> flowers) {
+		this.flowers = flowers;
 	}
 
-	public Flor addFlor(Flor flor) {
-		getFlores().add(flor);
-		flor.setEspecie(this);
+	public Flower addFlower(Flower flower) {
+		getFlowers().add(flower);
+		flower.setSpecies(this);
 
-		return flor;
+		return flower;
 	}
 
-	public Flor removeFlor(Flor flor) {
-		getFlores().remove(flor);
-		flor.setEspecie(null);
+	public Flower removeFlower(Flower flower) {
+		getFlowers().remove(flower);
+		flower.setSpecies(null);
 
-		return flor;
+		return flower;
 	}
 
-	public List<Fruto> getFrutos() {
-		return this.frutos;
+	public List<Fruit> getFruits() {
+		return this.fruits;
 	}
 
-	public void setFrutos(List<Fruto> frutos) {
-		this.frutos = frutos;
+	public void setFruits(List<Fruit> fruits) {
+		this.fruits = fruits;
 	}
 
-	public Fruto addFruto(Fruto fruto) {
-		getFrutos().add(fruto);
-		fruto.setEspecie(this);
+	public Fruit addFruit(Fruit fruit) {
+		getFruits().add(fruit);
+		fruit.setSpecies(this);
 
-		return fruto;
+		return fruit;
 	}
 
-	public Fruto removeFruto(Fruto fruto) {
-		getFrutos().remove(fruto);
-		fruto.setEspecie(null);
+	public Fruit removeFruit(Fruit fruit) {
+		getFruits().remove(fruit);
+		fruit.setSpecies(null);
 
-		return fruto;
+		return fruit;
 	}
 
-	public List<Oferta> getOfertas() {
-		return this.ofertas;
+	public List<Offer> getOffers() {
+		return this.offers;
 	}
 
-	public void setOfertas(List<Oferta> ofertas) {
-		this.ofertas = ofertas;
+	public void setOffers(List<Offer> offers) {
+		this.offers = offers;
 	}
 
-	public Oferta addOferta(Oferta oferta) {
-		getOfertas().add(oferta);
-		oferta.setEspecie(this);
+	public Offer addOffer(Offer offers) {
+		getOffers().add(offers);
+		offers.setSpecies(this);
 
-		return oferta;
+		return offers;
 	}
 
-	public Oferta removeOferta(Oferta oferta) {
-		getOfertas().remove(oferta);
-		oferta.setEspecie(null);
+	public Offer removeOffer(Offer offers) {
+		getOffers().remove(offers);
+		offers.setSpecies(null);
 
-		return oferta;
+		return offers;
 	}
 
-	public List<Sugestao> getSugestoes() {
-		return this.sugestoes;
+	public List<Suggestion> getSuggestions() {
+		return this.suggestions;
 	}
 
-	public void setSugestaos(List<Sugestao> sugestoes) {
-		this.sugestoes = sugestoes;
+	public void setSuggestions(List<Suggestion> suggestions) {
+		this.suggestions = suggestions;
 	}
 
-	public Sugestao addSugestao(Sugestao sugestao) {
-		getSugestoes().add(sugestao);
-		sugestao.setEspecie(this);
+	public Suggestion addSuggestion(Suggestion suggestion) {
+		getSuggestions().add(suggestion);
+		suggestion.setSpecies(this);
 
-		return sugestao;
+		return suggestion;
 	}
 
-	public Sugestao removeSugestao(Sugestao sugestao) {
-		getSugestoes().remove(sugestao);
-		sugestao.setEspecie(null);
+	public Suggestion removeSuggestion(Suggestion suggestion) {
+		getSuggestions().remove(suggestion);
+		suggestion.setSpecies(null);
 
-		return sugestao;
+		return suggestion;
 	}
 
 }

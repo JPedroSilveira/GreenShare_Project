@@ -3,38 +3,45 @@ package com.seedshare.entity;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 /**
- * Classe de persistência para a tabela Sugestao
+ * Persistence class for the table SUGGESTION
  * @author joao.silva
  */
 @Entity
-@Table(name = "SUGESTAO")
-public class Sugestao implements Serializable {
+@Table(name = "SUGGESTION")
+public class Suggestion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_SUGESTAO";
+	private static final String SEQUENCE_NAME = "SUGGESTION_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_SUGESTAO")
+	@Column(name = "SUGGESTION_ID")
 	private Long id;
 
-	//Associação Many To One com Usuario
 	@ManyToOne
 	@JoinColumn(name="USER_ID")
 	private User user;
 
-	//Associação Many To One com Especie
 	@ManyToOne
-	@JoinColumn(name="ID_ESPECIE")
-	private Especie especie;
+	@JoinColumn(name="SPECIES_ID")
+	private Species species;
+	
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "RECORD_CREATION_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date recordCreationDate;
 
-	protected Sugestao() {
+	protected Suggestion() {
 	}
 
 	public Long getId() {
@@ -53,12 +60,19 @@ public class Sugestao implements Serializable {
 		this.user = user;
 	}
 
-	public Especie getEspecie() {
-		return this.especie;
+	public Species getSpecies() {
+		return this.species;
 	}
 
-	public void setEspecie(Especie especie) {
-		this.especie = especie;
+	public void setSpecies(Species species) {
+		this.species = species;
 	}
 
+	public Date getRecordCreationDate() {
+		return this.recordCreationDate;
+	}
+
+	public void setRecordCreationDate(Date recordCreationDate) {
+		this.recordCreationDate = recordCreationDate;
+	}
 }

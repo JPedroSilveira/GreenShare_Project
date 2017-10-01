@@ -1,5 +1,6 @@
 package com.seedshare.controller.auth;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,13 @@ public class LoginControllerImpl implements LoginController{
 
     @Override
     @PostMapping(value = "/register")
-    public ResponseEntity<com.seedshare.entity.User> create(@RequestBody com.seedshare.entity.User user) {
+    public ResponseEntity<?> create(@RequestBody com.seedshare.entity.User user) {
     	com.seedshare.entity.User createdUser = userService.create(user); 
-    	if(createdUser == null){
-    		return new ResponseEntity<com.seedshare.entity.User>(HttpStatus.CONFLICT);
+        if(createdUser.isValid()){
+        	createdUser.cleanPassword();
+            return new ResponseEntity<com.seedshare.entity.User>(createdUser, HttpStatus.CREATED);
         }else{
-        	return new ResponseEntity<com.seedshare.entity.User>(HttpStatus.CREATED);
+        	return new ResponseEntity<List<String>>(createdUser.getValidationErrors(), HttpStatus.BAD_REQUEST);        	
         }
     }  
 }       

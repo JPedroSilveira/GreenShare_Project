@@ -8,131 +8,146 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
- * Classe de persistência para a tabela Flor
+ * Persistence class for the table FLOWER
  * @author joao.silva
  */
 @Entity
-@Table(name = "FLOR")
-public class Flor implements Serializable {
+@Table(name = "FLOWER")
+public class Flower implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_FLOR";
+	private static final String SEQUENCE_NAME = "FLOWER_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_FLOR")
+	@Column(name = "FLOWER_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "AROMATICA")
-	private Boolean aromatica;
+	@Column(name = "AROMATIC")
+	private Boolean isAromatic;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 50)
-	@Column(name = "COR")
-	private String cor;
+	@Column(name = "COLOR", length = 50)
+	private String color;
 
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "DATA_FIM_FLORACAO")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataFimFloracao;
-
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "DATA_INICIO_FLORACAO")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataInicioFloracao;
+	@ManyToMany
+	@JoinTable(
+		name="FLOWERING_MONTHS"
+		, joinColumns={
+			@JoinColumn(name="FLOWER_ID")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="MONTH_ID")
+			}
+		)
+	private List<Month> floweringMonths;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRICAO", columnDefinition="TEXT")
-	private String descricao;
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	private String description;
 
 	@Basic(optional = false)
 	@NotNull
-	@Size(max = 50)
-	@Column(name = "NOME")
-	private String nome;
+	@Size(max = 100)
+	@Column(name = "NAME", length = 100)
+	private String name;
 
-	//Associação Many To One com Especie
 	@ManyToOne
-	@JoinColumn(name="ID_ESPECIE")
-	private Especie especie;
+	@JoinColumn(name="SPECIES_ID")
+	private Species species;
+	
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "RECORD_CREATION_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date recordCreationDate;
 
-	protected Flor() {
+	protected Flower() {
 	}
 
 	public Long getId() {
 		return this.id;
 	}
 
-	public void setIdo(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Boolean getAromatica() {
-		return this.aromatica;
+	public Boolean getIsAromatic() {
+		return this.isAromatic;
 	}
 
-	public void setAromatica(Boolean aromatica) {
-		this.aromatica = aromatica;
+	public void setIsAromatic(Boolean isAromatic) {
+		this.isAromatic = isAromatic;
 	}
 
-	public String getCor() {
-		return this.cor;
+	public String getColor() {
+		return this.color;
 	}
 
-	public void setCor(String cor) {
-		this.cor = cor;
+	public void setColor(String color) {
+		this.color = color;
 	}
 
-	public Date getDataFimFloracao() {
-		return this.dataFimFloracao;
+	public List<Month> getFloweringMonths() {
+		return this.floweringMonths;
 	}
 
-	public void setDataFimFloracao(Date dataFimFloracao) {
-		this.dataFimFloracao = dataFimFloracao;
+	public void setFloweringMonths(List<Month> months) {
+		this.floweringMonths = months;
+	}
+	
+	public Month addFloweringMonths(Month month) {
+		getFloweringMonths().add(month);
+		return month;
+	}
+	
+	public Month removeFloweringMonths(Month month) {
+		getFloweringMonths().remove(month);
+		return month;
 	}
 
-	public Date getDataInicioFloracao() {
-		return this.dataInicioFloracao;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setDataInicioFloracao(Date dataInicioFloracao) {
-		this.dataInicioFloracao = dataInicioFloracao;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getName() {
+		return this.name;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
+	public void setNome(String name) {
+		this.name = name;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public Species getSpecies() {
+		return this.species;
 	}
 
-	public String getNome() {
-		return this.nome;
+	public void setSpecies(Species species) {
+		this.species = species;
+	}
+	
+	public Date getRecordCreationDate() {
+		return this.recordCreationDate;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public Especie getEspecie() {
-		return this.especie;
-	}
-
-	public void setEspecie(Especie especie) {
-		this.especie = especie;
+	public void setRecordCreationDate(Date recordCreationDate) {
+		this.recordCreationDate = recordCreationDate;
 	}
 
 }

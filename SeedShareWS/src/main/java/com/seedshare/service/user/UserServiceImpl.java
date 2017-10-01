@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.seedshare.entity.User;
 import com.seedshare.repository.UserRepository;
-import com.seedshare.security.UserSecurityConfig;
 
 /**
  * Implementation of User Service interface
@@ -16,22 +15,21 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
     UserRepository userRepository;
-    
-    @Autowired
-    UserServiceImpl userService;
-    
-    @Autowired
-    private UserSecurityConfig userSecurityConfig;
-    
+
     @Override
     public User create(User user) {
-    	User userDB = userService.findOneByEmail(user.getEmail());
-    	if(userDB == null) {
-    		User newUser =  new User(user.getCpf(), user.getEmail(), user.getPassword(), user.getPhotoId(), user.isLegalPerson());
-    		newUser.setPassword(userSecurityConfig.passwordEncoder().encode(newUser.getPassword()));
-        	return userRepository.save(newUser);
+    	User newUser = new User(user.getCpf(), user.getName(), user.getEmail(), user.getPassword(), user.getIsLegalPerson());
+    	if(newUser.generateNewValidation().isValid() && validUniqueKeys(newUser)){
+            return userRepository.save(newUser);
+    	}else{
+    		if(!isUniqueEmail(newUser.getEmail())) {
+    			newUser.addValidationError("Email já cadastrado");
+    		}
+    		if(!isUniqueCPF(newUser.getCpf())) {
+    			newUser.addValidationError("CPF já cadastrado");
+    		}
     	}
-    	return null;
+    	return newUser;
     }
     
 	@Override
@@ -48,10 +46,27 @@ public class UserServiceImpl implements UserService{
 	public User findOne(Long id) {
 		return userRepository.findOne(id);
 	}
-
+	
 	@Override
 	public User findOneByEmail(String email) {
 		return userRepository.findOneByEmail(email);
 	}
-
+	
+	@Override
+	public User findOneByCpf(String cpf) {
+		return userRepository.findOneByCpf(cpf);
+	}
+	
+	private Boolean validUniqueKeys(User user) {
+		return this.isUniqueEmail(user.getEmail()) && this.isUniqueCPF(user.getCpf());
+	}
+	
+	private Boolean isUniqueEmail(String email){
+    	return this.findOneByEmail(email) == null;
+	}
+	
+	private Boolean isUniqueCPF(String cpf){
+    	return this.findOneByCpf(cpf) == null;
+	}
+	
 }

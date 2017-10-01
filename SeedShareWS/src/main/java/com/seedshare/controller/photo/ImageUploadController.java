@@ -1,4 +1,4 @@
-package com.seedshare.controller.user.photo;
+package com.seedshare.controller.photo;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;

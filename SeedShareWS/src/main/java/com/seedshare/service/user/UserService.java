@@ -8,6 +8,10 @@ import com.seedshare.service.BasicService;
  * @author joao.silva
  */
 public interface UserService extends BasicService<User,Long>{
+	
 	User findOneByEmail(String email);
+	
 	User create(User user);
+	
+	User findOneByCpf(String cpf);
 }

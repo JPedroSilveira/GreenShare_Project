@@ -11,126 +11,125 @@ import java.util.List;
 
 
 /**
- * Classe de persistência para a tabela Selo
+ * Persistence class for the table ACHIEVEMENT
  * @author joao.silva
  */
 @Entity
-@Table(name = "SELO")
-public class Selo implements Serializable {
+@Table(name = "ACHIEVEMENT")
+public class Achievement implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_SELO";
+	private static final String SEQUENCE_NAME = "ACHIEVEMENT_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_SELO")
+	@Column(name = "ACHIEVEMENT_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "CATEGORIA", columnDefinition="TEXT")
-	private Integer categoria;
+	@Column(name = "CATEGORY", columnDefinition="TEXT")
+	private Integer category;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRICAO", columnDefinition="TEXT")
-	private String descricao;
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	private String description;
 
 	@Basic(optional = false)
 	@NotNull
-	@Size(max = 50)
-	@Column(name = "NOME")
-	private String nome;
+	@Size(max = 100)
+	@Column(name = "NAME", length = 100)
+	private String name;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "PONTUACAO_NECESSARIA")
-	private Integer pontuacaoNecessaria;
+	@Column(name = "REQUIRED_SCORE")
+	private Long requiredScore;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "URL_IMG", columnDefinition="TEXT")
-	private String urlImg;
+	@Column(name = "IMG_URL", columnDefinition="TEXT")
+	private String imgUrl;
 
-	//Associação One To Many com UsuarioSelo
-	@OneToMany(mappedBy="selo")
-	private List<UsuarioSelo> usuarioSelos;
+	@OneToMany(mappedBy="achievement")
+	private List<UserAchievement> userAchievements;
 
-	protected Selo() {
+	protected Achievement() {
 	}
 
-	public Long getIdSelo() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setIdSelo(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getCategoria() {
-		return this.categoria;
+	public Integer getCategory() {
+		return this.category;
 	}
 
-	public void setCategoria(Integer categoria) {
-		this.categoria = categoria;
+	public void setCategory(Integer category) {
+		this.category = category;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getNome() {
-		return this.nome;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public Integer getPontuacaoNecessaria() {
-		return this.pontuacaoNecessaria;
+	public Long getRequiredScore() {
+		return this.requiredScore;
 	}
 
-	public void setPontuacaoNecessaria(Integer pontuacaoNecessaria) {
-		this.pontuacaoNecessaria = pontuacaoNecessaria;
+	public void setRequiredScore(Long requiredScore) {
+		this.requiredScore = requiredScore;
 	}
 
-	public String getUrlImg() {
-		return this.urlImg;
+	public String getImgUrl() {
+		return this.imgUrl;
 	}
 
-	public void setUrlImg(String urlImg) {
-		this.urlImg = urlImg;
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
 	}
 
-	public List<UsuarioSelo> getUsuarioSelos() {
-		return this.usuarioSelos;
+	public List<UserAchievement> getUserAchievements() {
+		return this.userAchievements;
 	}
 
-	public void setUsuarioselos(List<UsuarioSelo> usuarioSelos) {
-		this.usuarioSelos = usuarioSelos;
+	public void setUserAchievements(List<UserAchievement> userAchievements) {
+		this.userAchievements = userAchievements;
 	}
 
-	public UsuarioSelo addUsuarioselo(UsuarioSelo usuarioSelo) {
-		getUsuarioSelos().add(usuarioSelo);
-		usuarioSelo.setSelo(this);
+	public UserAchievement addUserAchievement(UserAchievement userAchievement) {
+		getUserAchievements().add(userAchievement);
+		userAchievement.setAchievement(this);
 
-		return usuarioSelo;
+		return userAchievement;
 	}
 
-	public UsuarioSelo removeUsuarioselo(UsuarioSelo usuarioSelo) {
-		getUsuarioSelos().remove(usuarioSelo);
-		usuarioSelo.setSelo(null);
+	public UserAchievement removeUserAchievement(UserAchievement userAchievement) {
+		getUserAchievements().remove(userAchievement);
+		userAchievement.setAchievement(null);
 
-		return usuarioSelo;
+		return userAchievement;
 	}
 
 }

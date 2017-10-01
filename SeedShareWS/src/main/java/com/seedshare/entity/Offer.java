@@ -7,71 +7,67 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 
 /**
- * Classe de persistência para a tabela Oferta
+ * Persistence class for the table OFFER
  * @author joao.silva
  */
 @Entity
-@Table(name = "OFERTA")
-public class Oferta implements Serializable {
+@Table(name = "OFFER")
+public class Offer implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_OFERTA";
+	private static final String SEQUENCE_NAME = "OFFER_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_OFERTA")
+	@Column(name = "OFFER_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "DATA_CRIACAO")
+	@Column(name = "CREATION_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataCriacao;
+	private Date creationDate;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "PRECO_UNIDADE")
-	private BigDecimal precoUnidade;
+	@Column(name = "UNIT_PRICE")
+	private Float unitPrice;
 
 	@Basic(optional = false)
 	@NotNull
 	@Max(9999)
-	@Column(name = "QUANTIDADE")
-	private Integer quantidade;
+	@Column(name = "AMOUNT")
+	private Integer amount;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "STATUS_OFERTA", columnDefinition="TEXT")
-	private Integer statusOferta;
+	@Column(name = "OFFER_STATUS", columnDefinition="TEXT")
+	private Integer offerStatus;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "TIPO")
-	private Integer tipo;
+	@Column(name = "TYPE")
+	private Integer type;
 
-	//Associação Many To One com Usuario
 	@ManyToOne
 	@JoinColumn(name="USER_ID")
 	private User user;
 
-	//Associação Many To One com Especie
 	@ManyToOne
-	@JoinColumn(name="ID_ESPECIE")
-	private Especie especie;
+	@JoinColumn(name="SPECIES_ID")
+	private Species species;
 
-	//Associação One To Many com Solicitacao
-	@OneToMany(mappedBy="oferta")
-	private List<Solicitacao> solicitacoes;
+	@OneToMany(mappedBy="offer")
+	private List<Request> requests;
 
-	protected Oferta() {
+	protected Offer() {
 	}
 
 	public Long getId() {
@@ -82,44 +78,44 @@ public class Oferta implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDataCriacao() {
-		return this.dataCriacao;
+	public Date getCreationDate() {
+		return this.creationDate;
 	}
 
-	public void setDataCriacao(Date dataCriacao) {
-		this.dataCriacao = dataCriacao;
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
-	public BigDecimal getPrecoUnidade() {
-		return this.precoUnidade;
+	public Float getUnitPrice() {
+		return this.unitPrice;
 	}
 
-	public void setPrecoUnidade(BigDecimal precoUnidade) {
-		this.precoUnidade = precoUnidade;
+	public void setUnitPrice(Float unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
-	public Integer getQuantidade() {
-		return this.quantidade;
+	public Integer getAmount() {
+		return this.amount;
 	}
 
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
+	public void setAmount(Integer amount) {
+		this.amount = amount;
 	}
 
-	public Integer getStatusOferta() {
-		return this.statusOferta;
+	public Integer getOfferStatus() {
+		return this.offerStatus;
 	}
 
-	public void setStatusOferta(Integer statusOferta) {
-		this.statusOferta = statusOferta;
+	public void setOfferStatus(Integer offerStatus) {
+		this.offerStatus = offerStatus;
 	}
 
-	public Integer getTipo() {
-		return this.tipo;
+	public Integer getType() {
+		return this.type;
 	}
 
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public User getUser() {
@@ -130,34 +126,29 @@ public class Oferta implements Serializable {
 		this.user = user;
 	}
 
-	public Especie getEspecie() {
-		return this.especie;
+	public Species getSpecies() {
+		return this.species;
 	}
 
-	public void setEspecie(Especie especie) {
-		this.especie = especie;
+	public void setSpecies(Species species) {
+		this.species = species;
 	}
 
-	public List<Solicitacao> getSolicitacoes() {
-		return this.solicitacoes;
+	public List<Request> getRequests() {
+		return this.requests;
 	}
 
-	public void setSolicitacoes(List<Solicitacao> solicitacaos) {
-		this.solicitacoes = solicitacaos;
+	public Request addRequest(Request request) {
+		getRequests().add(request);
+		request.setOffer(this);
+
+		return request;
 	}
 
-	public Solicitacao addSolicitacao(Solicitacao solicitacao) {
-		getSolicitacoes().add(solicitacao);
-		solicitacao.setOferta(this);
+	public Request removeRequest(Request request) {
+		getRequests().remove(request);
+		request.setOffer(null);
 
-		return solicitacao;
+		return request;
 	}
-
-	public Solicitacao removeSolicitacao(Solicitacao solicitacao) {
-		getSolicitacoes().remove(solicitacao);
-		solicitacao.setOferta(null);
-
-		return solicitacao;
-	}
-
 }

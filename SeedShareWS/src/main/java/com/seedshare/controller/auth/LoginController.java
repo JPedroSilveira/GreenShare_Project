@@ -11,5 +11,6 @@ public interface LoginController {
 
 	User getUserDetails();
 	
-	ResponseEntity<User> create(User user);
+	ResponseEntity<?> create(User user);
+	
 }

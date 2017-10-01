@@ -9,34 +9,33 @@ import java.util.List;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 /**
- * Classe de persistência para a tabela Crescimento
+ * Persistence class for the table GROWTH
  * @author joao.silva
  */
 @Entity
-@Table(name = "CRESCIMENTO")
-public class Crescimento implements Serializable {
+@Table(name = "GROWTH")
+public class Growth implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_CRESCIMENTO";
+	private static final String SEQUENCE_NAME = "GROWTH_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_CRESCIMENTO")
+	@Column(name = "GROWTH_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRICAO", columnDefinition="TEXT")
-	private String descricao;
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	private String description;
 
-	//Associção One To Many com Especie
-	@OneToMany(mappedBy="crescimento")
-	private List<Especie> especies;
+	@OneToMany(mappedBy="growth")
+	private List<Species> species;
 
-	protected Crescimento() {
+	protected Growth() {
 	}
 
 	public Long getId() {
@@ -47,34 +46,34 @@ public class Crescimento implements Serializable {
 		this.id = id;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public List<Especie> getEspecies() {
-		return this.especies;
+	public List<Species> getSpecies() {
+		return this.species;
 	}
 
-	public void setEspecies(List<Especie> especies) {
-		this.especies = especies;
+	public void setEspecies(List<Species> species) {
+		this.species = species;
 	}
 
-	public Especie addEspecie(Especie especie) {
-		getEspecies().add(especie);
-		especie.setCrescimento(this);
+	public Species addEspecie(Species species) {
+		getSpecies().add(species);
+		species.setGrowth(this);
 
-		return especie;
+		return species;
 	}
 
-	public Especie removeEspecie(Especie especie) {
-		getEspecies().remove(especie);
-		especie.setCrescimento(null);
+	public Species removeEspecie(Species species) {
+		getSpecies().remove(species);
+		species.setGrowth(null);
 
-		return especie;
+		return species;
 	}
 
 }

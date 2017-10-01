@@ -4,53 +4,49 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 import java.util.Date;
 
 
 /**
- * Classe de persistência para a tabela Solicitacao
+ * Persistence class for the table REQUEST
  * @author joao.silva
  */
 @Entity
-@Table(name = "SOLICITACAO")
-public class Solicitacao implements Serializable {
+@Table(name = "REQUEST")
+public class Request implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_SOLICITACAO";
+	private static final String SEQUENCE_NAME = "REQUEST_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_SOLICITACAO")
+	@Column(name = "REQUEST_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "DATA_SOLICITACAO")
+	@Column(name = "REQUEST_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataSolicitacao;
+	private Date requestDate;
 
 	@Basic(optional = false)
 	@NotNull
-	@Max(9999)
-	@Column(name = "DESCRICAO")
-	private Integer quantidade;
+	@Column(name = "AMOUNT")
+	private Integer amount;
 
-	//Associação Many To One com Oferta
 	@ManyToOne
-	@JoinColumn(name="ID_OFERTA")
-	private Oferta oferta;
+	@JoinColumn(name="OFFER_ID")
+	private Offer offer;
 
-	//Associação Many To One com Usuario
 	@ManyToOne
 	@JoinColumn(name="USER_ID")
 	private User user;
 
-	protected Solicitacao() {
+	protected Request() {
 	}
 
 	public Long getId() {
@@ -61,28 +57,28 @@ public class Solicitacao implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDataSolicitacao() {
-		return this.dataSolicitacao;
+	public Date getRequestDate() {
+		return this.requestDate;
 	}
 
-	public void setDataSolicitacao(Date dataSolicitacao) {
-		this.dataSolicitacao = dataSolicitacao;
+	public void setRequestDate(Date requestDate) {
+		this.requestDate = requestDate;
 	}
 
-	public Integer getQuantidade() {
-		return this.quantidade;
+	public Integer getAmount() {
+		return this.amount;
 	}
 
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
+	public void setAmount(Integer amount) {
+		this.amount = amount;
 	}
 
-	public Oferta getOferta() {
-		return this.oferta;
+	public Offer getOffer() {
+		return this.offer;
 	}
 
-	public void setOferta(Oferta oferta) {
-		this.oferta = oferta;
+	public void setOffer(Offer offer) {
+		this.offer = offer;
 	}
 
 	public User getUser() {

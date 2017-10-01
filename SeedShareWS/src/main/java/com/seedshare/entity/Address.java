@@ -11,28 +11,28 @@ import java.util.Date;
 
 
 /**
- * Classe de persistência para a tabela Endereco
+ * Persistence class for the table ADDRESS
  * @author joao.silva
  */
 @Entity
-@Table(name = "ENDERECO")
-public class Endereco implements Serializable {
+@Table(name = "ADDRESS")
+public class Address implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_ENDERECO";
+	private static final String SEQUENCE_NAME = "ADDRESS_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_ENDERECO")
+	@Column(name = "ADDRESS_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "DATA_CRIACAO")
+	@Column(name = "CREATION_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataCriacao;
+	private Date creationDate;
 
 	@Basic(optional = false)
 	@NotNull
@@ -44,12 +44,11 @@ public class Endereco implements Serializable {
 	@Column(name = "LONGITUDE")
 	private BigDecimal longitude;
 
-	//Associação Many To One com Usuario
 	@ManyToOne
 	@JoinColumn(name="USER_ID")
 	private User user;
 
-	protected Endereco() {
+	protected Address() {
 	}
 
 	public Long getId() {
@@ -60,12 +59,12 @@ public class Endereco implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDataCriacao() {
-		return this.dataCriacao;
+	public Date getCreationDate() {
+		return this.creationDate;
 	}
 
-	public void setDataCriacao(Date dataCriacao) {
-		this.dataCriacao = dataCriacao;
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	public BigDecimal getLatitude() {

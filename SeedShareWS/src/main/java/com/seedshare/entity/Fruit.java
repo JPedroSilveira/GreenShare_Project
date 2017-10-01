@@ -8,66 +8,72 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
- * Classe de persistência para a tabela Fruto
+ * Persistence class for the table FRUIT
  * @author joao.silva
  */
 @Entity
-@Table(name = "FRUTO")
-public class Fruto implements Serializable {
+@Table(name = "FRUIT")
+public class Fruit implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_FRUTO";
+	private static final String SEQUENCE_NAME = "FRUIT_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_FRUTO")
+	@Column(name = "FRUIT_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "CONSUMO_FAUNA")
-	private Boolean consumoFauna;
+	@Column(name = "FAUNA_CONSUMPTION")
+	private Boolean faunaConsumption;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "CONSUMO_HUMANO")
-	private Boolean consumoHumano;
+	@Column(name = "HUMAN_CONSUMPTION")
+	private Boolean humanConsumption;
 
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "DATA_FIM_FRUTIFICACAO")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataFimFrutificacao;
-
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "DATA_INICIO_FRUTIFICACAO")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataInicioFrutificacao;
+	@ManyToMany
+	@JoinTable(
+		name="FRUITING_MONTHS"
+		, joinColumns={
+			@JoinColumn(name="FRUIT_ID")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="MONTH_ID")
+			}
+		)
+	private List<Month> fruitingMonths;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRICAO", columnDefinition="TEXT")
-	private String descricao;
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT")
+	private String description;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 50)
-	@Column(name = "NOME_FRUTO")
-	private String nomeFruto;
+	@Column(name = "NAME")
+	private String name;
 
-	//Associação Many To One com Especie
 	@ManyToOne
-	@JoinColumn(name="ID_ESPECIE")
-	private Especie especie;
+	@JoinColumn(name="SPECIES_ID")
+	private Species species;
+	
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "RECORD_CREATION_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date recordCreationDate;
 
-	protected Fruto() {
+	protected Fruit() {
 	}
 
 	public Long getId() {
@@ -78,60 +84,70 @@ public class Fruto implements Serializable {
 		this.id = id;
 	}
 
-	public Boolean getConsumoFauna() {
-		return this.consumoFauna;
+	public Boolean getFaunaConsumption() {
+		return this.faunaConsumption;
 	}
 
-	public void setConsumoFauna(Boolean consumoFauna) {
-		this.consumoFauna = consumoFauna;
+	public void setFaunaConsumption(Boolean faunaConsumption) {
+		this.faunaConsumption = faunaConsumption;
 	}
 
-	public Boolean getConsumoHumano() {
-		return this.consumoHumano;
+	public Boolean getHumanConsumption() {
+		return this.humanConsumption;
 	}
 
-	public void setConsumoHumano(Boolean consumoHumano) {
-		this.consumoHumano = consumoHumano;
+	public void setHumanConsumption(Boolean humanConsumption) {
+		this.humanConsumption = humanConsumption;
 	}
 
-	public Date getDataFimFrutificacao() {
-		return this.dataFimFrutificacao;
+	public List<Month> getFruitingMonths() {
+		return this.fruitingMonths;
 	}
 
-	public void setDataFimFrutificacao(Date dataFimFrutificacao) {
-		this.dataFimFrutificacao = dataFimFrutificacao;
+	public void setFruitingMonths(List<Month> months) {
+		this.fruitingMonths = months;
+	}
+	
+	public Month addFruitingMonths(Month month) {
+		getFruitingMonths().add(month);
+		return month;
+	}
+	
+	public Month removeFruitingMonths(Month month) {
+		getFruitingMonths().remove(month);
+		return month;
 	}
 
-	public Date getDataInicioFrutificacao() {
-		return this.dataInicioFrutificacao;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setDataInicioFrutificacao(Date dataInicioFrutificacao) {
-		this.dataInicioFrutificacao = dataInicioFrutificacao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getNomeFruto() {
-		return this.nomeFruto;
+	public Species getSpecies() {
+		return this.species;
 	}
 
-	public void setNomeFruto(String nomeFruto) {
-		this.nomeFruto = nomeFruto;
+	public void setSpecies(Species species) {
+		this.species = species;
+	}
+	
+	public Date getRecordCreationDate() {
+		return this.recordCreationDate;
 	}
 
-	public Especie getEspecie() {
-		return this.especie;
-	}
-
-	public void setEspecie(Especie especie) {
-		this.especie = especie;
+	public void setRecordCreationDate(Date recordCreationDate) {
+		this.recordCreationDate = recordCreationDate;
 	}
 
 }

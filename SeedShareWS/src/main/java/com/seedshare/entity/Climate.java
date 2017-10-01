@@ -10,41 +10,40 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
- * Classe de persistência para a tabela Clima.
+ * Persistence class for the table WEATHER.
  * @author joao.silva
  */
 @Entity
-@Table(name = "CLIMA")
-public class Clima implements Serializable {
+@Table(name = "CLIMATE")
+public class Climate implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_CLIMA";
+	private static final String SEQUENCE_NAME = "CLIMATE_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
 	@NotNull
-    @Column(name = "ID_CLIMA")
+    @Column(name = "CLIMATE_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRICAO", columnDefinition="TEXT")
-	private String descricao;
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	private String description;
 
 	@Basic(optional = false)
 	@NotNull
-	@Size(max = 50)
-	@Column(name = "NOME")
-	private String nome;
+	@Size(max = 100)
+	@Column(name = "NAME", length = 100)
+	private String name;
 
-	//Associação Many to Many com Especie
-	@ManyToMany(mappedBy="climas")
-	private List<Especie> especies;
+	@ManyToMany(mappedBy="climates")
+	private List<Species> species;
 
-	protected Clima() {
+	protected Climate() {
 	}
 
 	public Long getId() {
@@ -55,28 +54,28 @@ public class Clima implements Serializable {
 		this.id = id;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getNome() {
-		return this.nome;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public List<Especie> getEspecies() {
-		return this.especies;
+	public List<Species> getSpecies() {
+		return this.species;
 	}
 
-	public void setEspecies(List<Especie> especies) {
-		this.especies = especies;
+	public void setSpecies(List<Species> species) {
+		this.species = species;
 	}
 
 }

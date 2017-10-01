@@ -11,50 +11,49 @@ import java.util.List;
 
 
 /**
- * Classe de persistência para a tabela Permissao
+ * Persistence class for the table PERMISSION
  * @author joao.silva
  */
 @Entity
-@Table(name = "PERMISSAO")
-public class Permissao implements Serializable {
+@Table(name = "PERMISSION")
+public class Permission implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_PERMISSAO";
+	private static final String SEQUENCE_NAME = "PERMISSION_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_PERMISSAO")
+	@Column(name = "PERMISSION_ID")
 	private Long id;
 	
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 50)
-	@Column(name = "NOME")
-	private String nome;
+	@Column(name = "NAME", length = 50)
+	private String name;
 
-	//Associação Many To Many com Usuario
 	@ManyToMany(mappedBy="permissions")
 	private List<User> users;
 
-	protected Permissao() {
+	protected Permission() {
 	}
 
 	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(Long idPermissao) {
-		this.id = idPermissao;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public String getNome() {
-		return this.nome;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public List<User> getUser() {

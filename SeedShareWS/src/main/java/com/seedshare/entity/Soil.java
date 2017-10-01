@@ -11,49 +11,48 @@ import java.util.List;
 
 
 /**
- * Classe de persistência para a tabela Solo
+ * Persistence class for the table SOIL
  * @author joao.silva
  */
 @Entity
-@Table(name = "SOLO")
-public class Solo implements Serializable {
+@Table(name = "SOIL")
+public class Soil implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SQ_SOLO";
+	private static final String SEQUENCE_NAME = "SOIL_SEQ";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ID_SOLO")
+	@Column(name = "SOIL_ID")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRICAO", columnDefinition="TEXT")
-	private String descricao;
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	private String description;
 
 	@Basic(optional = false)
 	@NotNull
-	@Size(max = 50)
-	@Column(name = "NOME")
-	private String nome;
+	@Size(max = 100)
+	@Column(name = "NAME", length = 100)
+	private String name;
 
-	//Associação Many To Many com Especie
 	@ManyToMany
 	@JoinTable(
-		name="ESPECIE_SOLO"
+		name="SPECIES_SOIL"
 		, joinColumns={
-			@JoinColumn(name="ID_SOLO")
+			@JoinColumn(name="SOIL_ID")
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="ID_ESPECIE")
+			@JoinColumn(name="SPECIES_ID")
 			}
 		)
-	private List<Especie> especies;
+	private List<Species> species;
 
-	protected Solo() {
+	protected Soil() {
 	}
 
 	public Long getId() {
@@ -64,28 +63,28 @@ public class Solo implements Serializable {
 		this.id = id;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getNome() {
-		return this.nome;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public List<Especie> getEspecies() {
-		return this.especies;
+	public List<Species> getSpecies() {
+		return this.species;
 	}
 
-	public void setEspecies(List<Especie> especies) {
-		this.especies = especies;
+	public void setSpecies(List<Species> species) {
+		this.species = species;
 	}
 
 }
