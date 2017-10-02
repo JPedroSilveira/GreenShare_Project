@@ -4,11 +4,13 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Persistence class for the table FLOWER_SHOP
@@ -16,7 +18,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "FLOWER_SHOP")
-public class FlowerShop implements Serializable {
+public class FlowerShop extends BasicEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "FLOWER_SHOP_SEQ";
@@ -52,8 +54,8 @@ public class FlowerShop implements Serializable {
 	@Column(name = "NAME", length = 50)
 	private String name;
 
-	@ManyToOne
-	@JoinColumn(name="USER_ID")
+	@JsonIgnore
+	@OneToOne
 	private User user;
 	
 	@Basic(optional = false)
@@ -62,7 +64,41 @@ public class FlowerShop implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date recordCreationDate;
 
+	@JsonIgnore
+	@Transient
+	private List<String> validationErrors;
+	
 	protected FlowerShop() {
+	}
+	
+	public FlowerShop(String cnpj, String description, String logoUrl, User user){
+		this.recordCreationDate = new Date();
+		this.cnpj = cnpj;
+		this.description = description;
+		this.logoURL = logoUrl;
+		this.user = user;
+	}
+	
+	public FlowerShop generateNewValidation() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.description) || this.description.length()>2500){
+			this.validationErrors.add("Descrição inválida");
+		}
+		if(isNullOrEmpty(this.logoURL) || this.logoURL.length() > 2500) {
+			this.validationErrors.add("Url do logo inválida");
+		}
+		if(this.user == null || !(this.user.generateNewValidation().isValid())) {
+			this.validationErrors.add("Usuário inválido");
+		}
+		if(this.cnpj == null || this.cnpj.length() != 14) {
+			this.validationErrors.add("CNPJ inválido");
+		}
+		if(this.recordCreationDate == null || this.recordCreationDate.after(new Date())) {
+			this.validationErrors.add("Data de criação inválida");
+		}
+		
+		return this;
 	}
 
 	public Long getId() {
@@ -75,10 +111,6 @@ public class FlowerShop implements Serializable {
 
 	public String getCnpj() {
 		return this.cnpj;
-	}
-
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
 	}
 
 	public String getDescription() {
@@ -116,8 +148,14 @@ public class FlowerShop implements Serializable {
 	public Date getRecordCreationDate() {
 		return this.recordCreationDate;
 	}
-
-	public void setRecordCreationDate(Date recordCreationDate) {
-		this.recordCreationDate = recordCreationDate;
+	
+	@JsonIgnore
+	public Boolean isValid() {
+		return this.validationErrors.isEmpty();
+	}
+	
+	@JsonIgnore
+	public List<String> getValidationErrors() {
+		return validationErrors;
 	}
 }

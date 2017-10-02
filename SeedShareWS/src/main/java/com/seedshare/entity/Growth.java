@@ -5,6 +5,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
 import java.util.List;
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -14,7 +17,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
  */
 @Entity
 @Table(name = "GROWTH")
-public class Growth implements Serializable {
+public class Growth extends BasicEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "GROWTH_SEQ";
@@ -34,8 +37,34 @@ public class Growth implements Serializable {
 
 	@OneToMany(mappedBy="growth")
 	private List<Species> species;
+	
+	@JsonIgnore
+	@Transient
+	private List<String> validationErrors;
 
 	protected Growth() {
+		this.validationErrors = new ArrayList<String>();
+	}
+	
+	public Growth(String description) {
+		super();
+		this.description = description;
+		this.validationErrors = new ArrayList<String>();
+	}
+
+	public Growth generateNewValidation() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.description) || this.description.length()>2500){
+			this.validationErrors.add("Descrição inválida.");
+		}
+		
+		return this;
+	}
+	
+	@JsonIgnore
+	public Boolean isValid() {
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {

@@ -6,8 +6,12 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -44,27 +48,54 @@ public class Address implements Serializable {
 	@Column(name = "LONGITUDE")
 	private BigDecimal longitude;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="USER_ID")
 	private User user;
 
+	@JsonIgnore
+	@Transient
+	private List<String> validationErrors;
+	
 	protected Address() {
+		this.validationErrors = new ArrayList<String>();
+	}
+	
+	public Address(BigDecimal latitude, BigDecimal longitude, User user) {
+		this.creationDate = new Date();
+		this.user = user;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.validationErrors = new ArrayList<String>();
+	}
+	
+	public Address generateNewValidation() {
+		this.validationErrors.clear();
+		
+		if(this.user == null || !(this.user.generateNewValidation().isValid())){
+			this.validationErrors.add("Usuário inválido");
+		}
+		if(this.latitude == null || this.longitude == null) {
+			this.validationErrors.add("Coordenadas inválidas");
+		}
+		if(this.creationDate == null || this.creationDate.after(new Date())) {
+			this.validationErrors.add("Data de criação inválida");
+		}
+		
+		return this;
+	}
+	
+	@JsonIgnore
+	public Boolean isValid() {
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Date getCreationDate() {
 		return this.creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
 	}
 
 	public BigDecimal getLatitude() {

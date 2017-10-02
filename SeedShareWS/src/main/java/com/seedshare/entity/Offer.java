@@ -6,7 +6,13 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seedshare.enumeration.OfferStatus;
+import com.seedshare.enumeration.OfferType;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +23,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "OFFER")
-public class Offer implements Serializable {
+public class Offer extends BasicEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "OFFER_SEQ";
@@ -66,32 +72,88 @@ public class Offer implements Serializable {
 
 	@OneToMany(mappedBy="offer")
 	private List<Request> requests;
+	
+	@Basic(optional = false)
+	@NotNull
+	@Size(max = 2500)
+	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	private String description;
 
+	@JsonIgnore
+	@Transient
+	private List<String> validationErrors;
+	
 	protected Offer() {
+		this.validationErrors = new ArrayList<String>();
+	}
+	
+	public Offer(Float unitPrice, Integer amount, User user, Species species, String description) {
+		if(this.unitPrice == null || this.unitPrice == (float) 0) {
+			this.type = OfferType.Donation.getOfferType();
+			this.unitPrice = (float) 0;
+		}else {
+			this.type = OfferType.Sale.getOfferType();
+			this.unitPrice = unitPrice;
+		}
+		this.amount = amount;
+		this.species = species;
+		this.offerStatus = OfferStatus.Active.getOfferStatus();
+		this.description = description;
+		this.validationErrors = new ArrayList<String>();
+	}
+	
+	public Offer generateNewValidation() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.description) || this.description.length()>2500){
+			this.validationErrors.add("Descrição inválida");
+		}
+		if(this.type != null && this.unitPrice != null) {
+			if(this.type == OfferType.Sale.getOfferType() && this.unitPrice <= (float) 0) {
+				this.validationErrors.add("Preço unitário inválido para uma venda");
+			}
+			if(this.type == OfferType.Donation.getOfferType() && this.unitPrice != (float) 0) {
+				this.validationErrors.add("Preço unitário inválido para uma doação");
+			}
+		} else {
+			if(this.type == null) {
+				this.validationErrors.add("Tipo de oferta inválida");
+			}
+			if(this.unitPrice == null) {
+				this.validationErrors.add("Preço unitário inválido");
+			}
+		}
+		if(this.amount == null || this.amount<=0) {
+			this.validationErrors.add("Quantidade inválida");
+		}
+		if(this.creationDate == null || this.creationDate.after(new Date())) {
+			this.validationErrors.add("Data de criação inválida");
+		}
+		if(!this.user.generateNewValidation().isValid()) {
+			this.validationErrors.add("Usuário inválido");
+		}
+		if(!this.species.generateNewValidation().isValid()) {
+			this.validationErrors.add("Espécie inválida");
+		}
+		
+		return this;
+	}
+	
+	@JsonIgnore
+	public Boolean isValid() {
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Date getCreationDate() {
 		return this.creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-
 	public Float getUnitPrice() {
 		return this.unitPrice;
-	}
-
-	public void setUnitPrice(Float unitPrice) {
-		this.unitPrice = unitPrice;
 	}
 
 	public Integer getAmount() {
@@ -106,16 +168,16 @@ public class Offer implements Serializable {
 		return this.offerStatus;
 	}
 
-	public void setOfferStatus(Integer offerStatus) {
-		this.offerStatus = offerStatus;
+	public void setOfferStatus(OfferStatus offerStatus) {
+		this.offerStatus = offerStatus.getOfferStatus();
 	}
 
 	public Integer getType() {
 		return this.type;
 	}
 
-	public void setType(Integer type) {
-		this.type = type;
+	public void setType(OfferType type) {
+		this.type = type.getOfferType();
 	}
 
 	public User getUser() {
@@ -137,18 +199,12 @@ public class Offer implements Serializable {
 	public List<Request> getRequests() {
 		return this.requests;
 	}
-
-	public Request addRequest(Request request) {
-		getRequests().add(request);
-		request.setOffer(this);
-
-		return request;
+	
+	public String getDescription() {
+		return description;
 	}
 
-	public Request removeRequest(Request request) {
-		getRequests().remove(request);
-		request.setOffer(null);
-
-		return request;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

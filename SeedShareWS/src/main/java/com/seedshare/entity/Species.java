@@ -7,6 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SPECIES")
-public class Species implements Serializable {
+public class Species extends BasicEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "SPECIES_SEQ";
@@ -124,9 +127,88 @@ public class Species implements Serializable {
 	private List<Offer> offers;
 
 	@OneToMany(mappedBy="species")
+	private List<Post> posts;
+
+	@OneToMany(mappedBy="species")
 	private List<Suggestion> suggestions;
+	
+	@JsonIgnore
+	@Transient
+	private List<String> validationErrors;
 
 	protected Species() {
+		this.validationErrors = new ArrayList<String>();
+	}
+	
+	public Species(Boolean attractBirds, String description, String photoUrl, String cultivationGuide, Boolean isMedicinal, 
+			Boolean attractBees, String scientificName, String commonName, Boolean isOrnamental, Long averageHeight, 
+			Growth growth) {
+		super();
+		this.isApproved = false;
+		this.attractBirds = attractBirds;
+		this.insertionDate = new Date();
+		this.description = description;
+		this.photoUrl = photoUrl;
+		this.cultivationGuide = cultivationGuide;
+		this.isMedicinal = isMedicinal;
+		this.attractBees = attractBees;
+		this.scientificName = scientificName;
+		this.commonName = commonName;
+		this.isOrnamental = isOrnamental;
+		this.averageHeight = averageHeight;
+		this.growth = growth;
+		this.validationErrors = new ArrayList<String>();
+	}
+
+	
+	public Species generateNewValidation() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.description) || this.description.length()>2500){
+			this.validationErrors.add("Descrição inválida.");
+		}
+		if(isNullOrEmpty(this.cultivationGuide) || this.cultivationGuide.length()>5000){
+			this.validationErrors.add("Guia de cultivo inválido.");
+		}
+		if(this.isApproved == null){
+			this.validationErrors.add("Definição de aprovação inválida.");
+		}
+		if(this.attractBees == null){
+			this.validationErrors.add("Definição de atração de abelhas inválida.");
+		}
+		if(this.attractBirds == null){
+			this.validationErrors.add("Definição de atração de pássaros inválida.");
+		}
+		if(this.isMedicinal == null){
+			this.validationErrors.add("Definição de planta medicinal inválida.");
+		}
+		if(this.isOrnamental == null){
+			this.validationErrors.add("Definição de planta ornamental inválida.");
+		}
+		if(this.averageHeight == null || this.averageHeight > 30000){
+			this.validationErrors.add("Altura inválida.");
+		}
+		if(this.commonName == null || this.commonName.length() > 100){
+			this.validationErrors.add("Nome popular inválido.");
+		}
+		if(this.scientificName == null || this.scientificName.length() > 100){
+			this.validationErrors.add("Nome científico inválido.");
+		}
+		if(this.growth == null || !(this.growth.generateNewValidation().isValid())){
+			this.validationErrors.add("Nível de crescimento inválido.");
+		}
+		if(this.photoUrl == null || this.photoUrl.length() > 2500){
+			this.validationErrors.add("URL da foto inválida.");
+		}
+		if(this.insertionDate == null || this.insertionDate.after(new Date())) {
+			this.validationErrors.add("Data de inserção inválida");
+		}
+		return this;
+	}
+	
+	@JsonIgnore
+	public Boolean isValid() {
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
@@ -245,104 +327,28 @@ public class Species implements Serializable {
 		return this.climates;
 	}
 
-	public void setClimas(List<Climate> climates) {
-		this.climates = climates;
-	}
-
 	public List<Soil> getSoils() {
 		return this.soils;
-	}
-
-	public void setSoils(List<Soil> soils) {
-		this.soils = soils;
 	}
 
 	public List<Flower> getFlowers() {
 		return this.flowers;
 	}
 
-	public void setFlowers(List<Flower> flowers) {
-		this.flowers = flowers;
-	}
-
-	public Flower addFlower(Flower flower) {
-		getFlowers().add(flower);
-		flower.setSpecies(this);
-
-		return flower;
-	}
-
-	public Flower removeFlower(Flower flower) {
-		getFlowers().remove(flower);
-		flower.setSpecies(null);
-
-		return flower;
-	}
-
 	public List<Fruit> getFruits() {
 		return this.fruits;
-	}
-
-	public void setFruits(List<Fruit> fruits) {
-		this.fruits = fruits;
-	}
-
-	public Fruit addFruit(Fruit fruit) {
-		getFruits().add(fruit);
-		fruit.setSpecies(this);
-
-		return fruit;
-	}
-
-	public Fruit removeFruit(Fruit fruit) {
-		getFruits().remove(fruit);
-		fruit.setSpecies(null);
-
-		return fruit;
 	}
 
 	public List<Offer> getOffers() {
 		return this.offers;
 	}
-
-	public void setOffers(List<Offer> offers) {
-		this.offers = offers;
-	}
-
-	public Offer addOffer(Offer offers) {
-		getOffers().add(offers);
-		offers.setSpecies(this);
-
-		return offers;
-	}
-
-	public Offer removeOffer(Offer offers) {
-		getOffers().remove(offers);
-		offers.setSpecies(null);
-
-		return offers;
+	
+	public List<Post> getPosts() {
+		return this.posts;
 	}
 
 	public List<Suggestion> getSuggestions() {
 		return this.suggestions;
-	}
-
-	public void setSuggestions(List<Suggestion> suggestions) {
-		this.suggestions = suggestions;
-	}
-
-	public Suggestion addSuggestion(Suggestion suggestion) {
-		getSuggestions().add(suggestion);
-		suggestion.setSpecies(this);
-
-		return suggestion;
-	}
-
-	public Suggestion removeSuggestion(Suggestion suggestion) {
-		getSuggestions().remove(suggestion);
-		suggestion.setSpecies(null);
-
-		return suggestion;
 	}
 
 }
