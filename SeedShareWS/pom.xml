@@ -39,10 +39,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-social-facebook</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
@@ -77,28 +73,28 @@
 		<dependency>
 	        <groupId>org.springframework.security</groupId>
 	        <artifactId>spring-security-web</artifactId>
-	        <version>5.0.0.M4</version>
 	    </dependency>
 		<dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>4.5.2</version>
-        </dependency>
+            </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.7.3</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
         </dependency>
+        <dependency>
+	        <groupId>javax.media.jai</groupId>
+	        <artifactId>com.springsource.javax.media.jai.core</artifactId>
+	        <version>1.1.3</version>
+    	</dependency>
 	</dependencies>
 	
 	<repositories>
@@ -110,6 +106,11 @@
 	            <enabled>false</enabled>
 	        </snapshots>
 	    </repository>
+	    <repository>
+	        <id>com.springsource.repository.bundles.external</id>
+	        <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+	        <url>http://repository.springsource.com/maven/bundles/external</url>
+    	</repository>
 	</repositories>
 
 	<build>
