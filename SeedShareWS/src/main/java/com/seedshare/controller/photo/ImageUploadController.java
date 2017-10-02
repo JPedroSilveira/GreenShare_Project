@@ -8,6 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface ImageUploadController{
 		
-	ResponseEntity<?> handleFileUpload(MultipartFile file);
+	ResponseEntity<String> uploadProfileImage(MultipartFile file);
 	
+    ResponseEntity<String> uploadPostImage(MultipartFile multipartFile, Long postId);
+	
+	ResponseEntity<?> getProfileImage();
+	
+	ResponseEntity<?> getPostImage(Long idPost);
 }
