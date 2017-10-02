@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.seedshare.service.user.UserServiceImpl;
 
 /**
- * Classe de serviço para a autenticação do Usuario
+ * Authentication service 
  * @author joao.silva
  */
 @Service
