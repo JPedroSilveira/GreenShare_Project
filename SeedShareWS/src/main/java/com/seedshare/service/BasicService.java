@@ -1,7 +1,6 @@
 package com.seedshare.service;
 
 /**
- * Interface de service básica
  * @author joao.silva
  * @param <Entity>
  * @param <ID>
