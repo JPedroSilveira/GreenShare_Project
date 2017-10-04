@@ -9,5 +9,5 @@ import com.seedshare.entity.Species;
  * @author joao.silva
  */
 public interface SpeciesRepository extends PagingAndSortingRepository<Species, Long>{
-
+	public Species findOneByCommonName(String commonName);
 }
