@@ -11,6 +11,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seedshare.entity.abstracts.AbstractEntity;
+import com.seedshare.entity.interfaces.PhotogenicEntity;
+import com.seedshare.enumeration.PhotoType;
 
 /**
  * Persistence class for the table FLOWER_SHOP
@@ -18,11 +21,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "FLOWER_SHOP")
-public class FlowerShop extends BasicEntity implements Serializable {
+public class FlowerShop extends AbstractEntity implements Serializable, PhotogenicEntity {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "FLOWER_SHOP_SEQ";
 	
+	private static final PhotoType PHOTO_TYPE = PhotoType.FLOWER_SHOP;
+		
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
@@ -41,6 +46,11 @@ public class FlowerShop extends BasicEntity implements Serializable {
 	@Size(max = 2500)
 	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
 	private String description;
+	
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "HAS_IMAGE")
+	private Boolean hasImage;
 
 	@Basic(optional = false)
 	@NotNull
@@ -77,6 +87,7 @@ public class FlowerShop extends BasicEntity implements Serializable {
 		this.description = description;
 		this.logoURL = logoUrl;
 		this.user = user;
+		this.hasImage = false;
 	}
 	
 	public FlowerShop generateNewValidation() {
@@ -158,4 +169,20 @@ public class FlowerShop extends BasicEntity implements Serializable {
 	public List<String> getValidationErrors() {
 		return validationErrors;
 	}
+
+	@Override
+	public PhotoType getPhotoType() {
+		return FlowerShop.PHOTO_TYPE;
+	}
+	
+	@Override
+	public Boolean getHasImage() {
+		return this.hasImage;
+	}
+	
+	@Override
+	public void setHasImage(Boolean hasImage) {
+		this.hasImage = hasImage;
+	}
+
 }

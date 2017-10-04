@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.seedshare.entity.abstracts.AbstractEntity;
+
 import java.util.List;
 
 
@@ -16,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "PERMISSION")
-public class Permission implements Serializable {
+public class Permission extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "PERMISSION_SEQ";
@@ -62,6 +64,12 @@ public class Permission implements Serializable {
 
 	public void setUser(List<User> users) {
 		this.users = users;
+	}
+
+	@Override
+	public Boolean isValid() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

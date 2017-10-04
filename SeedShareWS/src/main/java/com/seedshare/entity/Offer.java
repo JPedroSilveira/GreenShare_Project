@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seedshare.entity.abstracts.AbstractEntity;
 import com.seedshare.enumeration.OfferStatus;
 import com.seedshare.enumeration.OfferType;
 
@@ -23,7 +24,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "OFFER")
-public class Offer extends BasicEntity implements Serializable {
+public class Offer extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "OFFER_SEQ";

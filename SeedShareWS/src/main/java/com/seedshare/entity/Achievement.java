@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.seedshare.entity.abstracts.AbstractEntity;
+
 import java.util.List;
 
 
@@ -16,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ACHIEVEMENT")
-public class Achievement implements Serializable {
+public class Achievement extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "ACHIEVEMENT_SEQ";
@@ -130,6 +132,12 @@ public class Achievement implements Serializable {
 		userAchievement.setAchievement(null);
 
 		return userAchievement;
+	}
+
+	@Override
+	public Boolean isValid() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

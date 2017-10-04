@@ -8,6 +8,8 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.seedshare.entity.abstracts.AbstractEntity;
+
 
 /**
  * Persistence class for the table USER_ACHIEVEMENT
@@ -15,7 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "USER_ACHIEVEMENT")
-public class UserAchievement implements Serializable {
+public class UserAchievement extends AbstractEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -88,6 +90,12 @@ public class UserAchievement implements Serializable {
 
 	public void setConquestDate(Date conquestDate) {
 		this.conquestDate = conquestDate;
+	}
+
+	@Override
+	public Boolean isValid() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

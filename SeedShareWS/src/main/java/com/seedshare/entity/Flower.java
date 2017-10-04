@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.seedshare.entity.abstracts.AbstractEntity;
+
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "FLOWER")
-public class Flower implements Serializable {
+public class Flower extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "FLOWER_SEQ";
@@ -148,6 +150,12 @@ public class Flower implements Serializable {
 
 	public void setRecordCreationDate(Date recordCreationDate) {
 		this.recordCreationDate = recordCreationDate;
+	}
+
+	@Override
+	public Boolean isValid() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

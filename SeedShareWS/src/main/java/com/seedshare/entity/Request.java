@@ -6,6 +6,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.seedshare.entity.abstracts.AbstractEntity;
+
 import java.util.Date;
 
 
@@ -15,7 +17,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "REQUEST")
-public class Request implements Serializable {
+public class Request extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "REQUEST_SEQ";
@@ -87,6 +89,12 @@ public class Request implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	@Override
+	public Boolean isValid() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -8,6 +8,8 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.seedshare.entity.abstracts.AbstractEntity;
+
 
 /**
  * Persistence class for the table SUGGESTION
@@ -15,7 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "SUGGESTION")
-public class Suggestion implements Serializable {
+public class Suggestion extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "SUGGESTION_SEQ";
@@ -74,5 +76,11 @@ public class Suggestion implements Serializable {
 
 	public void setRecordCreationDate(Date recordCreationDate) {
 		this.recordCreationDate = recordCreationDate;
+	}
+
+	@Override
+	public Boolean isValid() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

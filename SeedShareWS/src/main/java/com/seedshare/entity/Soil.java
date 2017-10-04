@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.seedshare.entity.abstracts.AbstractEntity;
+
 import java.util.List;
 
 
@@ -16,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SOIL")
-public class Soil implements Serializable {
+public class Soil extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "SOIL_SEQ";
@@ -85,6 +87,12 @@ public class Soil implements Serializable {
 
 	public void setSpecies(List<Species> species) {
 		this.species = species;
+	}
+
+	@Override
+	public Boolean isValid() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

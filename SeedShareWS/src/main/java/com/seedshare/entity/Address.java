@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seedshare.entity.abstracts.AbstractEntity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ADDRESS")
-public class Address implements Serializable {
+public class Address extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "ADDRESS_SEQ";

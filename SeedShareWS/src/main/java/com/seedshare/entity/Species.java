@@ -8,6 +8,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seedshare.entity.abstracts.AbstractEntity;
+import com.seedshare.entity.interfaces.PhotogenicEntity;
+import com.seedshare.enumeration.PhotoType;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,11 +23,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SPECIES")
-public class Species extends BasicEntity implements Serializable {
+public class Species extends AbstractEntity implements Serializable, PhotogenicEntity {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "SPECIES_SEQ";
 	
+	private static final PhotoType PHOTO_TYPE = PhotoType.SPECIES;
+		
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
@@ -56,10 +61,9 @@ public class Species extends BasicEntity implements Serializable {
 
 	@Basic(optional = false)
 	@NotNull
-	@Size(max = 2500)
-	@Column(name = "PHOTO_URL", columnDefinition="TEXT", length = 2500)
-	private String photoUrl;
-
+	@Column(name = "HAS_IMAGE")
+	private Boolean hasImage;
+	
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 5000)
@@ -140,7 +144,7 @@ public class Species extends BasicEntity implements Serializable {
 		this.validationErrors = new ArrayList<String>();
 	}
 	
-	public Species(Boolean attractBirds, String description, String photoUrl, String cultivationGuide, Boolean isMedicinal, 
+	public Species(Boolean attractBirds, String description, String cultivationGuide, Boolean isMedicinal, 
 			Boolean attractBees, String scientificName, String commonName, Boolean isOrnamental, Long averageHeight, 
 			Growth growth) {
 		super();
@@ -148,7 +152,7 @@ public class Species extends BasicEntity implements Serializable {
 		this.attractBirds = attractBirds;
 		this.insertionDate = new Date();
 		this.description = description;
-		this.photoUrl = photoUrl;
+		this.hasImage = false;
 		this.cultivationGuide = cultivationGuide;
 		this.isMedicinal = isMedicinal;
 		this.attractBees = attractBees;
@@ -196,9 +200,6 @@ public class Species extends BasicEntity implements Serializable {
 		}
 		if(this.growth == null || !(this.growth.generateNewValidation().isValid())){
 			this.validationErrors.add("Nível de crescimento inválido.");
-		}
-		if(this.photoUrl == null || this.photoUrl.length() > 2500){
-			this.validationErrors.add("URL da foto inválida.");
 		}
 		if(this.insertionDate == null || this.insertionDate.after(new Date())) {
 			this.validationErrors.add("Data de inserção inválida");
@@ -249,14 +250,6 @@ public class Species extends BasicEntity implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getPhotoUrl() {
-		return this.photoUrl;
-	}
-
-	public void setPhotoUrl(String photoUrl) {
-		this.photoUrl = photoUrl;
 	}
 
 	public String getCultivationGuide() {
@@ -349,6 +342,20 @@ public class Species extends BasicEntity implements Serializable {
 
 	public List<Suggestion> getSuggestions() {
 		return this.suggestions;
+	}
+	
+	@Override
+	public PhotoType getPhotoType() {
+		return Species.PHOTO_TYPE;
+	}
+	
+	public void setHasImage(Boolean hasImage) {
+		this.hasImage = hasImage;
+	}
+	
+	@Override
+	public Boolean getHasImage() {
+		return this.hasImage;
 	}
 
 }

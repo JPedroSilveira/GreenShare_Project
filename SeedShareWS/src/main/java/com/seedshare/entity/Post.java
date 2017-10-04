@@ -23,6 +23,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seedshare.entity.abstracts.AbstractEntity;
+import com.seedshare.entity.interfaces.PhotogenicEntity;
+import com.seedshare.enumeration.PhotoType;
 
 /**
  * Persistence class for the table POST
@@ -30,11 +33,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "POST")
-public class Post extends BasicEntity implements Serializable{
+public class Post extends AbstractEntity implements Serializable, PhotogenicEntity{
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "POST_SEQ";
 	
+	private static final PhotoType PHOTO_TYPE = PhotoType.POST;
+		
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
@@ -126,14 +131,6 @@ public class Post extends BasicEntity implements Serializable{
 	public Species getSpecies() {
 		return this.species;
 	}
-	
-	public Boolean getHasImage() {
-		return this.hasImage;
-	}
-	
-	public void setHasImage(Boolean hasImage) {
-		this.hasImage = hasImage;
-	}
 
 	public void setSpecies(Species species) {
 		this.species = species;
@@ -147,4 +144,18 @@ public class Post extends BasicEntity implements Serializable{
 		this.text = text;
 	}
 	
+	@Override
+	public PhotoType getPhotoType() {
+		return Post.PHOTO_TYPE;
+	}
+	
+	@Override
+	public Boolean getHasImage() {
+		return this.hasImage;
+	}
+	
+	@Override
+	public void setHasImage(Boolean hasImage) {
+		this.hasImage = hasImage;
+	}
 }
