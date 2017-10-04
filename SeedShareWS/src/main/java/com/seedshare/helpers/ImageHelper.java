@@ -86,14 +86,14 @@ public class ImageHelper {
 	}
 	
 	private File getImageFile() {
-		return new File(imageDirectory.getPath().concat("/").concat(this.photoType.getDirectoryName()).concat(this.imageFormat));
+		return new File(imageDirectory.getPath().concat("/").concat(this.photoType.getDirectoryName()).concat(".").concat(this.imageFormat));
 	}
 	
 	private File getOrTryCreateImageDirectory() throws DirectoryException {
 		char[] idInCharArray = this.id.toString().toCharArray();
 		String idDirectory = getIdDirectory(idInCharArray);
 		File file = new File(IMAGES_DIRECTORY.concat("/").concat(this.photoType.getDirectoryName()).concat("/").concat(idDirectory));
-		if(!file.exists() || !file.mkdirs()) {
+		if(!file.exists() && !file.mkdirs()) {
 			throw new DirectoryException("Falha ao encontrar diretório da imagem.");
 		}
 		return file;
