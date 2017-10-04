@@ -9,28 +9,37 @@ import javax.imageio.ImageIO;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.seedshare.entity.Post;
-import com.seedshare.entity.User;
+import com.seedshare.entity.interfaces.PhotogenicEntity;
+import com.seedshare.enumeration.PhotoType;
+import com.seedshare.exception.DirectoryException;
 
 /**
  * @author joao.silva
  */
 public class ImageHelper {
-
+	
+	/*	  To use ImageHelper	
+	 *
+	 * 	- Create a new value in Enum PhotoType Where the 'directoryName' will be used to name the folder where the images are saved.
+	 *  - Set a static final attribute called PHOTO_TYPE that references the Enum of your Entity Class on the Enum PhotoType.
+	 *  - Implements PhotogenicEntity interface on your Entity Class and set the getHasImage(), setHasImage() 
+	 *    and getPhotoType() with the correct variables.
+	 *  - Create the routes on ImageUploadController and implement they on ImageUploadControllerImpl, on route method you can call
+	 * 	  the methods saveImage and getImage.
+	 *  - On PhotogenicServiceImpl you will need to add a conditional to save the hasImage attribute using your entity's repository.
+	 *  - The image will be saved based on the entity id and only one image per entity can be saved.
+	 *  - On save a new image the old is deleted.
+	 *  
+	 * */
 	private final static String IMAGES_DIRECTORY = "images/";
-	private final static String PROFILE_DIRECTORY = "profile/";
-	private final static String POST_DIRECTORY = "post/";
-	private final static String PROFILE_IMAGE_NAME = "profile.";
-	private final static String POST_IMAGE_NAME = "post.";
-	private final static Integer MAX_FILE_SIZE = 5000000;
+
+	private final static int MAX_FILE_SIZE = 5000000;
 
 	private MultipartFile multiPartFile;
-
-	private Post post;
-
-	private Boolean isPostImage;
-
-	private Boolean isProfilePhoto;
+	
+	private PhotogenicEntity entity;
+	
+	private PhotoType photoType;
 
 	private File imageDirectory;
 
@@ -38,129 +47,58 @@ public class ImageHelper {
 
 	private String imageFormat;
 
-	private User user;
+	private Long id;
 
-	public ImageHelper(MultipartFile multiPartFile, Post post, User user) {
+	public ImageHelper(PhotogenicEntity entity) throws DirectoryException {
+		this.entity = entity;
+		this.id = this.entity.getId();
+		this.photoType = this.entity.getPhotoType();
+		this.imageDirectory = getOrTryCreateImageDirectory();
+	}
+
+	public Boolean save(MultipartFile multiPartFile) throws IOException{
 		this.multiPartFile = multiPartFile;
-		this.post = post;
-		this.isPostImage = (post != null);
-		this.user = user;
-		this.isProfilePhoto = (user != null);
-		configureImageFormat();
-		genereteImageDirectory();
-	}
-	
-	public ImageHelper(Post post, User user) {
-		this.multiPartFile = null;
-		this.post = post;
-		this.user = user;
-		this.isPostImage = (post != null);
-		this.isProfilePhoto = (user != null);
-		genereteImageDirectory();
-		configureImageFormat();
-	}
-
-	public Boolean cleanDiretoryAndSaveImage() {
-		if (this.multiPartFile != null && isValidImage() && tryCleanDirectory()) {
+		this.imageFormat = this.multiPartFile.getContentType().substring(this.multiPartFile.getContentType().indexOf('/') + 1);
+		if (isValidImage() && cleanDirectory()) {
 			this.image = getImageFile();
-			try {
-				saveImage();
-				return true;
-			} catch (IOException ex) {
-				return null;
-			}
-		}
-		return false;
-	}
-	
-	public BufferedImage getImage() {
-		File imageFile = getImageFile();
-		if(imageFile != null && imageFile.isFile()) {
-				try {
-					return ImageIO.read(imageFile);
-				} catch (IOException e) {
-					return null;
-				}
-		}
-		return null;
-	}
-
-	public Boolean tryCleanDirectory() {
-		if (this.imageDirectory.isDirectory()) {
-			File[] files = this.imageDirectory.listFiles();
-			for (File file : files) {
-				Boolean fileIsDeleted = file.delete();
-				if(!fileIsDeleted) return false;
-			}
+			FileOutputStream imageOutput = new FileOutputStream(this.image);
+			imageOutput.write(multiPartFile.getBytes());
+			imageOutput.close();
 			return true;
 		}
 		return false;
 	}
 
+	public BufferedImage getImage() throws IOException{
+		File[] files = this.imageDirectory.listFiles();
+		this.imageFormat = files[0].getName().substring(files[0].getName().indexOf(".")+1);
+		File imageFile = getImageFile();			
+		if(imageFile != null && imageFile.isFile()) {
+			return ImageIO.read(imageFile);
+		}
+		return null;
+	}
+	
 	private Boolean isValidImage() {
-		return this.multiPartFile.getSize() <= MAX_FILE_SIZE
+		return this.multiPartFile != null 
+				&& this.multiPartFile.getSize() <= MAX_FILE_SIZE
 				&& (this.imageFormat.equals("png") || this.imageFormat.equals("jpg") || this.imageFormat.equals("jpeg"));
 	}
-
-	private void genereteImageDirectory() {
-		if (!(this.isPostImage && this.isProfilePhoto)) {
-			this.isProfilePhoto = true;
-			if (this.isProfilePhoto) {
-				this.imageDirectory = genereteProfilePhotoDirectory();
-			} else if (this.isPostImage) {
-				this.imageDirectory = generetePostImageDirectory();
-			}
-		}
-	}
-
+	
 	private File getImageFile() {
-		if(this.isPostImage) {
-			return new File(imageDirectory.getPath() + "/" + POST_IMAGE_NAME + this.imageFormat);
-		}else if(this.isProfilePhoto) {
-			return new File(imageDirectory.getPath() + "/" + PROFILE_IMAGE_NAME + this.imageFormat);
-		}
-		return null;
+		return new File(imageDirectory.getPath().concat("/").concat(this.photoType.getDirectoryName()).concat(this.imageFormat));
 	}
-
-	private void configureImageFormat() {
-		if(this.multiPartFile != null) {
-			this.imageFormat = this.multiPartFile.getContentType().substring(this.multiPartFile.getContentType().indexOf('/') + 1);
-		}else {
-			File[] files = this.imageDirectory.listFiles();
-			this.imageFormat = files[0].getName().substring(files[0].getName().indexOf(".")+1);
-		}
-	}
-
-	private void saveImage() throws IOException {
-		FileOutputStream imageOutput = new FileOutputStream(this.image);
-		imageOutput.write(multiPartFile.getBytes());
-		imageOutput.close();
-	}
-
-	private File genereteProfilePhotoDirectory() {
-		char[] idInCharArray = this.user.getId().toString().toCharArray();
+	
+	private File getOrTryCreateImageDirectory() throws DirectoryException {
+		char[] idInCharArray = this.id.toString().toCharArray();
 		String idDirectory = getIdDirectory(idInCharArray);
-		return createDirectory(new java.io.File(IMAGES_DIRECTORY + PROFILE_DIRECTORY + idDirectory));
-	}
-
-	private File generetePostImageDirectory() {
-		char[] idInCharArray = this.post.getId().toString().toCharArray();
-		String idDirectory = getIdDirectory(idInCharArray);
-		return createDirectory(new java.io.File(IMAGES_DIRECTORY + POST_DIRECTORY + idDirectory));
-	}
-
-	private File createDirectory(File directory) {
-		if (directory != null) {
-			if (directory.exists()) {
-				return directory;
-			} else {
-				if (directory.mkdirs()) {
-					return directory;
-				}
-			}
+		File file = new File(IMAGES_DIRECTORY.concat("/").concat(this.photoType.getDirectoryName()).concat("/").concat(idDirectory));
+		if(!file.exists() || !file.mkdirs()) {
+			throw new DirectoryException("Falha ao encontrar diretório da imagem.");
 		}
-		return null;
+		return file;
 	}
+	
 	private String getIdDirectory(char[] idInCharArray) {
 		StringBuilder idDirectory = new StringBuilder();
 
@@ -169,5 +107,19 @@ public class ImageHelper {
 		}
 
 		return idDirectory.toString();
+	}
+	
+	private Boolean cleanDirectory() {
+		if (this.imageDirectory.isDirectory()) {
+			File[] files = this.imageDirectory.listFiles();
+			for (File file : files) {
+				Boolean fileIsDeleted = file.delete();
+				if(!fileIsDeleted) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 }
