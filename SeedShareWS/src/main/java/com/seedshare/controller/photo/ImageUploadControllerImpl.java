@@ -14,11 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.seedshare.UserUtils;
+import com.seedshare.entity.FlowerShop;
 import com.seedshare.entity.Post;
+import com.seedshare.entity.Species;
 import com.seedshare.entity.User;
+import com.seedshare.entity.interfaces.PhotogenicEntity;
+import com.seedshare.exception.DirectoryException;
 import com.seedshare.helpers.ImageHelper;
+import com.seedshare.service.photo.PhotogenicServiceImpl;
 import com.seedshare.service.post.PostServiceImpl;
-import com.seedshare.service.user.UserServiceImpl;
+import com.seedshare.service.species.SpeciesServiceImpl;
 
 /**
  * @author joao.silva
@@ -27,17 +32,19 @@ import com.seedshare.service.user.UserServiceImpl;
 public class ImageUploadControllerImpl extends UserUtils implements ImageUploadController{
 
 	@Autowired
-    UserServiceImpl usuarioService;
+    PhotogenicServiceImpl photogenicService;
 	
 	@Autowired
-	PostServiceImpl postService;
-    
+    PostServiceImpl postService;
+	
+	@Autowired
+    SpeciesServiceImpl speciesService;
+	
     @Override
     @PostMapping("/user/image/upload")
-    public ResponseEntity<String> uploadProfileImage(@RequestParam("photo") MultipartFile multipartFile) {
+    public ResponseEntity<String> uploadUserImage(@RequestParam("photo") MultipartFile multipartFile) {
     	User currentUser = getCurrentUser();
-    	Boolean imageSaved = saveImage(multipartFile, null, currentUser);
-    	return returnMessageImageSaved(imageSaved);
+    	return saveImage(multipartFile, currentUser);
     }
     
     @Override
@@ -46,74 +53,100 @@ public class ImageUploadControllerImpl extends UserUtils implements ImageUploadC
     	Post post = postService.findOne(postId);
     	User currentUser = getCurrentUser();
     	if(post.getUser().getId() == currentUser.getId()) {
-    		Boolean imageSaved = saveImage(multipartFile, post, null);
-        	return returnMessageImageSaved(imageSaved);
+    		return saveImage(multipartFile, post);
     	}
-    	return new ResponseEntity<String>("Usuário inválido", HttpStatus.UNAUTHORIZED);
+    	return new ResponseEntity<String>("Usuário inválido.", HttpStatus.UNAUTHORIZED);
+    }
+    
+    @Override
+    @PostMapping("/flower_shop/image/upload")
+    public ResponseEntity<String> uploadFlowerShopImage(@RequestParam("photo") MultipartFile multipartFile) {
+    	User currentUser = getCurrentUser();
+    	FlowerShop flowerShop = currentUser.getFlowerShop();
+    	if(flowerShop != null) {
+        	return saveImage(multipartFile, flowerShop);
+    	}
+    	return new ResponseEntity<String>("Usuário inválido.", HttpStatus.UNAUTHORIZED);
+    }
+    
+    @Override
+    @PostMapping("/species/image/upload")
+    public ResponseEntity<String> uploadSpeciesImage(@RequestParam("photo") MultipartFile multipartFile, @RequestParam("speciesId") Long speciesId) {
+    	Species species = speciesService.findOne(speciesId);
+    	if(species != null) {
+        	return saveImage(multipartFile, species);
+    	}
+    	return new ResponseEntity<String>("Espécie inválida.", HttpStatus.UNAUTHORIZED);
     }
     
     @Override
     @GetMapping("/user/image/get")
-	public ResponseEntity<?> getProfileImage() {
+	public ResponseEntity<?> getUserImage() {
     	User currentUser = getCurrentUser();
-    	BufferedImage image;
-		try {
-			image = getImage(null,currentUser);
-		} catch (IOException e) {
-			image = null;
-		} 
-    	if(image != null) {
-        	return new ResponseEntity<BufferedImage>(image, HttpStatus.OK);
-    	}
-    	return new ResponseEntity<String>("Imagem não encontrada", HttpStatus.NOT_FOUND);
+    	return getImage(currentUser);
 	}
     
     @Override
     @GetMapping("/post/image/get/{postId}")
 	public ResponseEntity<?> getPostImage(@PathVariable Long postId) {
     	Post post = postService.findOne(postId);
-    	BufferedImage image;
-		try {
-			image = getImage(post,null);
-		} catch (IOException e) {
-			image = null;
-		}
-    	if(image != null) {
-    		return new ResponseEntity<BufferedImage>(image, HttpStatus.OK);
-    	} else {
-    		return new ResponseEntity<String>("Falha ao carregar imagem", HttpStatus.NOT_FOUND);
-    	}
+		return getImage(post);
 	}
     
-    private ResponseEntity<String> returnMessageImageSaved(Boolean successOnSaveImage){
-    	if(successOnSaveImage) {
-    		return new ResponseEntity<String>("Imagem salva com sucesso", HttpStatus.CREATED);
-    	}else {
-    		return new ResponseEntity<String>("Formato de imagem inválido ou arquivo muito grande", HttpStatus.NOT_ACCEPTABLE);
+    @Override
+    @GetMapping("/flower_shop/image/get/")
+	public ResponseEntity<?> getFlowerShopImage() {
+    	User currentUser = getCurrentUser();
+    	FlowerShop flowerShop = currentUser.getFlowerShop();
+    	if(flowerShop != null) {
+        	return getImage(flowerShop);
     	}
-    }
+    	return new ResponseEntity<String>("Usuário inválido.", HttpStatus.UNAUTHORIZED);
+	}
     
-    private Boolean saveImage(MultipartFile multiPartFile, Post post, User user)
-    {  
-    	ImageHelper imageHelper = new ImageHelper(multiPartFile, post, user);
-    	if(imageHelper.cleanDiretoryAndSaveImage()) {
-    		if(user != null) {
-    			user.setHasProfileImage(true);
-    			usuarioService.save(user);
-    		}else{
-    			post.setHasImage(true);
-    			postService.save(post);
+    @Override
+    @GetMapping("/species/image/get/{speciesId}")
+	public ResponseEntity<?> getSpeciesImage(@PathVariable Long speciesId) {
+    	Species species = speciesService.findOne(speciesId);
+		return getImage(species);
+	}
+    
+    private ResponseEntity<String> saveImage(MultipartFile multiPartFile, PhotogenicEntity photogenicEntity){
+    	try {
+    		ImageHelper imageHelper = new ImageHelper(photogenicEntity);
+    		if(imageHelper.save(multiPartFile)) {
+    			if(!photogenicEntity.getHasImage()){
+        			photogenicEntity.setHasImage(true);
+        			if(photogenicService.save(photogenicEntity) == null) {
+        				return new ResponseEntity<String>("Erro ao salvar dados no banco.", HttpStatus.INTERNAL_SERVER_ERROR);
+        			}
+        		}
+    			return new ResponseEntity<String>("Imagem salva com sucesso", HttpStatus.CREATED);
     		}
-    		return true;
-    	}
-    	imageHelper.tryCleanDirectory();
-    	return false;
+    		return new ResponseEntity<String>("Formato de imagem inválido ou arquivo muito grande", HttpStatus.NOT_ACCEPTABLE);
+		} catch (DirectoryException e) {
+	    	return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (IOException e) {
+	    	return new ResponseEntity<String>("Erro ao ler imagem.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     }
     
-    private BufferedImage getImage(Post post, User user) throws IOException {
-    	ImageHelper imageHelper = new ImageHelper(post, user);
-    	return imageHelper.getImage();
+    private ResponseEntity<?> getImage(PhotogenicEntity photogenicEntity){
+		try {
+			ImageHelper imageHelper = new ImageHelper(photogenicEntity);
+			try {
+				BufferedImage bufferedImage = imageHelper.getImage();
+				if(bufferedImage != null) {
+					return new ResponseEntity<BufferedImage>(bufferedImage, HttpStatus.OK);
+				}else {
+					return new ResponseEntity<String>("Imagem não encontrada", HttpStatus.NOT_FOUND);
+				}
+			} catch (IOException e) {
+		    	return new ResponseEntity<String>("Erro ao ler imagem.", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (DirectoryException e) {
+	    	return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     }
-
     
 }
