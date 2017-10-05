@@ -22,8 +22,8 @@ public class ImageHelper {
 	 *
 	 * 	- Create a new value in Enum PhotoType Where the 'directoryName' will be used to name the folder where the images are saved.
 	 *  - Set a static final attribute called PHOTO_TYPE that references the Enum of your Entity Class on the Enum PhotoType.
-	 *  - Implements PhotogenicEntity interface on your Entity Class and set the getHasImage(), setHasImage() 
-	 *    and getPhotoType() with the correct variables.
+	 *  - Extends Class AbstractPhotogenicClass on your Entity giving his type and set the super(PHOTO_TYPE) contructor with the PHOTO_TYPE
+	 *  - The constructor of a newer entity is super(PHOTO_TYPE, true) and the constructor of a existing entity is super(PHOTO_TYPE)
 	 *  - Create the routes on ImageUploadController and implement they on ImageUploadControllerImpl, on route method you can call
 	 * 	  the methods saveImage and getImage.
 	 *  - On PhotogenicServiceImpl you will need to add a conditional to save the hasImage attribute using your entity's repository.
