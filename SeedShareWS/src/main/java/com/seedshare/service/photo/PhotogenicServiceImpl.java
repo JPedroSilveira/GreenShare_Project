@@ -4,13 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.seedshare.UserUtils;
+import com.seedshare.entity.Achievement;
+import com.seedshare.entity.Flower;
 import com.seedshare.entity.FlowerShop;
+import com.seedshare.entity.Fruit;
+import com.seedshare.entity.Offer;
 import com.seedshare.entity.Post;
 import com.seedshare.entity.Species;
 import com.seedshare.entity.User;
 import com.seedshare.entity.interfaces.PhotogenicEntity;
 import com.seedshare.enumeration.PhotoType;
+import com.seedshare.repository.AchievementRepository;
+import com.seedshare.repository.FlowerRepository;
 import com.seedshare.repository.FlowerShopRepository;
+import com.seedshare.repository.FruitRepository;
+import com.seedshare.repository.OfferRepository;
 import com.seedshare.repository.PostRepository;
 import com.seedshare.repository.SpeciesRepository;
 import com.seedshare.repository.UserRepository;
@@ -33,6 +41,18 @@ public class PhotogenicServiceImpl extends UserUtils implements PhotogenicServic
 	
 	@Autowired
 	SpeciesRepository speciesRepository;
+	
+	@Autowired
+	FlowerRepository flowerRepository;
+	
+	@Autowired
+	AchievementRepository achievementRepository;
+	
+	@Autowired
+	FruitRepository fruitRepository;
+	
+	@Autowired
+	OfferRepository offerRepository;
 
 	@Override
 	public PhotogenicEntity save(PhotogenicEntity photogenicEntity) {
@@ -54,6 +74,22 @@ public class PhotogenicServiceImpl extends UserUtils implements PhotogenicServic
 			Species species = speciesRepository.findOne(id);
 			species.setHasImage(true);
 			return speciesRepository.save(species);
+		}else if(photoType == PhotoType.ACHIEVEMENT) {
+			Achievement achievement = achievementRepository.findOne(id);
+			achievement.setHasImage(true);
+			return achievementRepository.save(achievement);
+		}else if(photoType == PhotoType.FLOWER) {
+			Flower flower = flowerRepository.findOne(id);
+			flower.setHasImage(true);
+			return flowerRepository.save(flower);
+		}else if(photoType == PhotoType.FRUIT) {
+			Fruit fruit = fruitRepository.findOne(id);
+			fruit.setHasImage(true);
+			return fruitRepository.save(fruit);
+		}else if(photoType == PhotoType.OFFER) {
+			Offer offer = offerRepository.findOne(id);
+			offer.setHasImage(true);
+			return offerRepository.save(offer);
 		}
 		return null;
 	}

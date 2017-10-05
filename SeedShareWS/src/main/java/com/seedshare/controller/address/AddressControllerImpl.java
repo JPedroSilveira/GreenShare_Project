@@ -22,7 +22,7 @@ import com.seedshare.service.address.AddressServiceImpl;
  * @author joao.silva
  */
 @RestController
-@RequestMapping("/address")
+@RequestMapping("/user/address")
 public class AddressControllerImpl extends UserUtils implements AddressController {
 
 	@Autowired
@@ -33,7 +33,7 @@ public class AddressControllerImpl extends UserUtils implements AddressControlle
 	public ResponseEntity<?> addAddress(@RequestBody Address address) {
 		User currentUser = getCurrentUser();
 		Address newAddress = new Address(address.getLatitude(), address.getLongitude(), currentUser);
-		Boolean validAddress = newAddress.generateNewValidation().isValid();
+		Boolean validAddress = newAddress.isValid();
 		if(validAddress) {
 			if(addressService.save(newAddress) != null) {
 				return new ResponseEntity<String>("Endereço registrado com sucesso", HttpStatus.OK);   
@@ -73,7 +73,7 @@ public class AddressControllerImpl extends UserUtils implements AddressControlle
 		List<Address> addresses = addressService.findAllByUser(getCurrentUser());
 		if(addresses != null) {
 			return new ResponseEntity<List<Address>>(addresses, HttpStatus.OK);   
-		}else {
+		} else {
 			return new ResponseEntity<String>("Endereço não encontrado", HttpStatus.NOT_FOUND);
 		}
     }

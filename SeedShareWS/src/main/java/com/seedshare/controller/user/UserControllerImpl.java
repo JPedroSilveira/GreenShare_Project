@@ -43,7 +43,6 @@ public class UserControllerImpl extends UserUtils implements UserController{
 	public ResponseEntity<?> changeName(@PathVariable String name) {
 		User currentUser = getCurrentUser();
 		currentUser.setName(name);
-		currentUser.generateNewValidation();
 		if(currentUser.isValid()) {  
 			if(userService.save(currentUser) != null) {
 				return new ResponseEntity<String>("Senha alterada com sucesso", HttpStatus.OK);   

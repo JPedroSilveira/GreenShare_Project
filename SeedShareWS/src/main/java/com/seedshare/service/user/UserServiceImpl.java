@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User create(User user) {
     	User newUser = new User(user.getCpf(), user.getName(), user.getEmail(), user.getPassword(), user.getIsLegalPerson());
-    	if(newUser.generateNewValidation().isValid() && validUniqueKeys(newUser)){
+    	if(newUser.isValid() && validUniqueKeys(newUser)){
             return userRepository.save(newUser);
     	}else{
     		if(!isUniqueEmail(newUser.getEmail())) {
@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService{
 		return userRepository.findOneByEmail(email);
 	}
 	
-	@Override
-	public User findOneByCpf(String cpf) {
+	private User findOneByCpf(String cpf) {
 		return userRepository.findOneByCpf(cpf);
 	}
 	

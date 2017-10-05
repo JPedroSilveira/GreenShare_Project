@@ -44,8 +44,8 @@ public class FlowerShopControllerImpl extends UserUtils implements FlowerShopCon
 	public ResponseEntity<?> createFlowerShopByUser(@RequestBody FlowerShop flowerShop) {
 		User currentUser = getCurrentUser();
 		if(currentUser.getIsLegalPerson()) {
-			FlowerShop newFlowerShop = new FlowerShop(flowerShop.getCnpj(),flowerShop.getDescription(),flowerShop.getLogoURL(),currentUser);
-			if(newFlowerShop.generateNewValidation().isValid()) {
+			FlowerShop newFlowerShop = new FlowerShop(flowerShop.getCnpj(),flowerShop.getDescription(),currentUser);
+			if(newFlowerShop.isValid()) {
 				if(flowerShopService.save(newFlowerShop) != null) {
 					return new ResponseEntity<FlowerShop>(flowerShop, HttpStatus.OK);   
 				}else {

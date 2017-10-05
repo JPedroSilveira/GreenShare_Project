@@ -18,7 +18,7 @@ public class PostServiceImpl implements PostService{
 	
 	@Override
 	public Post save(Post post) {
-		if(post.generateNewValidation().isValid()) {
+		if(post.isValid()) {
 			return postRepository.save(post);
 		}
 		return null;

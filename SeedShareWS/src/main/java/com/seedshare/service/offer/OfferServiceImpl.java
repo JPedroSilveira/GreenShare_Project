@@ -38,7 +38,7 @@ public class OfferServiceImpl extends UserUtils implements OfferService{
 	@Override
 	public Offer save(Offer offer) {
 		Offer newOffer = new Offer(offer.getUnitPrice(), offer.getAmount(), getCurrentUser(), offer.getSpecies(),offer.getDescription());
-		if(newOffer.generateNewValidation().isValid()) {
+		if(newOffer.isValid()) {
 			return offerRepository.save(offer);
 		}
 		return null;
