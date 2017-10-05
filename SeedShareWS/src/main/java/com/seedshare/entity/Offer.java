@@ -9,66 +9,62 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.seedshare.entity.abstracts.AbstractEntity;
+import com.seedshare.entity.abstracts.AbstractPhotogenicEntity;
 import com.seedshare.enumeration.OfferStatus;
 import com.seedshare.enumeration.OfferType;
+import com.seedshare.enumeration.PhotoType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
 /**
- * Persistence class for the table OFFER
+ * Persistence class for the table offer
  * @author joao.silva
  */
 @Entity
-@Table(name = "OFFER")
-public class Offer extends AbstractEntity implements Serializable {
+@Table(name = "offer")
+public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "OFFER_SEQ";
+	private static final String SEQUENCE_NAME = "offer_seq";
 	
+	private static final PhotoType PHOTO_TYPE = PhotoType.OFFER;
+
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "OFFER_ID")
+	@Column(name = "offer_id")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "CREATION_DATE")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date creationDate;
-
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "UNIT_PRICE")
+	@Column(name = "unit_price")
 	private Float unitPrice;
 
 	@Basic(optional = false)
 	@NotNull
 	@Max(9999)
-	@Column(name = "AMOUNT")
+	@Column(name = "amount")
 	private Integer amount;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "OFFER_STATUS", columnDefinition="TEXT")
+	@Column(name = "offer_status", columnDefinition="TEXT")
 	private Integer offerStatus;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "TYPE")
+	@Column(name = "type")
 	private Integer type;
 
 	@ManyToOne
-	@JoinColumn(name="USER_ID")
+	@JoinColumn(name="user_id")
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name="SPECIES_ID")
+	@JoinColumn(name="species_id")
 	private Species species;
 
 	@OneToMany(mappedBy="offer")
@@ -77,18 +73,16 @@ public class Offer extends AbstractEntity implements Serializable {
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
-
-	@JsonIgnore
-	@Transient
-	private List<String> validationErrors;
 	
 	protected Offer() {
+		super(PHOTO_TYPE);
 		this.validationErrors = new ArrayList<String>();
 	}
 	
 	public Offer(Float unitPrice, Integer amount, User user, Species species, String description) {
+		super(PHOTO_TYPE, true);
 		if(this.unitPrice == null || this.unitPrice == (float) 0) {
 			this.type = OfferType.Donation.getOfferType();
 			this.unitPrice = (float) 0;
@@ -100,57 +94,45 @@ public class Offer extends AbstractEntity implements Serializable {
 		this.species = species;
 		this.offerStatus = OfferStatus.Active.getOfferStatus();
 		this.description = description;
-		this.validationErrors = new ArrayList<String>();
-	}
-	
-	public Offer generateNewValidation() {
-		this.validationErrors.clear();
-		
-		if(isNullOrEmpty(this.description) || this.description.length()>2500){
-			this.validationErrors.add("Descrição inválida");
-		}
-		if(this.type != null && this.unitPrice != null) {
-			if(this.type == OfferType.Sale.getOfferType() && this.unitPrice <= (float) 0) {
-				this.validationErrors.add("Preço unitário inválido para uma venda");
-			}
-			if(this.type == OfferType.Donation.getOfferType() && this.unitPrice != (float) 0) {
-				this.validationErrors.add("Preço unitário inválido para uma doação");
-			}
-		} else {
-			if(this.type == null) {
-				this.validationErrors.add("Tipo de oferta inválida");
-			}
-			if(this.unitPrice == null) {
-				this.validationErrors.add("Preço unitário inválido");
-			}
-		}
-		if(this.amount == null || this.amount<=0) {
-			this.validationErrors.add("Quantidade inválida");
-		}
-		if(this.creationDate == null || this.creationDate.after(new Date())) {
-			this.validationErrors.add("Data de criação inválida");
-		}
-		if(!this.user.generateNewValidation().isValid()) {
-			this.validationErrors.add("Usuário inválido");
-		}
-		if(!this.species.generateNewValidation().isValid()) {
-			this.validationErrors.add("Espécie inválida");
-		}
-		
-		return this;
 	}
 	
 	@JsonIgnore
-	public Boolean isValid() {
+	public boolean isValid() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
+			this.validationErrors.add("Descrição inválida");
+		}
+		if(isNull(this.type) && isNull(this.unitPrice)) {
+			if(this.type == OfferType.Sale.getOfferType() && is(this.unitPrice).smallerOrEqual(0)) {
+				this.validationErrors.add("Preço unitário inválido para uma venda");
+			}
+			if(this.type == OfferType.Donation.getOfferType() && is(this.unitPrice).notEqual(0)) {
+				this.validationErrors.add("Preço unitário inválido para uma doação");
+			}
+		} else {
+			if(isNull(this.type)) {
+				this.validationErrors.add("Tipo de oferta inválida");
+			}
+			if(isNull(this.unitPrice)) {
+				this.validationErrors.add("Preço unitário inválido");
+			}
+		}
+		if(isNull(this.amount) || is(this.amount).smallerOrEqual(0)) {
+			this.validationErrors.add("Quantidade inválida");
+		}
+		if(this.user.isNotValid()) {
+			this.validationErrors.add("Usuário inválido");
+		}
+		if(!this.species.isNotValid()) {
+			this.validationErrors.add("Espécie inválida");
+		}
+		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
 	}
 
 	public Float getUnitPrice() {

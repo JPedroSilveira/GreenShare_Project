@@ -7,48 +7,50 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.seedshare.entity.abstracts.AbstractEntity;
+import com.seedshare.entity.abstracts.AbstractPhotogenicEntity;
+import com.seedshare.enumeration.PhotoType;
 
-import java.util.Date;
 import java.util.List;
 
 
 /**
- * Persistence class for the table FRUIT
+ * Persistence class for the table fruit
  * @author joao.silva
  */
 @Entity
-@Table(name = "FRUIT")
-public class Fruit extends AbstractEntity implements Serializable {
+@Table(name = "fruit")
+public class Fruit extends AbstractPhotogenicEntity<Fruit> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "FRUIT_SEQ";
+	private static final String SEQUENCE_NAME = "fruit_seq";
+	
+	private static final PhotoType PHOTO_TYPE = PhotoType.FRUIT;
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "FRUIT_ID")
+	@Column(name = "fruit_id")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "FAUNA_CONSUMPTION")
+	@Column(name = "fauna_consumption")
 	private Boolean faunaConsumption;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "HUMAN_CONSUMPTION")
+	@Column(name = "human_consumption")
 	private Boolean humanConsumption;
 
 	@ManyToMany
 	@JoinTable(
-		name="FRUITING_MONTHS"
+		name="fruiting_months"
 		, joinColumns={
-			@JoinColumn(name="FRUIT_ID")
+			@JoinColumn(name="fruit_id")
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="MONTH_ID")
+			@JoinColumn(name="month_id")
 			}
 		)
 	private List<Month> fruitingMonths;
@@ -56,34 +58,57 @@ public class Fruit extends AbstractEntity implements Serializable {
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRIPTION", columnDefinition="TEXT")
+	@Column(name = "description", columnDefinition="TEXT")
 	private String description;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 50)
-	@Column(name = "NAME")
+	@Column(name = "name")
 	private String name;
 
 	@ManyToOne
-	@JoinColumn(name="SPECIES_ID")
+	@JoinColumn(name="species_id")
 	private Species species;
-	
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "RECORD_CREATION_DATE")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date recordCreationDate;
 
 	protected Fruit() {
+		super(PHOTO_TYPE);
+	}
+	
+	public Fruit(Boolean faunaConsumption, Boolean humanConsumption, String description, String name, Species species) {
+		super(PHOTO_TYPE, true);
+		this.faunaConsumption = faunaConsumption;
+		this.humanConsumption = humanConsumption;
+		this.description = description;
+		this.name = name;
+		this.species = species;
+	}
+	
+	@Override
+	public boolean isValid() {
+		this.validationErrors.clear();
+		
+		if(isNull(this.faunaConsumption)){
+			this.validationErrors.add("Bicondicional consumo para fauna inválido.");
+		}
+		if(isNull(this.humanConsumption)){
+			this.validationErrors.add("Bicondicional consumo para humanos inválido.");
+		}
+		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
+			this.validationErrors.add("Descrição inválida.");
+		}
+		if(isNullOrEmpty(this.name) || is(this.name).biggerThan(100)) {
+			this.validationErrors.add("Nome inválido.");
+		}
+		if(isNull(this.species) || this.species.isNotValid()) {
+			this.validationErrors.add("Espécie inválida.");
+		}
+		addAbstractAttributesValidation();
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public Boolean getFaunaConsumption() {
@@ -142,20 +167,6 @@ public class Fruit extends AbstractEntity implements Serializable {
 
 	public void setSpecies(Species species) {
 		this.species = species;
-	}
-	
-	public Date getRecordCreationDate() {
-		return this.recordCreationDate;
-	}
-
-	public void setRecordCreationDate(Date recordCreationDate) {
-		this.recordCreationDate = recordCreationDate;
-	}
-
-	@Override
-	public Boolean isValid() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

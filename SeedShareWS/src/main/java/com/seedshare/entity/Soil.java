@@ -13,56 +13,73 @@ import java.util.List;
 
 
 /**
- * Persistence class for the table SOIL
+ * Persistence class for the table soil
  * @author joao.silva
  */
 @Entity
-@Table(name = "SOIL")
-public class Soil extends AbstractEntity implements Serializable {
+@Table(name = "soil")
+public class Soil extends AbstractEntity<Soil> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SOIL_SEQ";
+	private static final String SEQUENCE_NAME = "soil_seq";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "SOIL_ID")
+	@Column(name = "soil_id")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 100)
-	@Column(name = "NAME", length = 100)
+	@Column(name = "name", length = 100)
 	private String name;
 
 	@ManyToMany
 	@JoinTable(
-		name="SPECIES_SOIL"
+		name="species_soil"
 		, joinColumns={
-			@JoinColumn(name="SOIL_ID")
+			@JoinColumn(name="soil_id")
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="SPECIES_ID")
+			@JoinColumn(name="species_id")
 			}
 		)
 	private List<Species> species;
 
 	protected Soil() {
+		super();
+	}
+	
+	public Soil(String description, String name) {
+		super(true);
+		this.description = description;
+		this.name = name;
+	}
+	
+	@Override
+	public boolean isValid() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
+			this.validationErrors.add("Descrição inválida.");
+		}
+		if(isNullOrEmpty(this.name) || is(this.name).biggerThan(100)) {
+			this.validationErrors.add("Nome inválido.");
+		}
+		addAbstractAttributesValidation();
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getDescription() {
@@ -88,11 +105,4 @@ public class Soil extends AbstractEntity implements Serializable {
 	public void setSpecies(List<Species> species) {
 		this.species = species;
 	}
-
-	@Override
-	public Boolean isValid() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

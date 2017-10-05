@@ -8,63 +8,67 @@ import javax.validation.constraints.NotNull;
 
 import com.seedshare.entity.abstracts.AbstractEntity;
 
-import java.util.Date;
-
-
 /**
- * Persistence class for the table REQUEST
+ * Persistence class for the table request
  * @author joao.silva
  */
 @Entity
-@Table(name = "REQUEST")
-public class Request extends AbstractEntity implements Serializable {
+@Table(name = "request")
+public class Request extends AbstractEntity<Request> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "REQUEST_SEQ";
+	private static final String SEQUENCE_NAME = "request_seq";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "REQUEST_ID")
+	@Column(name = "request_id")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "REQUEST_DATE")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date requestDate;
-
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "AMOUNT")
+	@Column(name = "amount")
 	private Integer amount;
 
 	@ManyToOne
-	@JoinColumn(name="OFFER_ID")
+	@JoinColumn(name="offer_id")
 	private Offer offer;
 
 	@ManyToOne
-	@JoinColumn(name="USER_ID")
+	@JoinColumn(name="user_id")
 	private User user;
 
 	protected Request() {
+		super();
+	}
+	
+	protected Request(Integer amount, Offer offer, User user) {
+		super(true);
+		this.amount = amount;
+		this.offer = offer;
+		this.user = user;
+	}
+	
+	@Override
+	public boolean isValid() {
+		this.validationErrors.clear();
+		
+		if(isNull(this.amount) || is(this.amount).biggerThan(0)){
+			this.validationErrors.add("Quantidade inválida.");
+		}
+		if(isNull(this.offer) || this.offer.isNotValid()){
+			this.validationErrors.add("Oferta inválida.");
+		}
+		if(isNull(this.user) || this.user.isNotValid()){
+			this.validationErrors.add("Usuário inválido.");
+		}
+		addAbstractAttributesValidation();
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Date getRequestDate() {
-		return this.requestDate;
-	}
-
-	public void setRequestDate(Date requestDate) {
-		this.requestDate = requestDate;
 	}
 
 	public Integer getAmount() {
@@ -90,11 +94,4 @@ public class Request extends AbstractEntity implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	@Override
-	public Boolean isValid() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

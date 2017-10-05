@@ -16,48 +16,71 @@ import com.seedshare.entity.abstracts.AbstractEntity;
  * @author joao.silva
  */
 @Entity
-@Table(name = "USER_ACHIEVEMENT")
-public class UserAchievement extends AbstractEntity implements Serializable {
+@Table(name = "user_achievement")
+public class UserAchievement extends AbstractEntity<UserAchievement> implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "USER_ACHIEVEMENT_SEQ";
+	private static final String SEQUENCE_NAME = "user_achievement_seq";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "USER_ACHIEVEMENT_ID")
+	@Column(name = "user_achievement_id")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "SCORE")
+	@Column(name = "score")
 	private Long score;
 
 	@ManyToOne
-	@JoinColumn(name="USER_ID")
+	@JoinColumn(name="user_id")
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name="ID_ACHIEVEMENT")
+	@JoinColumn(name="achievement_id")
 	private Achievement achievement;
 	
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "CONQUEST_DATE")
+	@Column(name = "conquest_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date conquestDate;
 
 	protected UserAchievement() {
+		super();
+	}
+	
+	public UserAchievement(User user, Achievement achievement) {
+		super(true);
+		this.score = 0L;
+		this.achievement = achievement;
+	}
+	
+	@Override
+	public boolean isValid() {
+		this.validationErrors.clear();
+		
+		if(isNull(this.user) || this.user.isNotValid()){
+			this.validationErrors.add("Usuário inválido.");
+		}
+		if(isNull(this.score) || isPositive(this.score)){
+			this.validationErrors.add("Pontuação inválida.");
+		}
+		if(isNull(this.achievement) || this.achievement.isNotValid()) {
+			this.validationErrors.add("Conquista inválida.");
+		}
+		if(isFromTheFuture(this.conquestDate)) {
+			this.validationErrors.add("Data de conquista inválida.");
+		}
+		addAbstractAttributesValidation();
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public Long getScore() {
@@ -91,11 +114,4 @@ public class UserAchievement extends AbstractEntity implements Serializable {
 	public void setConquestDate(Date conquestDate) {
 		this.conquestDate = conquestDate;
 	}
-
-	@Override
-	public Boolean isValid() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

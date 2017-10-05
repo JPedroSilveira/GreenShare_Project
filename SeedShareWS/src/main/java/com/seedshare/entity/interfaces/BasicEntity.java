@@ -1,8 +1,9 @@
 package com.seedshare.entity.interfaces;
 
-public interface BasicEntity {
+public interface BasicEntity<Entity> {
 
-	public Long getId();
+	Long getId();
 	
-	Boolean isValid();
+	boolean isValid();
+
 }

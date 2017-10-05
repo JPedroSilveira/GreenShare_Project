@@ -13,41 +13,54 @@ import java.util.List;
 
 
 /**
- * Persistence class for the table PERMISSION
+ * Persistence class for the table permission
  * @author joao.silva
  */
 @Entity
-@Table(name = "PERMISSION")
-public class Permission extends AbstractEntity implements Serializable {
+@Table(name = "permission")
+public class Permission extends AbstractEntity<Permission> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "PERMISSION_SEQ";
+	private static final String SEQUENCE_NAME = "permission_seq";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "PERMISSION_ID")
+	@Column(name = "permission_id")
 	private Long id;
 	
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 50)
-	@Column(name = "NAME", length = 50)
+	@Column(name = "name", length = 50)
 	private String name;
 
 	@ManyToMany(mappedBy="permissions")
 	private List<User> users;
 
 	protected Permission() {
+		super();
+	}
+	
+	public Permission(String name) {
+		super(true);
+		this.name = name;
+	}
+	
+	@Override
+	public boolean isValid() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.name) || is(this.name).biggerThan(100)) {
+			this.validationErrors.add("Nome inválido.");
+		}
+		addAbstractAttributesValidation();
+		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -65,11 +78,4 @@ public class Permission extends AbstractEntity implements Serializable {
 	public void setUser(List<User> users) {
 		this.users = users;
 	}
-
-	@Override
-	public Boolean isValid() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

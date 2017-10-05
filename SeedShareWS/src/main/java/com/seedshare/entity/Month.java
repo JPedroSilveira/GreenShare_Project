@@ -15,33 +15,34 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Persistence class for the table MONTH
+ * Persistence class for the table month
  * @author joao.silva
  */
 @Entity
-@Table(name = "MONTH")
+@Table(name = "month")
 public class Month implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final String SEQUENCE_NAME = "MONTH_SEQ";
+	private static final String SEQUENCE_NAME = "month_seq";
 
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "MONTH_ID")
+	@Column(name = "month_id")
 	private Long id;
 	
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 25)
-	@Column(name = "NAME", length = 25)
+	@Column(name = "name", length = 25)
 	private String name;
 
 	protected Month() {
 		
 	}
+	
 	public Long getId() {
 		return id;
 	}

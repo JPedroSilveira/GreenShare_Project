@@ -7,26 +7,22 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.seedshare.entity.abstracts.AbstractEntity;
-import com.seedshare.entity.interfaces.PhotogenicEntity;
+import com.seedshare.entity.abstracts.AbstractPhotogenicEntity;
 import com.seedshare.enumeration.PhotoType;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
 /**
- * Persistence class for the table SPECIES
+ * Persistence class for the table species
  * @author joao.silva
  */
 @Entity
-@Table(name = "SPECIES")
-public class Species extends AbstractEntity implements Serializable, PhotogenicEntity {
+@Table(name = "species")
+public class Species extends AbstractPhotogenicEntity<Species> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "SPECIES_SEQ";
+	private static final String SEQUENCE_NAME = "species_seq";
 	
 	private static final PhotoType PHOTO_TYPE = PhotoType.SPECIES;
 		
@@ -34,86 +30,75 @@ public class Species extends AbstractEntity implements Serializable, PhotogenicE
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "SPECIES_ID")
+	@Column(name = "species_id")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "APPROVED")
+	@Column(name = "approved")
 	private Boolean isApproved;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "ATTRACT_BIRDS")
+	@Column(name = "attract_birds")
 	private Boolean attractBirds;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "INSERTION_DATE")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date insertionDate;
-
-	@Basic(optional = false)
-	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
-
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "HAS_IMAGE")
-	private Boolean hasImage;
 	
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 5000)
-	@Column(name = "CULTIVATION_GUIDE", columnDefinition="TEXT", length = 5000)
+	@Column(name = "cultivation_guide", columnDefinition="TEXT", length = 5000)
 	private String cultivationGuide;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "MEDICINAL")
+	@Column(name = "medicinal")
 	private Boolean isMedicinal;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "ATTRACT_BEES")
+	@Column(name = "attract_bees")
 	private Boolean attractBees;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 100)
-	@Column(name = "SCIENTIFIC_NAME", length = 100)
+	@Column(name = "scientific_name", length = 100)
 	private String scientificName;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 100)
-	@Column(name = "COMMON_NAME", length = 100)
+	@Column(name = "common_name", length = 100)
 	private String commonName;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "ORNAMENTAL")
+	@Column(name = "ornamental")
 	private Boolean isOrnamental;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "AVERAGE_HEIGHT")
+	@Column(name = "average_height")
 	private Long averageHeight;
 
 	@ManyToOne
-	@JoinColumn(name="GROWTH_ID")
+	@JoinColumn(name="growth_id")
 	private Growth growth;
 
 	@ManyToMany
 	@JoinTable(
-		name="SPECIES_CLIMATE"
+		name="species_climate"
 		, joinColumns={
-			@JoinColumn(name="SPECIES_ID")
+			@JoinColumn(name="species_id")
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="CLIMATE_ID")
+			@JoinColumn(name="climate_id")
 			}
 		)
 	private List<Climate> climates;
@@ -133,26 +118,20 @@ public class Species extends AbstractEntity implements Serializable, PhotogenicE
 	@OneToMany(mappedBy="species")
 	private List<Post> posts;
 
-	@OneToMany(mappedBy="species")
-	private List<Suggestion> suggestions;
-	
-	@JsonIgnore
-	@Transient
-	private List<String> validationErrors;
+	@OneToOne(mappedBy="species")
+	private Suggestion suggestions;
 
 	protected Species() {
-		this.validationErrors = new ArrayList<String>();
+		super(PHOTO_TYPE);
 	}
 	
 	public Species(Boolean attractBirds, String description, String cultivationGuide, Boolean isMedicinal, 
 			Boolean attractBees, String scientificName, String commonName, Boolean isOrnamental, Long averageHeight, 
 			Growth growth) {
-		super();
+		super(PHOTO_TYPE, true);
 		this.isApproved = false;
 		this.attractBirds = attractBirds;
-		this.insertionDate = new Date();
 		this.description = description;
-		this.hasImage = false;
 		this.cultivationGuide = cultivationGuide;
 		this.isMedicinal = isMedicinal;
 		this.attractBees = attractBees;
@@ -161,63 +140,51 @@ public class Species extends AbstractEntity implements Serializable, PhotogenicE
 		this.isOrnamental = isOrnamental;
 		this.averageHeight = averageHeight;
 		this.growth = growth;
-		this.validationErrors = new ArrayList<String>();
 	}
 
-	
-	public Species generateNewValidation() {
+	@Override
+	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNullOrEmpty(this.description) || this.description.length()>2500){
+		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
 			this.validationErrors.add("Descrição inválida.");
 		}
-		if(isNullOrEmpty(this.cultivationGuide) || this.cultivationGuide.length()>5000){
+		if(isNullOrEmpty(this.cultivationGuide) || is(this.cultivationGuide).biggerThan(5000)){
 			this.validationErrors.add("Guia de cultivo inválido.");
 		}
-		if(this.isApproved == null){
+		if(isNull(this.isApproved)){
 			this.validationErrors.add("Definição de aprovação inválida.");
 		}
-		if(this.attractBees == null){
+		if(isNull(this.attractBees)){
 			this.validationErrors.add("Definição de atração de abelhas inválida.");
 		}
-		if(this.attractBirds == null){
+		if(isNull(this.attractBirds)){
 			this.validationErrors.add("Definição de atração de pássaros inválida.");
 		}
-		if(this.isMedicinal == null){
+		if(isNull(this.isMedicinal)){
 			this.validationErrors.add("Definição de planta medicinal inválida.");
 		}
-		if(this.isOrnamental == null){
+		if(isNull(this.isOrnamental)){
 			this.validationErrors.add("Definição de planta ornamental inválida.");
 		}
-		if(this.averageHeight == null || this.averageHeight > 30000){
+		if(isNull(this.averageHeight) || is(this.averageHeight).biggerThan(30000)){
 			this.validationErrors.add("Altura inválida.");
 		}
-		if(this.commonName == null || this.commonName.length() > 100){
+		if(isNull(this.commonName) || is(this.commonName).biggerThan(100)){
 			this.validationErrors.add("Nome popular inválido.");
 		}
-		if(this.scientificName == null || this.scientificName.length() > 100){
+		if(isNull(this.scientificName) || is(this.scientificName).biggerThan(100)){
 			this.validationErrors.add("Nome científico inválido.");
 		}
-		if(this.growth == null || !(this.growth.generateNewValidation().isValid())){
+		if(isNull(this.growth) || this.growth.isNotValid()){
 			this.validationErrors.add("Nível de crescimento inválido.");
 		}
-		if(this.insertionDate == null || this.insertionDate.after(new Date())) {
-			this.validationErrors.add("Data de inserção inválida");
-		}
-		return this;
-	}
-	
-	@JsonIgnore
-	public Boolean isValid() {
+		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public Boolean getIsApproved() {
@@ -234,14 +201,6 @@ public class Species extends AbstractEntity implements Serializable, PhotogenicE
 
 	public void setAttractBirds(Boolean attractBirds) {
 		this.attractBirds = attractBirds;
-	}
-
-	public Date getInsertionDate() {
-		return this.insertionDate;
-	}
-
-	public void setInsertionDate(Date insertionDate) {
-		this.insertionDate = insertionDate;
 	}
 
 	public String getDescription() {
@@ -340,22 +299,7 @@ public class Species extends AbstractEntity implements Serializable, PhotogenicE
 		return this.posts;
 	}
 
-	public List<Suggestion> getSuggestions() {
+	public Suggestion getSuggestions() {
 		return this.suggestions;
 	}
-	
-	@Override
-	public PhotoType getPhotoType() {
-		return Species.PHOTO_TYPE;
-	}
-	
-	public void setHasImage(Boolean hasImage) {
-		this.hasImage = hasImage;
-	}
-	
-	@Override
-	public Boolean getHasImage() {
-		return this.hasImage;
-	}
-
 }

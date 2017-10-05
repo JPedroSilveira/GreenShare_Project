@@ -10,93 +10,72 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 
 /**
- * Persistence class for the table ADDRESS
+ * Persistence class for the table address
  * @author joao.silva
  */
 @Entity
-@Table(name = "ADDRESS")
-public class Address extends AbstractEntity implements Serializable {
+@Table(name = "address")
+public class Address extends AbstractEntity<Address> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "ADDRESS_SEQ";
+	private static final String SEQUENCE_NAME = "address_seq";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "ADDRESS_ID")
+	@Column(name = "address_id")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "CREATION_DATE")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date creationDate;
-
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "LATITUDE")
+	@Column(name = "latitude")
 	private BigDecimal latitude;
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "LONGITUDE")
+	@Column(name = "longitude")
 	private BigDecimal longitude;
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name="USER_ID")
+	@JoinColumn(name="user_id")
 	private User user;
-
-	@JsonIgnore
-	@Transient
-	private List<String> validationErrors;
 	
 	protected Address() {
-		this.validationErrors = new ArrayList<String>();
+		super();
 	}
 	
 	public Address(BigDecimal latitude, BigDecimal longitude, User user) {
-		this.creationDate = new Date();
+		super(true);
 		this.user = user;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.validationErrors = new ArrayList<String>();
 	}
 	
-	public Address generateNewValidation() {
+	@Override
+	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(this.user == null || !(this.user.generateNewValidation().isValid())){
+		if(isNull(this.user) || !(this.user.isNotValid())){
 			this.validationErrors.add("Usuário inválido");
 		}
-		if(this.latitude == null || this.longitude == null) {
-			this.validationErrors.add("Coordenadas inválidas");
+		if(isNull(this.latitude)) {
+			this.validationErrors.add("Latitude inválida");
 		}
-		if(this.creationDate == null || this.creationDate.after(new Date())) {
-			this.validationErrors.add("Data de criação inválida");
+		if(isNull(this.longitude)) {
+			this.validationErrors.add("Longitude inválida");
 		}
-		
-		return this;
-	}
-	
-	@JsonIgnore
-	public Boolean isValid() {
+		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
 	}
 
+	@Override
 	public Long getId() {
 		return this.id;
-	}
-
-	public Date getCreationDate() {
-		return this.creationDate;
 	}
 
 	public BigDecimal getLatitude() {
@@ -122,5 +101,4 @@ public class Address extends AbstractEntity implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
 }

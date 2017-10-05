@@ -5,75 +5,59 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 /**
- * Persistence class for the table GROWTH
+ * Persistence class for the table growth
  * @author joao.silva
  */
 @Entity
-@Table(name = "GROWTH")
-public class Growth extends AbstractEntity implements Serializable {
+@Table(name = "growth")
+public class Growth extends AbstractEntity<Growth> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final String SEQUENCE_NAME = "GROWTH_SEQ";
+	private static final String SEQUENCE_NAME = "growth_seq";
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@Column(name = "GROWTH_ID")
+	@Column(name = "growth_id")
 	private Long id;
 
 	@Basic(optional = false)
 	@NotNull
 	@Size(max = 2500)
-	@Column(name = "DESCRIPTION", columnDefinition="TEXT", length = 2500)
+	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
 
 	@OneToMany(mappedBy="growth")
 	private List<Species> species;
-	
-	@JsonIgnore
-	@Transient
-	private List<String> validationErrors;
 
 	protected Growth() {
-		this.validationErrors = new ArrayList<String>();
+		super();
 	}
 	
 	public Growth(String description) {
-		super();
+		super(true);
 		this.description = description;
-		this.validationErrors = new ArrayList<String>();
-	}
-
-	public Growth generateNewValidation() {
-		this.validationErrors.clear();
-		
-		if(isNullOrEmpty(this.description) || this.description.length()>2500){
-			this.validationErrors.add("Descrição inválida.");
-		}
-		
-		return this;
 	}
 	
-	@JsonIgnore
-	public Boolean isValid() {
+	public boolean isValid() {
+		this.validationErrors.clear();
+		
+		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
+			this.validationErrors.add("Descrição inválida.");
+		}
+		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
 	}
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getDescription() {
@@ -90,20 +74,6 @@ public class Growth extends AbstractEntity implements Serializable {
 
 	public void setEspecies(List<Species> species) {
 		this.species = species;
-	}
-
-	public Species addEspecie(Species species) {
-		getSpecies().add(species);
-		species.setGrowth(this);
-
-		return species;
-	}
-
-	public Species removeEspecie(Species species) {
-		getSpecies().remove(species);
-		species.setGrowth(null);
-
-		return species;
 	}
 
 }
