@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.UserUtils;
 import com.seedshare.entity.Suggestion;
+import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.SpeciesRepository;
 import com.seedshare.repository.SuggestionRepository;
 
@@ -15,7 +15,7 @@ import com.seedshare.repository.SuggestionRepository;
  * @author joao.silva
  */
 @Service
-public class SuggestionServiceImpl extends UserUtils implements SuggestionService{
+public class SuggestionServiceImpl extends IsHelper implements SuggestionService{
 
 	@Autowired
 	SuggestionRepository suggestionRepository;
@@ -24,9 +24,9 @@ public class SuggestionServiceImpl extends UserUtils implements SuggestionServic
 	SpeciesRepository speciesRepository;
 	
 	@Override
-	public boolean delete(Long id) {
+	public boolean delete(long id) {
 		Suggestion suggestion = suggestionRepository.findOne(id);
-		if(suggestion != null && suggestion.getUser().getId() == getCurrentUser().getId()) {
+		if(isNotNull(suggestion) && suggestion.getUser().getId() == getCurrentUserId()) {
 			suggestion.setIsActive(false);
 			suggestionRepository.save(suggestion);
 			return true;
@@ -36,29 +36,29 @@ public class SuggestionServiceImpl extends UserUtils implements SuggestionServic
 
 	@Override
 	public Suggestion save(Suggestion suggestion) {
-		Suggestion newSuggestion = new Suggestion(suggestion.getUser(),suggestion.getSpecies());
-		if(newSuggestion.isValid()) {
-			return suggestionRepository.save(newSuggestion);
+		Suggestion dbSuggestion = suggestionRepository.findOne(suggestion.getId());
+		if(isNull(dbSuggestion)) {
+			Suggestion newSuggestion = new Suggestion(suggestion.getUser(),suggestion.getSpecies());
+			if(newSuggestion.isValid()) {
+				return suggestionRepository.save(newSuggestion);
+			}
 		}
-		return newSuggestion;
+		return null;
 	}
 
 	@Override
 	public List<Suggestion> findByUser() {
-		// TODO Auto-generated method stub
-		return null;
+		return suggestionRepository.findByUser(getCurrentUser());
 	}
 
 	@Override
-	public Suggestion findOne(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Suggestion findOne(long id) {
+		return suggestionRepository.findOne(id);
 	}
 
 	@Override
 	public List<Suggestion> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<Suggestion>) suggestionRepository.findAll();
 	}
 
 }

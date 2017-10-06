@@ -10,13 +10,13 @@ import com.seedshare.entity.Suggestion;
  */
 public interface SuggestionService {
 	
-	boolean delete(Long id);
+	boolean delete(long id);
 	
 	Suggestion save(Suggestion suggestion);
 	
 	List<Suggestion> findByUser();
 	
-	Suggestion findOne(Long id);
+	Suggestion findOne(long id);
 	
 	List<Suggestion> findAll();
 }

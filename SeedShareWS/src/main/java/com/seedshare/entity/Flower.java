@@ -34,15 +34,9 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull
+	@NotNull(message = "Obrigatório informar se a flor é aromática.")
 	@Column(name = "aromatic")
 	private Boolean isAromatic;
-
-	@Basic(optional = false)
-	@NotNull
-	@Size(max = 50)
-	@Column(name = "color", length = 50)
-	private String color;
 
 	@ManyToMany
 	@JoinTable(
@@ -57,26 +51,34 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	private List<Month> floweringMonths;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 2500)
+	@NotNull(message = "A descrição não pode ser nula.")
+	@Size(min = 1, max = 2500, message = "A descrição deve conter de 1 a 2500 caracteres.")
 	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 100)
+	@NotNull(message = "O nome não pode ser nulo.")
+	@Size(min = 1, max = 100, message = "O nome deve conter entre 1 e 100 caracteres.")
 	@Column(name = "name", length = 100)
 	private String name;
 
+	@Basic(optional = false)
 	@ManyToOne
+	@NotNull(message = "A espécie não pode ser nula.")
 	@JoinColumn(name="species_id")
 	private Species species;
+	
+	@Basic(optional = false)
+	@ManyToOne
+	@NotNull(message = "A cor não pode ser nula.")
+	@JoinColumn(name = "color_id")
+	private Color color;
 
 	protected Flower() {
 		super(PHOTO_TYPE);
 	}
 	
-	public Flower(Boolean isAromatic, String color, String description, String name, Species species) {
+	public Flower(Boolean isAromatic, Color color, String description, String name, Species species) {
 		super(PHOTO_TYPE, true);
 		this.isAromatic = isAromatic;
 		this.color = color;
@@ -92,10 +94,10 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 		if(isNull(this.isAromatic)){
 			this.validationErrors.add("Dado isAromatic inválido.");
 		}
-		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
+		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)){
 			this.validationErrors.add("Espécie inválida.");
 		}
-		if(isNullOrEmpty(this.name) || is(this.name).biggerThan(100)) {
+		if(isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome inválido.");
 		}
 		if(isNull(this.species) || this.species.isNotValid()) {
@@ -117,11 +119,11 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 		this.isAromatic = isAromatic;
 	}
 
-	public String getColor() {
+	public Color getColor() {
 		return this.color;
 	}
 
-	public void setColor(String color) {
+	public void setColor(Color color) {
 		this.color = color;
 	}
 

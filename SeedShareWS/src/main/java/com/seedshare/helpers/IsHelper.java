@@ -1,363 +1,426 @@
 package com.seedshare.helpers;
 
+import java.util.Date;
+
 /**
  * @author joao.silva
  */
-public class LengthHelper {
+public class IsHelper extends UserUtils {
 	
-	private String string;
-	private int integer;
-	private short shortV;
-	private long longV;
-	private float floatV;
-	private double doubleV;
-	private short type;
-	
-	public LengthHelper(String number) {
-		this.string = number;
-		this.type = 0;
+	protected It is(String string) {
+		return new It(string);
 	}
 	
-	public LengthHelper(int integer) {
-		this.integer = integer;
-		this.type = 1;
+	protected It is(int number) {
+		return new It(number);
 	}
 	
-	public LengthHelper(short shortV) {
-		this.shortV = shortV;
-		this.type = 2;
+	protected It is(short number) {
+		return new It(number);
 	}
 	
-	public LengthHelper(long longV) {
-		this.longV = longV;
-		this.type = 3;
+	protected It is(long number) {
+		return new It(number);
 	}
 	
-	public LengthHelper(float floatV) {
-		this.floatV = floatV;
-		this.type = 4;
+	protected It is(float number) {
+		return new It(number);
 	}
 	
-	public LengthHelper(double doubleV) {
-		this.doubleV = doubleV;
-		this.type = 5;
+	protected It is(double number) {
+		return new It(number);
 	}
+	
+	protected boolean isNullOrEmpty(String string) {
+	    return string == null || string.isEmpty();
+	}
+	
+	protected boolean isNull(Object obj) {
+		return obj == null;
+	}
+	
+	protected boolean isNotNull(Object obj) {
+		return obj == null;
+	}
+	
+	protected boolean isNullOrFromTheFuture(Date date) {
+		return isNull(date) || date.after(new Date());
+	}
+	
+	protected boolean isFromTheFuture(Date date) {
+		if(isNull(date)) {
+			return false;
+		}
+		return date.after(new Date());
+	}
+	
+	protected boolean isPositive(Short number) {
+		return number>0;
+	}
+	
+	protected boolean isPositive(Integer number) {
+		return number>0;
+	}
+	
+	protected boolean isPositive(Long number) {
+		return number>0;
+	}
+	
+	public class It
+	{
 
+		private String string;
+		private int integer;
+		private short shortV;
+		private long longV;
+		private float floatV;
+		private double doubleV;
+		private short type;
 
-	public boolean equal(double equalNumber) {
-		if(this.type == 0) {
-			return this.string.length() == equalNumber;
-		}else if(this.type == 1) {
-			return this.integer == equalNumber;
-		}else if(this.type == 2) {
-			return this.shortV == equalNumber;
-		}else if(this.type == 3) {
-			return this.longV == equalNumber;
-		}else if(this.type == 4) {
-			return this.floatV == equalNumber;
-		}else if(this.type == 5) {
-			return this.doubleV == equalNumber;
+		public It(String number) {
+			this.string = number;
+			this.type = 0;
 		}
-		
-		return false;
-	}
-	
-	public boolean notEqual(double notEqualNumber) {
-		if(this.type == 0) {
-			return this.string.length() != notEqualNumber;
-		}else if(this.type == 1) {
-			return this.integer != notEqualNumber;
-		}else if(this.type == 2) {
-			return this.shortV != notEqualNumber;
-		}else if(this.type == 3) {
-			return this.longV != notEqualNumber;
-		}else if(this.type == 4) {
-			return this.floatV != notEqualNumber;
-		}else if(this.type == 5) {
-			return this.doubleV != notEqualNumber;
+
+		public It(int integer) {
+			this.integer = integer;
+			this.type = 1;
 		}
-		
-		return false;
-	}
-	
-	public boolean smallerThan(double biggerNumber) {
-		if(this.type == 0) {
-			return this.string.length() < biggerNumber;
-		}else if(this.type == 1) {
-			return this.integer < biggerNumber;
-		}else if(this.type == 2) {
-			return this.shortV < biggerNumber;
-		}else if(this.type == 3) {
-			return this.longV < biggerNumber;
-		}else if(this.type == 4) {
-			return this.floatV < biggerNumber;
-		}else if(this.type == 5) {
-			return this.doubleV < biggerNumber;
+
+		public It(short shortV) {
+			this.shortV = shortV;
+			this.type = 2;
 		}
-		
-		return false;
-	}
-	
-	public boolean smallerOrEqual(double number) {
-		if(this.type == 0) {
-			return this.string.length() <= number;
-		}else if(this.type == 1) {
-			return this.integer <= number;
-		}else if(this.type == 2) {
-			return this.shortV <= number;
-		}else if(this.type == 3) {
-			return this.longV <= number;
-		}else if(this.type == 4) {
-			return this.floatV <= number;
-		}else if(this.type == 5) {
-			return this.doubleV <= number;
+
+		public It(long longV) {
+			this.longV = longV;
+			this.type = 3;
 		}
-		
-		return false;
-	}
-	
-	public LengthOr orSmallerThan(double biggerNumber) {
-		if(this.type == 0) {
-			if(this.string.length() < biggerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 1) {
-			if(this.integer < biggerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 2) {
-			if(this.shortV < biggerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 3) {
-			if(this.longV < biggerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 4) {
-			if(this.floatV < biggerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 5) {
-			if(this.doubleV < biggerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
+
+		public It(float floatV) {
+			this.floatV = floatV;
+			this.type = 4;
 		}
-		return new LengthOr(this, null);
-	}
-	
-	public boolean biggerThan(double smallerNumber) {
-		if(this.type == 0) {
-			return this.string.length() > smallerNumber;
-		}else if(this.type == 1) {
-			return this.integer > smallerNumber;
-		}else if(this.type == 2) {
-			return this.shortV > smallerNumber;
-		}else if(this.type == 3) {
-			return this.longV > smallerNumber;
-		}else if(this.type == 4) {
-			return this.floatV > smallerNumber;
-		}else if(this.type == 5) {
-			return this.doubleV > smallerNumber;
+
+		public It(double doubleV) {
+			this.doubleV = doubleV;
+			this.type = 5;
 		}
-		return false;
-	}
-	
-	public boolean biggerOrEqual(double number) {
-		if(this.type == 0) {
-			return this.string.length() >= number;
-		}else if(this.type == 1) {
-			return this.integer >= number;
-		}else if(this.type == 2) {
-			return this.shortV >= number;
-		}else if(this.type == 3) {
-			return this.longV >= number;
-		}else if(this.type == 4) {
-			return this.floatV >= number;
-		}else if(this.type == 5) {
-			return this.doubleV >= number;
+
+		public boolean equal(double equalNumber) {
+			if (this.type == 0) {
+				return this.string.length() == equalNumber;
+			} else if (this.type == 1) {
+				return this.integer == equalNumber;
+			} else if (this.type == 2) {
+				return this.shortV == equalNumber;
+			} else if (this.type == 3) {
+				return this.longV == equalNumber;
+			} else if (this.type == 4) {
+				return this.floatV == equalNumber;
+			} else if (this.type == 5) {
+				return this.doubleV == equalNumber;
+			}
+
+			return false;
 		}
-		return false;
-	}
-	
-	public LengthOr orBiggerThan(double smallerNumber) {
-		if(this.type == 0) {
-			if(this.string.length() > smallerNumber) {
-				return new LengthOr(this, true);
+
+		public boolean notEqual(double notEqualNumber) {
+			if (this.type == 0) {
+				return this.string.length() != notEqualNumber;
+			} else if (this.type == 1) {
+				return this.integer != notEqualNumber;
+			} else if (this.type == 2) {
+				return this.shortV != notEqualNumber;
+			} else if (this.type == 3) {
+				return this.longV != notEqualNumber;
+			} else if (this.type == 4) {
+				return this.floatV != notEqualNumber;
+			} else if (this.type == 5) {
+				return this.doubleV != notEqualNumber;
 			}
-			return new LengthOr(this, false);
-		}else if(this.type == 1) {
-			if(this.integer > smallerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 2) {
-			if(this.shortV > smallerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 3) {
-			if(this.longV > smallerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 4) {
-			if(this.floatV > smallerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
-		}else if(this.type == 5) {
-			if(this.doubleV > smallerNumber) {
-				return new LengthOr(this, true);
-			}
-			return new LengthOr(this, false);
+
+			return false;
 		}
-		return new LengthOr(this, null);
-	}
-	
-	public LengthAnd between(double smallerNumber) {
-		if(this.type == 0) {
-			if(this.string.length() > smallerNumber) {
-				return new LengthAnd(this, true);
-			}		
-		}else if(this.type == 1) {
-			if(this.integer > smallerNumber) {
-				return new LengthAnd(this, true);
-			}	
-		}else if(this.type == 2) {
-			if(this.shortV > smallerNumber) {
-				return new LengthAnd(this, true);
-			}	
-		}else if(this.type == 3) {
-			if(this.longV > smallerNumber) {
-				return new LengthAnd(this, true);
+
+		public boolean smallerThan(double biggerNumber) {
+			if (this.type == 0) {
+				return this.string.length() < biggerNumber;
+			} else if (this.type == 1) {
+				return this.integer < biggerNumber;
+			} else if (this.type == 2) {
+				return this.shortV < biggerNumber;
+			} else if (this.type == 3) {
+				return this.longV < biggerNumber;
+			} else if (this.type == 4) {
+				return this.floatV < biggerNumber;
+			} else if (this.type == 5) {
+				return this.doubleV < biggerNumber;
 			}
-		}else if(this.type == 4) {
-			if(this.floatV > smallerNumber) {
-				return new LengthAnd(this, true);
+
+			return false;
+		}
+
+		public boolean smallerOrEqual(double number) {
+			if (this.type == 0) {
+				return this.string.length() <= number;
+			} else if (this.type == 1) {
+				return this.integer <= number;
+			} else if (this.type == 2) {
+				return this.shortV <= number;
+			} else if (this.type == 3) {
+				return this.longV <= number;
+			} else if (this.type == 4) {
+				return this.floatV <= number;
+			} else if (this.type == 5) {
+				return this.doubleV <= number;
 			}
-		}else if(this.type == 5) {
-			if(this.doubleV > smallerNumber) {
-				return new LengthAnd(this, true);
+
+			return false;
+		}
+
+		public Or orSmallerThan(double biggerNumber) {
+			if (this.type == 0) {
+				if (this.string.length() < biggerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 1) {
+				if (this.integer < biggerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 2) {
+				if (this.shortV < biggerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 3) {
+				if (this.longV < biggerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 4) {
+				if (this.floatV < biggerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 5) {
+				if (this.doubleV < biggerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			}
+			return new Or(this, null);
+		}
+
+		public boolean biggerThan(double smallerNumber) {
+			if (this.type == 0) {
+				return this.string.length() > smallerNumber;
+			} else if (this.type == 1) {
+				return this.integer > smallerNumber;
+			} else if (this.type == 2) {
+				return this.shortV > smallerNumber;
+			} else if (this.type == 3) {
+				return this.longV > smallerNumber;
+			} else if (this.type == 4) {
+				return this.floatV > smallerNumber;
+			} else if (this.type == 5) {
+				return this.doubleV > smallerNumber;
+			}
+			return false;
+		}
+
+		public boolean biggerOrEqual(double number) {
+			if (this.type == 0) {
+				return this.string.length() >= number;
+			} else if (this.type == 1) {
+				return this.integer >= number;
+			} else if (this.type == 2) {
+				return this.shortV >= number;
+			} else if (this.type == 3) {
+				return this.longV >= number;
+			} else if (this.type == 4) {
+				return this.floatV >= number;
+			} else if (this.type == 5) {
+				return this.doubleV >= number;
+			}
+			return false;
+		}
+
+		public Or orBiggerThan(double smallerNumber) {
+			if (this.type == 0) {
+				if (this.string.length() > smallerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 1) {
+				if (this.integer > smallerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 2) {
+				if (this.shortV > smallerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 3) {
+				if (this.longV > smallerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 4) {
+				if (this.floatV > smallerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			} else if (this.type == 5) {
+				if (this.doubleV > smallerNumber) {
+					return new Or(this, true);
+				}
+				return new Or(this, false);
+			}
+			return new Or(this, null);
+		}
+
+		public And between(double smallerNumber) {
+			if (this.type == 0) {
+				if (this.string.length() > smallerNumber) {
+					return new And(this, true);
+				}
+			} else if (this.type == 1) {
+				if (this.integer > smallerNumber) {
+					return new And(this, true);
+				}
+			} else if (this.type == 2) {
+				if (this.shortV > smallerNumber) {
+					return new And(this, true);
+				}
+			} else if (this.type == 3) {
+				if (this.longV > smallerNumber) {
+					return new And(this, true);
+				}
+			} else if (this.type == 4) {
+				if (this.floatV > smallerNumber) {
+					return new And(this, true);
+				}
+			} else if (this.type == 5) {
+				if (this.doubleV > smallerNumber) {
+					return new And(this, true);
+				}
+			}
+			return new And(this, false);
+		}
+
+		public class And {
+
+			private It it;
+			private Short type;
+			private boolean isTrue;
+
+			public And(It it, Boolean isTrue) {
+				this.it = it;
+				this.isTrue = isTrue;
+				this.type = it.type;
+			}
+
+			public boolean and(double biggerNumber) {
+				if (isTrue) {
+					if (this.type == 0) {
+						return this.it.string.length() < biggerNumber;
+					} else if (this.type == 1) {
+						return this.it.integer < biggerNumber;
+					} else if (this.type == 2) {
+						return this.it.shortV < biggerNumber;
+					} else if (this.type == 3) {
+						return this.it.longV < biggerNumber;
+					} else if (this.type == 4) {
+						return this.it.floatV < biggerNumber;
+					} else if (this.type == 5) {
+						return this.it.doubleV < biggerNumber;
+					}
+				}
+				return false;
 			}
 		}
-		return new LengthAnd(this, false);
+
+		public class Or {
+
+			private It it;
+			private Short type;
+			private Boolean isTrue;
+
+			public Or(It it, Boolean isTrue) {
+				this.it = it;
+				this.isTrue = isTrue;
+				this.type = it.type;
+			}
+
+			public boolean orEqual(double equalNumber) {
+				if (this.isTrue != null) {
+					if (this.isTrue) {
+						return true;
+					}
+					if (this.type == 0) {
+						return this.it.string.length() == equalNumber;
+					} else if (this.type == 1) {
+						return this.it.integer == equalNumber;
+					} else if (this.type == 2) {
+						return this.it.shortV == equalNumber;
+					} else if (this.type == 3) {
+						return this.it.longV == equalNumber;
+					} else if (this.type == 4) {
+						return this.it.floatV == equalNumber;
+					} else if (this.type == 5) {
+						return this.it.doubleV == equalNumber;
+					}
+				}
+				return false;
+			}
+
+			public boolean orBiggerThan(double smallerNumber) {
+				if (this.isTrue != null) {
+					if (this.isTrue) {
+						return true;
+					}
+					if (this.type == 0) {
+						return this.it.string.length() > smallerNumber;
+					} else if (this.type == 1) {
+						return this.it.integer > smallerNumber;
+					} else if (this.type == 2) {
+						return this.it.shortV > smallerNumber;
+					} else if (this.type == 3) {
+						return this.it.longV > smallerNumber;
+					} else if (this.type == 4) {
+						return this.it.floatV > smallerNumber;
+					} else if (this.type == 5) {
+						return this.it.doubleV > smallerNumber;
+					}
+				}
+				return false;
+			}
+
+			public boolean orSmallerThan(double biggerNumber) {
+				if (this.isTrue != null) {
+					if (this.isTrue) {
+						return true;
+					}
+					if (this.type == 0) {
+						return this.it.string.length() < biggerNumber;
+					} else if (this.type == 1) {
+						return this.it.integer < biggerNumber;
+					} else if (this.type == 2) {
+						return this.it.shortV < biggerNumber;
+					} else if (this.type == 3) {
+						return this.it.longV < biggerNumber;
+					} else if (this.type == 4) {
+						return this.it.floatV < biggerNumber;
+					} else if (this.type == 5) {
+						return this.it.doubleV < biggerNumber;
+					}
+				}
+				return false;
+			}
+		}
 	}
-    
-    public class LengthAnd {
-        
-    	private LengthHelper lengthHelper;
-    	private Short type;
-    	private boolean isTrue;
-    	
-    	public LengthAnd(LengthHelper lengthHelper, Boolean isTrue) {
-    		this.lengthHelper = lengthHelper;
-    		this.isTrue = isTrue;
-    		this.type = lengthHelper.type;
-    	}
-    	
-    	public boolean and(double biggerNumber) {
-    		if(isTrue) {
-    			if(this.type == 0) {
-        			return this.lengthHelper.string.length() < biggerNumber;
-        		}else if(this.type == 1) {
-        			return this.lengthHelper.integer < biggerNumber;
-        		}else if(this.type == 2) {
-        			return this.lengthHelper.shortV < biggerNumber;
-        		}else if(this.type == 3) {
-        			return this.lengthHelper.longV < biggerNumber;
-        		}else if(this.type == 4) {
-        			return this.lengthHelper.floatV < biggerNumber;
-        		}else if(this.type == 5) {
-        			return this.lengthHelper.doubleV < biggerNumber;
-        		}
-    		}    		
-    		return false;
-    	}   
-    }
-    
-    public class LengthOr {
-        
-    	private LengthHelper lengthHelper;
-    	private Short type;
-    	private Boolean isTrue;
-    	
-    	public LengthOr(LengthHelper lengthHelper, Boolean isTrue) {
-    		this.lengthHelper = lengthHelper;
-    		this.isTrue = isTrue;
-    		this.type = lengthHelper.type;
-    	}
-    	
-    	public boolean orEqual(double equalNumber) {
-    		if(this.isTrue != null) {
-    			if(this.isTrue) {
-    				return true;
-    			}
-    			if(this.type == 0) {
-        			return this.lengthHelper.string.length() == equalNumber;
-        		}else if(this.type == 1) {
-        			return this.lengthHelper.integer == equalNumber;
-        		}else if(this.type == 2) {
-        			return this.lengthHelper.shortV == equalNumber;
-        		}else if(this.type == 3) {
-        			return this.lengthHelper.longV == equalNumber;
-        		}else if(this.type == 4) {
-        			return this.lengthHelper.floatV == equalNumber;
-        		}else if(this.type == 5) {
-        			return this.lengthHelper.doubleV == equalNumber;
-        		}
-    		}
-    		return false;
-    	}   
-    	
-    	public boolean orBiggerThan(double smallerNumber) {
-    		if(this.isTrue != null) {
-    			if(this.isTrue) {
-    				return true;
-    			}
-	    		if(this.type == 0) {
-	    			return this.lengthHelper.string.length() > smallerNumber;
-	    		}else if(this.type == 1) {
-	    			return this.lengthHelper.integer > smallerNumber;
-	    		}else if(this.type == 2) {
-	    			return this.lengthHelper.shortV > smallerNumber;
-	    		}else if(this.type == 3) {
-	    			return this.lengthHelper.longV > smallerNumber;
-	    		}else if(this.type == 4) {
-	    			return this.lengthHelper.floatV > smallerNumber;
-	    		}else if(this.type == 5) {
-	    			return this.lengthHelper.doubleV > smallerNumber;
-	    		}
-    		}
-    		return false;
-    	}
-    	
-    	public boolean orSmallerThan(double biggerNumber) {
-    		if(this.isTrue != null) {
-    			if(this.isTrue) {
-    				return true;
-    			}
-	    		if(this.type == 0) {
-	    			return this.lengthHelper.string.length() < biggerNumber;
-	    		}else if(this.type == 1) {
-	    			return this.lengthHelper.integer < biggerNumber;
-	    		}else if(this.type == 2) {
-	    			return this.lengthHelper.shortV < biggerNumber;
-	    		}else if(this.type == 3) {
-	    			return this.lengthHelper.longV < biggerNumber;
-	    		}else if(this.type == 4) {
-	    			return this.lengthHelper.floatV < biggerNumber;
-	    		}else if(this.type == 5) {
-	    			return this.lengthHelper.doubleV < biggerNumber;
-	    		}
-    		}
-    		return false;
-    	}
-    }
 }
-

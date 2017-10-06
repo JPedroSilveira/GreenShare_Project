@@ -9,6 +9,8 @@ import com.seedshare.entity.User;
  */
 public interface UserController{
 	ResponseEntity<String> changePassword(User user);
-	
+
+	ResponseEntity<?> changeName(User user);
+
 	ResponseEntity<?> changeName(String name);
 }

@@ -1,4 +1,4 @@
-package com.seedshare;
+package com.seedshare.helpers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,4 +22,8 @@ public abstract class UserUtils {
     	}
     	return userService.findOneByEmail(email);
     }
+	
+	protected Long getCurrentUserId() {
+		return getCurrentUser().getId();
+	}
 }

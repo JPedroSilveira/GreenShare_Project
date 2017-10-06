@@ -13,51 +13,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.UserUtils;
 import com.seedshare.entity.Address;
-import com.seedshare.entity.User;
+import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.address.AddressServiceImpl;
 
 /**
  * @author joao.silva
  */
 @RestController
-@RequestMapping("/user/address")
-public class AddressControllerImpl extends UserUtils implements AddressController {
+@RequestMapping("/address")
+public class AddressControllerImpl extends IsHelper implements AddressController {
 
 	@Autowired
 	AddressServiceImpl addressService;
 	
 	@Override
-	@PostMapping("/add/")
+	@PostMapping("/")
 	public ResponseEntity<?> addAddress(@RequestBody Address address) {
-		User currentUser = getCurrentUser();
-		Address newAddress = new Address(address.getLatitude(), address.getLongitude(), currentUser);
-		Boolean validAddress = newAddress.isValid();
-		if(validAddress) {
-			if(addressService.save(newAddress) != null) {
-				return new ResponseEntity<String>("Endereço registrado com sucesso", HttpStatus.OK);   
-			}else {
-				return new ResponseEntity<String>("Falha ao registrar endereço", HttpStatus.INTERNAL_SERVER_ERROR);   
-			}
+		Address response = addressService.save(address);
+		if(isNotNull(response)) {
+			return new ResponseEntity<Address>(response, HttpStatus.OK);   
 		}
-		return new ResponseEntity<List<String>>(currentUser.getValidationErrors(), HttpStatus.BAD_REQUEST);   
+		return new ResponseEntity<String>("Falha ao registrar endereço", HttpStatus.BAD_REQUEST);   
     }
 	
 	@Override
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteAddress(@PathVariable Long id) {
-		Address address = addressService.findOne(id);
-		if(address != null && address.getUser().getId() == getCurrentUser().getId()) {
-			addressService.delete(address);
-			return new ResponseEntity<String>("Endereço deletado", HttpStatus.OK);   
-		}else {
-			return new ResponseEntity<String>("Endereço inválido", HttpStatus.BAD_REQUEST);
-		}
+		addressService.delete(id);
+		return new ResponseEntity<String>("Endereço deletado", HttpStatus.OK);   
     }
 	
 	@Override
-	@GetMapping("/get/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getAddressById(@PathVariable Long id) {
 		Address address = addressService.findOne(id);
 		if(address != null && address.getUser().getId() == getCurrentUser().getId()) {
@@ -68,13 +56,13 @@ public class AddressControllerImpl extends UserUtils implements AddressControlle
     }
 	
 	@Override
-	@GetMapping("/get/all")
+	@GetMapping("/all")
 	public ResponseEntity<?> getAllByUser() {
-		List<Address> addresses = addressService.findAllByUser(getCurrentUser());
+		List<Address> addresses = addressService.findAllByCurrentUser();
 		if(addresses != null) {
 			return new ResponseEntity<List<Address>>(addresses, HttpStatus.OK);   
 		} else {
-			return new ResponseEntity<String>("Endereço não encontrado", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Nenhum endereço encontrado", HttpStatus.NOT_FOUND);
 		}
     }
 }

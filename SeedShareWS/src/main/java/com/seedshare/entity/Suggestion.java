@@ -29,15 +29,16 @@ public class Suggestion extends AbstractEntity<Suggestion> implements Serializab
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull
 	@Column(name = "active")
 	private Boolean isActive;
 
 	@ManyToOne
+	@NotNull(message = "O usuário não pode ser nulo.")
 	@JoinColumn(name="user_id")
 	private User user;
 
 	@OneToOne
+	@NotNull(message = "A espécie não pode ser nula.")
 	@JoinColumn(name="species_id")
 	private Species species;
 

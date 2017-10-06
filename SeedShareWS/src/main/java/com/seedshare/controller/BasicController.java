@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
  * @param <Entity>
  * @param <ID>
  */
-public interface BasicController<Entity,ID> {
+public interface BasicController<Entity,ID>{
 	
 	ResponseEntity<?> save(Entity e);
     

@@ -26,19 +26,18 @@ public class Climate extends AbstractEntity<Climate> implements Serializable {
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
     @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
     @Basic(optional = false)
-	@NotNull
     @Column(name = "climate_id")
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 2500)
+	@NotNull(message = "A descrição não pode ser nula.")
+	@Size(min = 1, max = 2500, message = "Descrição deve conter entre 1 e 2500 caracteres.")
 	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 100)
+	@NotNull(message = "O nome não pode ser nulo.")
+	@Size(min = 1, max = 100, message = "O nome deve conter entre 1 e 100 caracteres.")
 	@Column(name = "name", length = 100)
 	private String name;
 
@@ -59,10 +58,10 @@ public class Climate extends AbstractEntity<Climate> implements Serializable {
 	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
+		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(100)){
 			this.validationErrors.add("Espécie inválida.");
 		}
-		if(isNullOrEmpty(this.name) || is(this.name).biggerThan(100)) {
+		if(isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome grande demais.");
 		}
 		addAbstractAttributesValidation();

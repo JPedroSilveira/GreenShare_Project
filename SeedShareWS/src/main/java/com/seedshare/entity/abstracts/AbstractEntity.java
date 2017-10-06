@@ -10,23 +10,27 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.interfaces.BasicEntity;
-import com.seedshare.helpers.LengthHelper;
+import com.seedshare.helpers.IsHelper;
 
 @MappedSuperclass
-public abstract class AbstractEntity<Entity> implements BasicEntity<Entity>{
+public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEntity<Entity>{
 	
 	@Basic(optional = false)
-	@NotNull
+	@Past
+	@DateTimeFormat(pattern="dd/MM/yyyy")
 	@Column(name = "insertion_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date insertionDate;
 	
 	@Basic(optional = false)
-	@NotNull
+	@Past
+	@DateTimeFormat(pattern="dd/MM/yyyy")
 	@Column(name = "last_modification_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date lastModificationDate;
@@ -67,57 +71,6 @@ public abstract class AbstractEntity<Entity> implements BasicEntity<Entity>{
 	
 	public List<String> getValidationErrors() {
 		return this.validationErrors;
-	}
-	
-	protected boolean isNullOrEmpty(String string) {
-	    return string == null || string.isEmpty();
-	}
-	
-	protected boolean isNull(Object obj) {
-		return obj == null;
-	}
-	
-	protected boolean isNotNull(Object obj) {
-		return obj == null;
-	}
-	
-	protected boolean isNullOrFromTheFuture(Date date) {
-		return isNull(date) || date.after(new Date());
-	}
-	
-	protected boolean isFromTheFuture(Date date) {
-		if(isNull(date)) {
-			return false;
-		}
-		return date.after(new Date());
-	}
-	
-	protected LengthHelper is(String string) {
-		return new LengthHelper(string);
-	}
-	
-	protected LengthHelper is(short number) {
-		return new LengthHelper(number);
-	}
-	
-	protected LengthHelper is(int number) {
-		return new LengthHelper(number);
-	}
-	
-	protected LengthHelper is(float number) {
-		return new LengthHelper(number);
-	}
-	
-	protected boolean isPositive(Short number) {
-		return number>0;
-	}
-	
-	protected boolean isPositive(Integer number) {
-		return number>0;
-	}
-	
-	protected boolean isPositive(Long number) {
-		return number>0;
 	}
 	
 	public boolean isNotValid() {

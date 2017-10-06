@@ -31,17 +31,18 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull
+	@NotNull(message = "Latitude não pode ser nula.")
 	@Column(name = "latitude")
 	private BigDecimal latitude;
 
 	@Basic(optional = false)
-	@NotNull
+	@NotNull(message = "Longitude não pode ser nula.")
 	@Column(name = "longitude")
 	private BigDecimal longitude;
 
 	@JsonIgnore
 	@ManyToOne
+	@NotNull(message = "O usuário não pode ser nulo.")
 	@JoinColumn(name="user_id")
 	private User user;
 	

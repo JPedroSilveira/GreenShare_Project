@@ -31,9 +31,9 @@ public class Permission extends AbstractEntity<Permission> implements Serializab
 	private Long id;
 	
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 50)
-	@Column(name = "name", length = 50)
+	@NotNull(message = "O nome não pode ser nulo.")
+	@Size(min = 1, max = 100, message = "O nome deve conter entre 1 e 100 caracteres.")
+	@Column(name = "name", length = 100)
 	private String name;
 
 	@ManyToMany(mappedBy="permissions")
@@ -52,7 +52,7 @@ public class Permission extends AbstractEntity<Permission> implements Serializab
 	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNullOrEmpty(this.name) || is(this.name).biggerThan(100)) {
+		if(isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome inválido.");
 		}
 		addAbstractAttributesValidation();

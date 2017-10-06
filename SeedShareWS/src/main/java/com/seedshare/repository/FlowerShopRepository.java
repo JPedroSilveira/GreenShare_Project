@@ -11,4 +11,6 @@ import com.seedshare.entity.User;
  */
 public interface FlowerShopRepository extends PagingAndSortingRepository<FlowerShop, Long>{
 	FlowerShop findByUser(User user);
+	
+	FlowerShop findByCnpj(String cnpj);
 }

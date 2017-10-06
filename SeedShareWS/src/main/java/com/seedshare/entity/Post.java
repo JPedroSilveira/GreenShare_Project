@@ -41,17 +41,19 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	private Long id;
 	
 	@ManyToOne
+	@NotNull(message = "O usuário não pode ser nulo.")
 	@JoinColumn(name="user_id")
 	private User user;
 	
 	@ManyToOne
+	@NotNull(message = "A especie não pode ser nula.")
 	@JoinColumn(name="species_id")
 	private Species species;
 	
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 500)
-	@Column(name = "text", columnDefinition="TEXT", length = 2500)
+	@NotNull(message = "O texto não pode ser nulo.")
+	@Size(min = 1, max = 500, message = "O texto deve conter entre 1 e 500 caracteres.")
+	@Column(name = "text", columnDefinition="TEXT", length = 500)
 	private String text;
 
 	protected Post() {
@@ -71,7 +73,7 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNullOrEmpty(this.text) || is(this.text.length()).biggerThan(500)){
+		if(isNullOrEmpty(this.text) || is(this.text).orSmallerThan(1).orBiggerThan(500)){
 			this.validationErrors.add("Texto inválido.");
 		}
 		if(isNull(this.hasImage)) {

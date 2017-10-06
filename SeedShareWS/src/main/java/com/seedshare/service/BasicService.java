@@ -8,7 +8,7 @@ package com.seedshare.service;
 public interface BasicService<Entity, ID> {
 	Entity save(Entity e);
     
-    void delete(Entity e);
+    void delete(ID id);
 
     Entity findOne(ID id);
 }

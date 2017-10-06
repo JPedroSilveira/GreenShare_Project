@@ -29,8 +29,8 @@ public class Growth extends AbstractEntity<Growth> implements Serializable {
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 2500)
+	@NotNull(message = "A descrição não pode ser nula.")
+	@Size(min = 1, max = 2500, message = "A descrição deve conter de 1 a 2500 caracteres")
 	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
 
@@ -49,7 +49,7 @@ public class Growth extends AbstractEntity<Growth> implements Serializable {
 	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
+		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(100)){
 			this.validationErrors.add("Descrição inválida.");
 		}
 		addAbstractAttributesValidation();

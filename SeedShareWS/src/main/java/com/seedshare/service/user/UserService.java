@@ -1,16 +1,19 @@
 package com.seedshare.service.user;
 
 import com.seedshare.entity.User;
-import com.seedshare.service.BasicService;
 
 /**
  * Service interface of User
  * @author joao.silva
  */
-public interface UserService extends BasicService<User,Long>{
-	
-	User findOneByEmail(String email);
-	
+public interface UserService{
+		
 	User create(User user);
+
+	boolean changePassword(User user);
+
+	String changeName(String name);
+
+	User findOne(Long id);
 
 }

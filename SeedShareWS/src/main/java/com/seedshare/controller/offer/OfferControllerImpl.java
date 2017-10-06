@@ -30,36 +30,34 @@ public class OfferControllerImpl implements OfferController{
 	OfferServiceImpl offerService;
 	
 	@Override
-	@PostMapping("/save/")
+	@PostMapping("/")
 	public ResponseEntity<?> save(Offer offer) {
 		Offer response = offerService.save(offer);
 		if(response != null) {
-			response.setUser(null);
 			return new ResponseEntity<Offer>(response, HttpStatus.OK);   
 		}
-		return new ResponseEntity<String>("Falha ao registrar oferta", HttpStatus.NOT_ACCEPTABLE);
+		return new ResponseEntity<String>("Falha ao registrar oferta", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		offerService.delete(id);
 		return new ResponseEntity<String>("Oferta retirada.", HttpStatus.OK);
 	}
 	
 	@Override
-	@DeleteMapping("/delete/")
+	@DeleteMapping("/")
 	public ResponseEntity<?> delete(@RequestBody Offer offer) {
-		offerService.delete(offer);
+		offerService.delete(offer.getId());
 		return new ResponseEntity<String>("Oferta retirada.", HttpStatus.OK);
 	}
 
 	@Override
-	@GetMapping("/get/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> findOne(@PathVariable Long id) {
 		Offer response = offerService.findOne(id);
 		if(response != null) {
-			response.setUser(null);
 			return new ResponseEntity<Offer>(response, HttpStatus.OK);   
 		}
 		return new ResponseEntity<String>("Falha ao registrar oferta", HttpStatus.NOT_ACCEPTABLE);
@@ -68,7 +66,7 @@ public class OfferControllerImpl implements OfferController{
 	@Override
 	@GetMapping("/getByUser/")
 	public ResponseEntity<?> findAllByUser(@RequestBody User user) {
-		List<Offer> response = offerService.findAllByUser(user);
+		List<Offer> response = offerService.findAllByUser(user.getId());
 		return findAllResponse(response);
 	}
 
@@ -82,7 +80,7 @@ public class OfferControllerImpl implements OfferController{
 	@Override
 	@GetMapping("/getByFlowerShop/")
 	public ResponseEntity<?> findAllByFlowerShop(@RequestBody FlowerShop flowerShop) {
-		List<Offer> response = offerService.findAllByFlowerShop(flowerShop);
+		List<Offer> response = offerService.findAllByFlowerShop(flowerShop.getId());
 		return findAllResponse(response);
 	}
 	
@@ -96,7 +94,7 @@ public class OfferControllerImpl implements OfferController{
 	@Override
 	@GetMapping("/getBySpecies/")
 	public ResponseEntity<?> findAllBySpecies(@RequestBody Species species) {
-		List<Offer> response = offerService.findAllBySpecies(species);
+		List<Offer> response = offerService.findAllBySpecies(species.getId());
 		return findAllResponse(response);
 	}
 	
@@ -109,7 +107,6 @@ public class OfferControllerImpl implements OfferController{
 	
 	private ResponseEntity<?> findAllResponse(List<Offer> response) {
 		if(response != null) {
-			response.forEach(r -> r.setUser(null));
 			return new ResponseEntity<List<Offer>>(response, HttpStatus.OK);   
 		}
 		return new ResponseEntity<String>("Falha ao carregar ofertas", HttpStatus.NOT_FOUND);

@@ -4,7 +4,6 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -39,31 +38,32 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull
+	@NotNull(message = "O preço unitário não pode ser nulo.")
+	@Size(min = 0, message = "Preço unitário deve ser no mínimo zero.")
 	@Column(name = "unit_price")
 	private Float unitPrice;
 
 	@Basic(optional = false)
-	@NotNull
-	@Max(9999)
+	@NotNull(message = "Quantidade não pode ser nula")
+	@Size(min = 1, max = 9999, message = "Quantidade deve estar entre 1 e 9999.")
 	@Column(name = "amount")
 	private Integer amount;
 
 	@Basic(optional = false)
-	@NotNull
 	@Column(name = "offer_status", columnDefinition="TEXT")
 	private Integer offerStatus;
 
 	@Basic(optional = false)
-	@NotNull
 	@Column(name = "type")
 	private Integer type;
 
 	@ManyToOne
+	@NotNull(message = "O usuário não pode ser nulo.")
 	@JoinColumn(name="user_id")
 	private User user;
 
 	@ManyToOne
+	@NotNull(message = "A espécie não pode ser nula.")
 	@JoinColumn(name="species_id")
 	private Species species;
 
@@ -71,8 +71,8 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private List<Request> requests;
 	
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 2500)
+	@NotNull(message = "A descrição não pode ser nula.")
+	@Size(min = 1, max = 2500, message = "A descrição deve conter de 1 a 2500 caracteres.")
 	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
 	
@@ -100,7 +100,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(2500)){
+		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)){
 			this.validationErrors.add("Descrição inválida");
 		}
 		if(isNull(this.type) && isNull(this.unitPrice)) {

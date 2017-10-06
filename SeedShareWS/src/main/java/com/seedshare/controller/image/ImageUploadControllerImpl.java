@@ -1,4 +1,4 @@
-package com.seedshare.controller.photo;
+package com.seedshare.controller.image;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.seedshare.UserUtils;
 import com.seedshare.entity.FlowerShop;
 import com.seedshare.entity.Post;
 import com.seedshare.entity.Species;
@@ -21,6 +20,7 @@ import com.seedshare.entity.User;
 import com.seedshare.entity.interfaces.PhotogenicEntity;
 import com.seedshare.exception.DirectoryException;
 import com.seedshare.helpers.ImageHelper;
+import com.seedshare.helpers.UserUtils;
 import com.seedshare.service.photo.PhotogenicServiceImpl;
 import com.seedshare.service.post.PostServiceImpl;
 import com.seedshare.service.species.SpeciesServiceImpl;

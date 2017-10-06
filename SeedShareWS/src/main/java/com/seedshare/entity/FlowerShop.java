@@ -33,22 +33,26 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(min = 14, max = 14)
+	@NotNull(message = "O CNPJ não pode ser nulo.")
+	@Size(min = 14, max = 14, message = "O CNPJ deve conter 14 caracteres.")
 	@Column(name = "cnpj", length = 14, unique = true)
 	private String cnpj;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 2500)
+	@NotNull(message = "A descrição não pode ser nula.")
+	@Size(min = 1, max = 2500, message = "A descrição deve conter de 1 a 2500 caracteres")
 	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 100)
+	@NotNull(message = "O nome não pode ser nulo.")
+	@Size(min = 1, max = 100, message = "O nome deve conter de 1 e 100 caracteres.")
 	@Column(name = "name", length = 100)
 	private String name;
+	
+	@Basic(optional = false)
+	@Column(name = "active")
+	private Boolean isActive;
 
 	@JsonIgnore
 	@OneToOne
@@ -71,13 +75,13 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNullOrEmpty(this.description) || is(this.description).biggerThan(100)){
+		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)){
 			this.validationErrors.add("Descrição inválida");
 		}
-		if(isNullOrEmpty(this.name) || is(this.name).biggerThan(100)) {
+		if(isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome inválido.");
 		}
-		if(isNull(this.user) || this.user.isNotValid()) {
+		if(isNull(this.user) || !this.user.getIsLegalPerson() || this.user.isNotValid()) {
 			this.validationErrors.add("Usuário inválido.");
 		}
 		if(isNull(this.cnpj) || is(this.cnpj).equal(14)) {
@@ -107,7 +111,7 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 		return this.name;
 	}
 
-	public void setNome(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -117,6 +121,14 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 
 }

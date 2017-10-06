@@ -1,18 +1,15 @@
 package com.seedshare.controller.user;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.UserUtils;
 import com.seedshare.entity.User;
+import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.user.UserServiceImpl;
 
 /**
@@ -20,18 +17,14 @@ import com.seedshare.service.user.UserServiceImpl;
  */
 @RestController
 @RequestMapping("/user")
-public class UserControllerImpl extends UserUtils implements UserController{
+public class UserControllerImpl extends IsHelper implements UserController{
 	@Autowired
 	UserServiceImpl userService;
 	
 	@Override
-	@PutMapping(value = "/change/password/")
+	@PutMapping(value = "/password/")
     public ResponseEntity<String> changePassword(@RequestBody User user) {
-		User currentUser = getCurrentUser();
-		currentUser.setPassword(user.getPassword());
-		currentUser.encodePassword();
-		User newUser = userService.save(currentUser);
-		if(newUser != null) {
+		if(userService.changePassword(user)) {
 			return new ResponseEntity<String>("Senha alterada com sucesso", HttpStatus.OK);   
 		}else {
 			return new ResponseEntity<String>("Falha ao alterar a senha", HttpStatus.INTERNAL_SERVER_ERROR);   
@@ -39,17 +32,22 @@ public class UserControllerImpl extends UserUtils implements UserController{
     }
 	
 	@Override
-	@PutMapping("/change/name/{name}")
-	public ResponseEntity<?> changeName(@PathVariable String name) {
-		User currentUser = getCurrentUser();
-		currentUser.setName(name);
-		if(currentUser.isValid()) {  
-			if(userService.save(currentUser) != null) {
-				return new ResponseEntity<String>("Senha alterada com sucesso", HttpStatus.OK);   
-			}else {
-				return new ResponseEntity<String>("Falha ao alterar a senha", HttpStatus.INTERNAL_SERVER_ERROR);   
-			}
+	@PutMapping("/name/")
+	public ResponseEntity<?> changeName(@RequestBody User user) {
+		String response = userService.changeName(user.getName());
+		if(isNotNull(response)){
+			return new ResponseEntity<String>(response, HttpStatus.OK);   
 		}
-		return new ResponseEntity<List<String>>(currentUser.getValidationErrors(), HttpStatus.BAD_REQUEST);   
+		return new ResponseEntity<String>("Falha ao atualizar nome", HttpStatus.BAD_REQUEST); 
+    }
+	
+	@Override
+	@PutMapping("/name/string/")
+	public ResponseEntity<?> changeName(@RequestBody String name) {
+		String response = userService.changeName(name);
+		if(isNotNull(response)){
+			return new ResponseEntity<String>(response, HttpStatus.OK);   
+		}
+		return new ResponseEntity<String>("Falha ao atualizar nome", HttpStatus.BAD_REQUEST); 
     }
 }

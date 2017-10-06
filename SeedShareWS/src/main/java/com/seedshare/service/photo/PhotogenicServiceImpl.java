@@ -3,7 +3,6 @@ package com.seedshare.service.photo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.UserUtils;
 import com.seedshare.entity.Achievement;
 import com.seedshare.entity.Flower;
 import com.seedshare.entity.FlowerShop;
@@ -14,6 +13,7 @@ import com.seedshare.entity.Species;
 import com.seedshare.entity.User;
 import com.seedshare.entity.interfaces.PhotogenicEntity;
 import com.seedshare.enumeration.PhotoType;
+import com.seedshare.helpers.UserUtils;
 import com.seedshare.repository.AchievementRepository;
 import com.seedshare.repository.FlowerRepository;
 import com.seedshare.repository.FlowerShopRepository;

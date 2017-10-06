@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractPhotogenicEntity;
 import com.seedshare.enumeration.PhotoType;
 import com.seedshare.helpers.CPFHelper;
@@ -45,46 +46,43 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	private Long id;
 	
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 100)
+	@NotNull(message="Nome não poder ser nulo.")
+	@Size(min = 1, max = 100, message = "O nome deve conter entre 1 e 100 caracteres.")
 	@Column(name = "name", length = 100)
 	private String name;
-	
-	@Basic(optional = false)
-	@NotNull
-	@Column(name = "has_image")
-	private Boolean hasImage;
 
 	@Basic(optional = true)
-	@Size(min = 11, max = 11)
+	@NotNull(message = "CPF não pode ser nulo.")
+	@Size(min = 11, max = 11, message="CPF deve conter 11 digitos.")
 	@Column(name = "cpf", length = 11, unique = true)
 	private String cpf;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(max = 100)
+	@NotNull(message = "Email não pode ser nulo.")
+	@Size(min = 1, max = 100, message = "O email deve conter entre 1 e 100 caracteres.")
 	@Column(name = "email", length = 100, unique = true)
 	private String email;
 
 	@Basic(optional = false)
-	@NotNull
-	@Size(min = 8, max = 250)
+	@NotNull(message = "A senha não pode ser nula.")
+	@Size(min = 8, max = 250, message = "A senha deve conter no mínimo 8 caracteres e no máximo 250.")
 	@Column(name = "password", length = 250)
 	private String password;
 
 	@Basic(optional = false)
-	@NotNull
+	@NotNull(message = "Obrigatório informar se o usuário é uma pessoa jurídica.")
 	@Column(name = "legal_person")
 	private Boolean isLegalPerson;
 	
 	@Basic(optional = false)
-	@NotNull
 	@Column(name = "approved")
 	private Boolean isApproved;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="user")
 	private List<Address> addresses;
 
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "flower_shop_id")
 	private FlowerShop flowerShop;
@@ -139,21 +137,37 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	public boolean isValid(){
 		this.validationErrors.clear();
 		
-		if(isNullOrEmpty(this.email) || is(this.email).biggerThan(100) || isNotValidEmail()){
+		if(isNullOrEmpty(this.email) || is(this.email).orSmallerThan(1).orBiggerThan(100) || isNotValidEmail()){
 			this.validationErrors.add("Email inválido");
 		}
-		if(isNullOrEmpty(this.password) || is(this.password).orSmallerThan(8).orBiggerThan(250)) {
+		if(hasInvalidPassword()) {
 			this.validationErrors.add("Senha inválida");
 		}
-		if(!this.isLegalPerson && (isNullOrEmpty(this.cpf) || !CPFHelper.isNotCPF(this.cpf))) {
+		if(!this.isLegalPerson && (isNullOrEmpty(this.cpf) || CPFHelper.isNotCPF(this.cpf))) {
 			this.validationErrors.add("CPF inválido");
 		}
-		if(isNullOrEmpty(this.name) || is(this.name).biggerThan(100)) {
+		if(hasInvalidName()) {
 			this.validationErrors.add("Nome inválido");
 		}
 		
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
+	}
+	
+	public boolean hasInvalidPassword() {
+		return isNullOrEmpty(this.password) || is(this.password).orSmallerThan(8).orBiggerThan(250);
+	}
+	
+	public boolean hasValidPassword() {
+		return !hasInvalidPassword();
+	}
+	
+	public boolean hasInvalidName() {
+		return isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100);
+	}
+	
+	public boolean hasValidName() {
+		return !hasInvalidName();
 	}
 	
 	public static PasswordEncoder passwordEncoder() {
@@ -166,6 +180,10 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 
 	public String getCpf() {
 		return this.cpf;
+	}
+	
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 	
 	public String getName() {
@@ -273,6 +291,12 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Override
 	public Boolean getHasImage() {
 		return this.hasImage;
+	}
+	
+	public void cleanPrivateDate() {
+		this.cpf = null;
+		this.addresses = null;
+		this.password = null;
 	}
 
 }
