@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.seedshare.entity.abstracts.AbstractPhotogenicEntity;
+import com.seedshare.enumeration.Month;
 import com.seedshare.enumeration.PhotoType;
 
 import java.util.List;
@@ -38,16 +39,10 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	@Column(name = "aromatic")
 	private Boolean isAromatic;
 
-	@ManyToMany
-	@JoinTable(
-		name="flowerting_months"
-		, joinColumns={
-			@JoinColumn(name="flower_ID")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="month_id")
-			}
-		)
+	@ElementCollection(targetClass = Month.class)
+	@JoinTable(name = "Flowering_Month", joinColumns = @JoinColumn(name = "flower_id"))
+	@Column(name = "month", nullable = false)
+	@Enumerated(EnumType.STRING)
 	private List<Month> floweringMonths;
 
 	@Basic(optional = false)

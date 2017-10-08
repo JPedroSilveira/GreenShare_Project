@@ -6,10 +6,10 @@
 	<groupId>com.seedshare</groupId>
 	<artifactId>SeedShareWS</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>jar</packaging> 
 
 	<name>SeedShareWS</name>
-	<description>SeedShare webservice project</description>
+	<description>SeedShare WebService project</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -113,6 +113,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals><goal>copy-dependencies</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 
