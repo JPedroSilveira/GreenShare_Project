@@ -1,6 +1,6 @@
 package com.seedshare.service.offer;
 
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 import com.seedshare.entity.Offer;
 import com.seedshare.service.BasicService;
@@ -11,12 +11,12 @@ import com.seedshare.service.BasicService;
  */
 public interface OfferService extends BasicService<Offer,Long>{
 	
-	List<Offer> findAllByFlowerShop(Long id);
+	ResponseEntity<?> findAllByFlowerShop(Long id);
 
-	void delete(Long id);
+	ResponseEntity<?> delete(Long id);
 
-	List<Offer> findAllByUser(Long id);
+	ResponseEntity<?> findAllByUser(Long id);
 
-	List<Offer> findAllBySpecies(Long id);
+	ResponseEntity<?> findAllBySpecies(Long id);
 
 }
