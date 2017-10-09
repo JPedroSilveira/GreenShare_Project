@@ -1,6 +1,6 @@
 package com.seedshare.service.address;
 
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 import com.seedshare.entity.Address;
 import com.seedshare.service.BasicService;
@@ -11,6 +11,6 @@ import com.seedshare.service.BasicService;
  */
 public interface AddressService extends BasicService<Address,Long>{
 
-	List<Address> findAllByCurrentUser();
+	ResponseEntity<?> findAllByCurrentUser();
 	
 }

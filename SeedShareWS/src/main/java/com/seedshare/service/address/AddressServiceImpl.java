@@ -1,8 +1,8 @@
 package com.seedshare.service.address;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.seedshare.entity.Address;
@@ -13,55 +13,62 @@ import com.seedshare.repository.UserRepository;
 
 /**
  * Implementation of Address Service interface
+ * 
  * @author joao.silva
  */
 @Service
-public class AddressServiceImpl extends IsHelper implements AddressService{
+public class AddressServiceImpl extends IsHelper implements AddressService {
 
 	@Autowired
 	AddressRepository addressRepository;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
-	@Override
-	public Address save(Address address) {
-		Address newAddress = new Address(address.getLatitude(), address.getLongitude(), getCurrentUser());
-		if(newAddress.isValid()) {
-			newAddress = addressRepository.save(address);
-			newAddress.getUser().cleanPrivateDate();
-			return newAddress;
-		}
-		return null;
-	}
 
 	@Override
-	public void delete(Long id) {
-		if(isNotNull(id)) {
-			addressRepository.delete(id);
-		}
-	}
-
-	@Override
-	public Address findOne(Long id) {
-		if(isNotNull(id)) {
-			Address addressDB = addressRepository.findOne(id);
-			if(isNotNull(addressDB)) {
-				addressDB.getUser().cleanPrivateDate();
-				return addressDB;
+	public ResponseEntity<?> save(Address address) {
+		if (isNotNull(address)) {
+			Address newAddress = new Address(address.getLatitude(), address.getLongitude(), address.getCity(),
+					getCurrentUser());
+			if (newAddress.isValid()) {
+				newAddress = addressRepository.save(newAddress);
+				newAddress.getUser().cleanPrivateDate();
+				return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
 			}
 		}
-		return null;
+		return new ResponseEntity<String>("Endereço inválido.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Override
-	public List<Address> findAllByCurrentUser() {
-		User userDB = getCurrentUser();
-		if(isNotNull(userDB)) {
-			List<Address> addressListDB = addressRepository.findAllByUser(userDB);
-			addressListDB.forEach(address -> address.getUser().cleanPrivateDate());
-			return addressListDB;
+	public ResponseEntity<?> delete(Long id) {
+		if (isNotNull(id)) {
+			addressRepository.delete(id);
+			return new ResponseEntity<String>("Endereço deletado.", HttpStatus.OK);
 		}
-		return null;
+		return new ResponseEntity<String>("É necessário informar um ID.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> findOne(Long id) {
+		if (isNotNull(id)) {
+			Address addressDB = addressRepository.findOne(id);
+			if (isNotNull(addressDB)) {
+				addressDB.setUser(null);
+				return new ResponseEntity<Address>(addressDB, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>("Endereço não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("É necessário informar um ID.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> findAllByCurrentUser() {
+		User userDB = getCurrentUser();
+		if (isNotNull(userDB)) {
+			Iterable<Address> addressListDB = addressRepository.findAllByUser(userDB);
+			addressListDB.forEach(address -> address.getUser().cleanPrivateDate());
+			return new ResponseEntity<Iterable<Address>>(addressListDB, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Usuário logado inválido.", HttpStatus.BAD_REQUEST);
 	}
 }
