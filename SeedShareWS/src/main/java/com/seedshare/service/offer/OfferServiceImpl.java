@@ -3,6 +3,7 @@ package com.seedshare.service.offer;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.seedshare.entity.FlowerShop;
@@ -36,7 +37,7 @@ public class OfferServiceImpl extends IsHelper implements OfferService{
 	UserRepository userRepository;
 	
 	@Override
-	public Offer save(Offer offer) {
+	public ResponseEntity<?> save(Offer offer) {
 		Offer newOffer = new Offer(offer.getUnitPrice(), offer.getAmount(), getCurrentUser(), offer.getSpecies(),offer.getDescription());
 		if(newOffer.isValid()) {
 			Offer response = offerRepository.save(offer);
@@ -48,12 +49,12 @@ public class OfferServiceImpl extends IsHelper implements OfferService{
 	}
 	
 	@Override
-	public void delete(Long id) {
+	public ResponseEntity<?> delete(Long id) {
 		Offer offerToDelete = offerRepository.findOne(id);
 		deleteOffer(offerToDelete);
 	}
 	
-	private void deleteOffer(Offer offerToDelete) {
+	private ResponseEntity<?> deleteOffer(Offer offerToDelete) {
 		if(offerToDelete.getUser().getId() == getCurrentUser().getId()) {
 			offerToDelete.setOfferStatus(OfferStatus.Closed);
 			offerRepository.save(offerToDelete);
@@ -61,7 +62,7 @@ public class OfferServiceImpl extends IsHelper implements OfferService{
 	}
 
 	@Override
-	public Offer findOne(Long id) {
+	public ResponseEntity<?> findOne(Long id) {
 		Offer response = offerRepository.findOne(id);
 		if(response != null) {
 			response.getUser().cleanPrivateDate();
@@ -71,7 +72,7 @@ public class OfferServiceImpl extends IsHelper implements OfferService{
 	}
 	
 	@Override
-	public List<Offer> findAllByUser(Long id) {
+	public ResponseEntity<?> findAllByUser(Long id) {
 		if(isNotNull(id)) {
 			User user = userRepository.findOne(id);
 			if(user != null) {
@@ -84,7 +85,7 @@ public class OfferServiceImpl extends IsHelper implements OfferService{
 	}
 	
 	@Override
-	public List<Offer> findAllByFlowerShop(Long id) {
+	public ResponseEntity<?> findAllByFlowerShop(Long id) {
 		if(isNotNull(id)) {
 			FlowerShop flowerShopDB = flowerShopRepository.findOne(id);
 			if(isNotNull(flowerShopDB)) {
@@ -97,7 +98,7 @@ public class OfferServiceImpl extends IsHelper implements OfferService{
 	}
 	
 	@Override
-	public List<Offer> findAllBySpecies(Long id) {
+	public ResponseEntity<?> findAllBySpecies(Long id) {
 		if(isNotNull(id)) {
 			Species speciesDB = speciesRepository.findOne(id);
 			if(isNotNull(speciesDB)) {
