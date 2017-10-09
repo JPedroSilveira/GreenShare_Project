@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.seedshare.entity.abstracts.AbstractEntity;
@@ -34,16 +35,18 @@ public class Suggestion extends AbstractEntity<Suggestion> implements Serializab
 
 	@ManyToOne
 	@NotNull(message = "O usuário não pode ser nulo.")
+	@Valid
 	@JoinColumn(name="user_id")
 	private User user;
 
 	@OneToOne
 	@NotNull(message = "A espécie não pode ser nula.")
+	@Valid
 	@JoinColumn(name="species_id")
 	private Species species;
 
 	protected Suggestion() {
-		super();
+		super(false);
 	}
 	
 	public Suggestion(User user, Species species) {
@@ -57,11 +60,18 @@ public class Suggestion extends AbstractEntity<Suggestion> implements Serializab
 	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNull(this.user) || this.user.isNotValid()){
-			this.validationErrors.add("Usuário inválido.");
+		if(isNull(this.isActive)) {
+			this.validationErrors.add("O atributo isActive não pode ser nulo.");
 		}
-		if(isNull(this.species) || this.species.isNotValid()){
-			this.validationErrors.add("Espécie inválida.");
+		if(isNull(this.user)){
+			this.validationErrors.add("Usuário não pode ser nulo.");
+		}else if(this.user.isNotValid()){
+			this.validationErrors.addAll(this.user.getValidationErrors());
+		}
+		if(isNull(this.species)){
+			this.validationErrors.add("Espécie não pode ser nula.");
+		}else if(this.species.isNotValid()) {
+			this.validationErrors.addAll(this.species.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();

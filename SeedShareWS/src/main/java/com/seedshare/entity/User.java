@@ -4,9 +4,11 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -60,6 +62,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Basic(optional = false)
 	@NotNull(message = "Email não pode ser nulo.")
 	@Size(min = 1, max = 100, message = "O email deve conter entre 1 e 100 caracteres.")
+	@Email(message = "Email inválido.")
 	@Column(name = "email", length = 100, unique = true)
 	private String email;
 
@@ -79,26 +82,33 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	private Boolean isApproved;
 	
 	@JsonIgnore
+	@Valid
 	@OneToMany(mappedBy="user")
 	private List<Address> addresses;
 
 	@JsonIgnore
+	@Valid
 	@OneToOne
 	@JoinColumn(name = "flower_shop_id")
 	private FlowerShop flowerShop;
 
+	@Valid
 	@OneToMany(mappedBy="user")
 	private List<Offer> offers;
 	
+	@Valid
 	@OneToMany(mappedBy="user")
 	private List<Post> posts;
 
+	@Valid
 	@OneToMany(mappedBy="user")
 	private List<Request> requests;
 
+	@Valid
 	@OneToMany(mappedBy="user")
 	private List<Suggestion> suggestions;
 
+	@Valid
 	@ManyToMany
 	@JoinTable(
 		name="user_permission"
@@ -111,11 +121,12 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		)
 	private List<Permission> permissions;
 
+	@Valid
 	@OneToMany(mappedBy="user")
 	private List<UserAchievement> userAchievements;
 		
 	protected User() {
-		super(PHOTO_TYPE);
+		super(PHOTO_TYPE, false);
 	}
 
 	public User(String cpf, String name, String email, String password, Boolean isLegalPerson) {

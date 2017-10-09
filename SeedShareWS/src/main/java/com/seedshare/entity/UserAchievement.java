@@ -6,7 +6,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 import com.seedshare.entity.abstracts.AbstractEntity;
 
@@ -31,26 +34,31 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull
+	@NotNull(message = "Pontuação não pode ser nula.")
+	@Size(min = 0, message = "Pontuação deve ser igual ou maior que zero.")
 	@Column(name = "score")
 	private Long score;
 
+	@Valid
+	@NotNull(message = "Usuário não pode ser nulo.")
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
 
+	@Valid
+	@NotNull(message = "A conquista não pode ser nula.")
 	@ManyToOne
 	@JoinColumn(name="achievement_id")
 	private Achievement achievement;
 	
-	@Basic(optional = false)
-	@NotNull
+	@Past
+	@Basic(optional = true)
 	@Column(name = "conquest_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date conquestDate;
 
 	protected UserAchievement() {
-		super();
+		super(false);
 	}
 	
 	public UserAchievement(User user, Achievement achievement) {
@@ -63,8 +71,10 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	public boolean isValid() {
 		this.validationErrors.clear();
 		
-		if(isNull(this.user) || this.user.isNotValid()){
-			this.validationErrors.add("Usuário inválido.");
+		if(isNull(this.user)){
+			this.validationErrors.add("Usuário não pode ser nulo.");
+		}else if(this.user.isNotValid()) {
+			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
 		if(isNull(this.score) || isPositive(this.score)){
 			this.validationErrors.add("Pontuação inválida.");
@@ -95,16 +105,8 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 		return this.user;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public Achievement getAchievement() {
 		return this.achievement;
-	}
-
-	public void setAchievement(Achievement achievement) {
-		this.achievement = achievement;
 	}
 	
 	public Date getConquestDate() {

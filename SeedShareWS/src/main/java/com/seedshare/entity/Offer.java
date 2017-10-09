@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -59,14 +60,17 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 
 	@ManyToOne
 	@NotNull(message = "O usuário não pode ser nulo.")
+	@Valid
 	@JoinColumn(name="user_id")
 	private User user;
 
 	@ManyToOne
 	@NotNull(message = "A espécie não pode ser nula.")
+	@Valid
 	@JoinColumn(name="species_id")
 	private Species species;
 
+	@Valid
 	@OneToMany(mappedBy="offer")
 	private List<Request> requests;
 	
@@ -77,7 +81,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private String description;
 	
 	protected Offer() {
-		super(PHOTO_TYPE);
+		super(PHOTO_TYPE, false);
 		this.validationErrors = new ArrayList<String>();
 	}
 	
@@ -101,31 +105,35 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		this.validationErrors.clear();
 		
 		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)){
-			this.validationErrors.add("Descrição inválida");
+			this.validationErrors.add("Descrição inválida.");
 		}
-		if(isNull(this.type) && isNull(this.unitPrice)) {
+		if(isNotNull(this.type) && isNotNull(this.unitPrice)) {
 			if(this.type == OfferType.Sale.getOfferType() && is(this.unitPrice).smallerOrEqual(0)) {
-				this.validationErrors.add("Preço unitário inválido para uma venda");
+				this.validationErrors.add("Preço unitário inválido para uma venda.");
 			}
 			if(this.type == OfferType.Donation.getOfferType() && is(this.unitPrice).notEqual(0)) {
-				this.validationErrors.add("Preço unitário inválido para uma doação");
+				this.validationErrors.add("Preço unitário inválido para uma doação.");
 			}
 		} else {
 			if(isNull(this.type)) {
-				this.validationErrors.add("Tipo de oferta inválida");
+				this.validationErrors.add("Tipo de oferta inválida.");
 			}
 			if(isNull(this.unitPrice)) {
-				this.validationErrors.add("Preço unitário inválido");
+				this.validationErrors.add("Preço unitário inválido.");
 			}
 		}
 		if(isNull(this.amount) || is(this.amount).smallerOrEqual(0)) {
-			this.validationErrors.add("Quantidade inválida");
+			this.validationErrors.add("Quantidade inválida.");
 		}
-		if(this.user.isNotValid()) {
-			this.validationErrors.add("Usuário inválido");
+		if(isNull(this.user)) {
+			this.validationErrors.add("O usuário não pode ser nulo.");
+		}else if(this.user.isNotValid()) {
+			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
-		if(!this.species.isNotValid()) {
-			this.validationErrors.add("Espécie inválida");
+		if(isNull(this.species)){
+			this.validationErrors.add("A espécie não pode ser nula.");
+		}else if(this.species.isNotValid()) {
+			this.validationErrors.addAll(this.species.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();

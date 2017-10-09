@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -39,12 +40,6 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	@Column(name = "aromatic")
 	private Boolean isAromatic;
 
-	@ElementCollection(targetClass = Month.class)
-	@JoinTable(name = "Flowering_Month", joinColumns = @JoinColumn(name = "flower_id"))
-	@Column(name = "month", nullable = false)
-	@Enumerated(EnumType.STRING)
-	private List<Month> floweringMonths;
-
 	@Basic(optional = false)
 	@NotNull(message = "A descrição não pode ser nula.")
 	@Size(min = 1, max = 2500, message = "A descrição deve conter de 1 a 2500 caracteres.")
@@ -60,23 +55,36 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	@Basic(optional = false)
 	@ManyToOne
 	@NotNull(message = "A espécie não pode ser nula.")
+	@Valid
 	@JoinColumn(name="species_id")
 	private Species species;
 	
-	@Basic(optional = false)
-	@ManyToOne
-	@NotNull(message = "A cor não pode ser nula.")
-	@JoinColumn(name = "color_id")
-	private Color color;
+	@Valid
+	@ManyToMany
+	@JoinTable(
+		name="flower_clor"
+		, joinColumns={
+			@JoinColumn(name="flower_id")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="color_id")
+			}
+		)
+	private List<Color> colors;
+	
+	@ElementCollection(targetClass = Month.class)
+	@JoinTable(name = "Flowering_Month", joinColumns = @JoinColumn(name = "flower_id"))
+	@Column(name = "month", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private List<Month> floweringMonths;
 
 	protected Flower() {
-		super(PHOTO_TYPE);
+		super(PHOTO_TYPE, false);
 	}
 	
-	public Flower(Boolean isAromatic, Color color, String description, String name, Species species) {
+	public Flower(Boolean isAromatic, String description, String name, Species species) {
 		super(PHOTO_TYPE, true);
 		this.isAromatic = isAromatic;
-		this.color = color;
 		this.description = description;
 		this.name = name;
 		this.species = species;
@@ -114,12 +122,8 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 		this.isAromatic = isAromatic;
 	}
 
-	public Color getColor() {
-		return this.color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
+	public List<Color> getColors() {
+		return this.colors;
 	}
 
 	public List<Month> getFloweringMonths() {

@@ -1,6 +1,8 @@
 package com.seedshare.helpers;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author joao.silva
@@ -40,7 +42,7 @@ public class IsHelper extends UserUtils {
 	}
 	
 	protected boolean isNotNull(Object obj) {
-		return obj == null;
+		return !isNull(obj);
 	}
 	
 	protected boolean isNullOrFromTheFuture(Date date) {

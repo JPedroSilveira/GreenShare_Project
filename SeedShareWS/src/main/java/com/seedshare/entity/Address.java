@@ -4,16 +4,19 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 import java.math.BigDecimal;
-
+import java.util.List;
 
 /**
  * Persistence class for the table address
+ * 
  * @author joao.silva
  */
 @Entity
@@ -22,11 +25,11 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "address_seq";
-	
+
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
-    @Basic(optional = false)
+	@SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
+	@Basic(optional = false)
 	@Column(name = "address_id")
 	private Long id;
 
@@ -40,35 +43,60 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@Column(name = "longitude")
 	private BigDecimal longitude;
 
+	@Valid
+	@Basic(optional = false)
+	@NotNull(message = "Cidade não poder ser nula.")
+	@Column(name = "city")
+	private City city;
+
+	@Basic(optional = false)
+	@NotNull(message = "CEP não pode ser nulo.")
+	@Size(max = 8, min = 8, message = "O CEP deve conter oito dígitos.")
+	@Column(name = "cpd", length = 8)
+	private Integer cep;
+
 	@JsonIgnore
 	@ManyToOne
-	@NotNull(message = "O usuário não pode ser nulo.")
-	@JoinColumn(name="user_id")
+	@Valid
+	@JoinColumn(name = "user_id")
 	private User user;
 	
+	@OneToMany(mappedBy="address")
+	@Valid
+	private List<Address> address;
+
 	protected Address() {
-		super();
+		super(false);
 	}
-	
-	public Address(BigDecimal latitude, BigDecimal longitude, User user) {
+
+	public Address(BigDecimal latitude, BigDecimal longitude, City city, User user) {
 		super(true);
 		this.user = user;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.city = city;
 	}
-	
+
 	@Override
 	public boolean isValid() {
 		this.validationErrors.clear();
-		
-		if(isNull(this.user) || !(this.user.isNotValid())){
-			this.validationErrors.add("Usuário inválido");
+
+		if (isNotNull(this.user) && this.user.isNotValid()) {
+			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
-		if(isNull(this.latitude)) {
-			this.validationErrors.add("Latitude inválida");
+		if (isNull(this.latitude)) {
+			this.validationErrors.add("Latitude inválida.");
 		}
-		if(isNull(this.longitude)) {
-			this.validationErrors.add("Longitude inválida");
+		if (isNull(this.longitude)) {
+			this.validationErrors.add("Longitude inválida.");
+		}
+		if (isNull(this.city)) {
+			this.validationErrors.add("Cidade nula.");
+		} else if (this.city.isNotValid()) {
+			this.validationErrors.addAll(this.city.getValidationErrors());
+		}
+		if (is(this.cep).notEqual(8)) {
+			this.validationErrors.add("O CEP não contém oito dígitos.");
 		}
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
@@ -101,5 +129,13 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
 	}
 }

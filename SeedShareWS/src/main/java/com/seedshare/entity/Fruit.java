@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -47,7 +48,7 @@ public class Fruit extends AbstractPhotogenicEntity<Fruit> implements Serializab
 	@ElementCollection(targetClass = Month.class)
 	@JoinTable(name = "Fruiting_Month", joinColumns = @JoinColumn(name = "fruit_id"))
 	@Column(name = "month", nullable = false)
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private List<Month> fruitingMonths;
 
 	@Basic(optional = false)
@@ -64,11 +65,12 @@ public class Fruit extends AbstractPhotogenicEntity<Fruit> implements Serializab
 
 	@ManyToOne
 	@NotNull(message = "A espécie não pode ser nula.")
+	@Valid
 	@JoinColumn(name="species_id")
 	private Species species;
 
 	protected Fruit() {
-		super(PHOTO_TYPE);
+		super(PHOTO_TYPE, false);
 	}
 	
 	public Fruit(Boolean faunaConsumption, Boolean humanConsumption, String description, String name, Species species) {
@@ -96,8 +98,10 @@ public class Fruit extends AbstractPhotogenicEntity<Fruit> implements Serializab
 		if(isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(2500)) {
 			this.validationErrors.add("Nome inválido.");
 		}
-		if(isNull(this.species) || this.species.isNotValid()) {
+		if(isNull(this.species)) {
 			this.validationErrors.add("Espécie inválida.");
+		}else if(this.species.isNotValid()) {
+			this.validationErrors.addAll(this.species.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();

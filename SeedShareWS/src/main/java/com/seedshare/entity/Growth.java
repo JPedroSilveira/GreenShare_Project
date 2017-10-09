@@ -2,6 +2,7 @@ package com.seedshare.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -27,6 +28,12 @@ public class Growth extends AbstractEntity<Growth> implements Serializable {
     @Basic(optional = false)
 	@Column(name = "growth_id")
 	private Long id;
+	
+	@Basic(optional = false)
+	@NotNull(message = "Nome não poder ser nulo.")
+	@Size(min = 1, max = 100, message = "O nome deve conter entre 1 e 100 caracteres.")
+	@Column(name = "name", length = 100, unique=true)
+	private String name;
 
 	@Basic(optional = false)
 	@NotNull(message = "A descrição não pode ser nula.")
@@ -34,15 +41,17 @@ public class Growth extends AbstractEntity<Growth> implements Serializable {
 	@Column(name = "description", columnDefinition="TEXT", length = 2500)
 	private String description;
 
+	@Valid
 	@OneToMany(mappedBy="growth")
 	private List<Species> species;
 
 	protected Growth() {
-		super();
+		super(false);
 	}
 	
-	public Growth(String description) {
+	public Growth(String name, String description) {
 		super(true);
+		this.name = name;
 		this.description = description;
 	}
 	
@@ -74,6 +83,14 @@ public class Growth extends AbstractEntity<Growth> implements Serializable {
 
 	public void setEspecies(List<Species> species) {
 		this.species = species;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

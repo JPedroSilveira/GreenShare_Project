@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -68,7 +69,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	@Basic(optional = false)
 	@NotNull(message = "É obrigatório informar o nome científico da espécie.")
 	@Size(min = 1, max = 100, message = "O nome científico deve conter entre 1 e 100 caracteres.")
-	@Column(name = "scientific_name", length = 100)
+	@Column(name = "scientific_name", length = 100, unique=true)
 	private String scientificName;
 
 	@Basic(optional = false)
@@ -90,10 +91,12 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 
 	@ManyToOne
 	@NotNull(message = "É obrigatório informar o crescimento da espécie.")
+	@Valid
 	@JoinColumn(name="growth_id")
 	private Growth growth;
 
 	@ManyToMany
+	@Valid
 	@JoinTable(
 		name="species_climate"
 		, joinColumns={
@@ -106,28 +109,34 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	private List<Climate> climates;
 	
 	@ManyToMany(mappedBy="species")
+	@Valid
 	private List<Soil> soils;
 
 	@OneToMany(mappedBy="species")
+	@Valid
 	private List<Flower> flowers;
 
 	@OneToMany(mappedBy="species")
+	@Valid
 	private List<Fruit> fruits;
 
 	@JsonIgnore
+	@Valid
 	@OneToMany(mappedBy="species")
 	private List<Offer> offers;
 
 	@JsonIgnore
+	@Valid
 	@OneToMany(mappedBy="species")
 	private List<Post> posts;
 
 	@JsonIgnore
+	@Valid
 	@OneToOne(mappedBy="species")
 	private Suggestion suggestions;
 
 	protected Species() {
-		super(PHOTO_TYPE);
+		super(PHOTO_TYPE, false);
 	}
 	
 	public Species(Boolean attractBirds, String description, String cultivationGuide, Boolean isMedicinal, 
@@ -181,8 +190,10 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 		if(isNull(this.scientificName) || is(this.scientificName).orSmallerThan(1).orBiggerThan(100)){
 			this.validationErrors.add("Nome científico inválido.");
 		}
-		if(isNull(this.growth) || this.growth.isNotValid()){
-			this.validationErrors.add("Nível de crescimento inválido.");
+		if(isNull(this.growth)){
+			this.validationErrors.add("Nível de crescimento não pode ser nulo.");
+		}else if(this.growth.isNotValid()) {
+			this.validationErrors.addAll(this.growth.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();

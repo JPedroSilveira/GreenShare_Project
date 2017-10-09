@@ -39,7 +39,7 @@ public class Soil extends AbstractEntity<Soil> implements Serializable {
 	@Basic(optional = false)
 	@NotNull(message = "O nome não pode ser nulo.")
 	@Size(min = 1, max = 100, message = "O nome deve conter entre 1 e 100 caracteres.")
-	@Column(name = "name", length = 100)
+	@Column(name = "name", length = 100, unique=true)
 	private String name;
 
 	@ManyToMany
@@ -55,7 +55,7 @@ public class Soil extends AbstractEntity<Soil> implements Serializable {
 	private List<Species> species;
 
 	protected Soil() {
-		super();
+		super(false);
 	}
 	
 	public Soil(String description, String name) {

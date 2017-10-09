@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -42,11 +43,13 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	
 	@ManyToOne
 	@NotNull(message = "O usuário não pode ser nulo.")
+	@Valid
 	@JoinColumn(name="user_id")
 	private User user;
 	
 	@ManyToOne
 	@NotNull(message = "A especie não pode ser nula.")
+	@Valid
 	@JoinColumn(name="species_id")
 	private Species species;
 	
@@ -57,7 +60,7 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	private String text;
 
 	protected Post() {
-		super(PHOTO_TYPE);
+		super(PHOTO_TYPE, false);
 		this.validationErrors = new ArrayList<String>();
 	}
 	
@@ -79,11 +82,15 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 		if(isNull(this.hasImage)) {
 			this.validationErrors.add("Definição inválida para imagem.");
 		}
-		if(this.user.isNotValid()) {
-			this.validationErrors.add("Usuário inválido");
+		if(isNull(this.user)){
+			this.validationErrors.add("O usuário não pode ser nulo.");
+		}else if(this.user.isNotValid()) {			
+			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
-		if(this.species.isNotValid()) {
-			this.validationErrors.add("Espécie inválida");
+		if(isNull(this.species)) {
+			this.validationErrors.add("A espécie nao pode ser nula.");
+		}else if(this.species.isNotValid()) {
+			this.validationErrors.addAll(this.species.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
@@ -95,10 +102,6 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	
 	public User getUser() {
 		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public Species getSpecies() {

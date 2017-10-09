@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -35,16 +36,18 @@ public class Request extends AbstractEntity<Request> implements Serializable {
 
 	@ManyToOne
 	@NotNull(message = "A oferta não pode ser nula.")
+	@Valid
 	@JoinColumn(name="offer_id")
 	private Offer offer;
 
 	@ManyToOne
 	@NotNull(message = "O usuário não pode ser nulo.")
+	@Valid
 	@JoinColumn(name="user_id")
 	private User user;
 
 	protected Request() {
-		super();
+		super(false);
 	}
 	
 	protected Request(Integer amount, Offer offer, User user) {
@@ -61,11 +64,15 @@ public class Request extends AbstractEntity<Request> implements Serializable {
 		if(isNull(this.amount) || is(this.amount).orSmallerThan(1).orBiggerThan(9999)){
 			this.validationErrors.add("Quantidade inválida.");
 		}
-		if(isNull(this.offer) || this.offer.isNotValid()){
-			this.validationErrors.add("Oferta inválida.");
+		if(isNull(this.offer)) {
+			this.validationErrors.add("A oferta não pode ser nula.");
+		}else if(this.offer.isNotValid()){
+			this.validationErrors.addAll(this.offer.getValidationErrors());
 		}
-		if(isNull(this.user) || this.user.isNotValid()){
-			this.validationErrors.add("Usuário inválido.");
+		if(isNull(this.user)){
+			this.validationErrors.add("O usuário não pode ser nulo.");
+		}else if(this.user.isNotValid()){
+			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();

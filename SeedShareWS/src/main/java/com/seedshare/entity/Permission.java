@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -33,14 +34,15 @@ public class Permission extends AbstractEntity<Permission> implements Serializab
 	@Basic(optional = false)
 	@NotNull(message = "O nome não pode ser nulo.")
 	@Size(min = 1, max = 100, message = "O nome deve conter entre 1 e 100 caracteres.")
-	@Column(name = "name", length = 100)
+	@Column(name = "name", length = 100, unique=true)
 	private String name;
 
+	@Valid
 	@ManyToMany(mappedBy="permissions")
 	private List<User> users;
 
 	protected Permission() {
-		super();
+		super(false);
 	}
 	
 	public Permission(String name) {
@@ -65,10 +67,6 @@ public class Permission extends AbstractEntity<Permission> implements Serializab
 
 	public String getName() {
 		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<User> getUser() {
