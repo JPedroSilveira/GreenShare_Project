@@ -9,11 +9,11 @@ import com.seedshare.entity.Address;
  */
 public interface AddressController{
 
-	ResponseEntity<?> addAddress(Address address);
+	ResponseEntity<?> save(Address address);
 	
 	ResponseEntity<?> deleteAddress(Long id);
 	
 	ResponseEntity<?> getAddressById(Long id);
 
-	ResponseEntity<?> getAllByUser();
+	ResponseEntity<?> findAllByCurrentUser();
 }

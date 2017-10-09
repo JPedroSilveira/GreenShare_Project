@@ -1,9 +1,8 @@
 package com.seedshare.controller.address;
 
-import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,8 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.address.AddressServiceImpl;
 
 /**
+ * Controller Class for Address
+ * 
  * @author joao.silva
  */
 @RestController
@@ -26,43 +27,28 @@ public class AddressControllerImpl extends IsHelper implements AddressController
 
 	@Autowired
 	AddressServiceImpl addressService;
-	
+
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> addAddress(@RequestBody Address address) {
-		Address response = addressService.save(address);
-		if(isNotNull(response)) {
-			return new ResponseEntity<Address>(response, HttpStatus.OK);   
-		}
-		return new ResponseEntity<String>("Falha ao registrar endereço", HttpStatus.BAD_REQUEST);   
-    }
-	
+	public ResponseEntity<?> save(@RequestBody @Valid Address address) {
+		return addressService.save(address);
+	}
+
 	@Override
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteAddress(@PathVariable Long id) {
-		addressService.delete(id);
-		return new ResponseEntity<String>("Endereço deletado", HttpStatus.OK);   
-    }
-	
+		return addressService.delete(id);
+	}
+
 	@Override
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getAddressById(@PathVariable Long id) {
-		Address address = addressService.findOne(id);
-		if(address != null && address.getUser().getId() == getCurrentUser().getId()) {
-			return new ResponseEntity<Address>(address, HttpStatus.OK);   
-		}else {
-			return new ResponseEntity<String>("Endereço não encontrado", HttpStatus.NOT_FOUND);
-		}
-    }
-	
+		return addressService.findOne(id);
+	}
+
 	@Override
-	@GetMapping("/all")
-	public ResponseEntity<?> getAllByUser() {
-		List<Address> addresses = addressService.findAllByCurrentUser();
-		if(addresses != null) {
-			return new ResponseEntity<List<Address>>(addresses, HttpStatus.OK);   
-		} else {
-			return new ResponseEntity<String>("Nenhum endereço encontrado", HttpStatus.NOT_FOUND);
-		}
-    }
+	@GetMapping("/currentUser")
+	public ResponseEntity<?> findAllByCurrentUser() {
+		return addressService.findAllByCurrentUser();
+	}
 }
