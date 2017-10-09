@@ -1,14 +1,16 @@
 package com.seedshare.service;
 
+import org.springframework.http.ResponseEntity;
+
 /**
  * @author joao.silva
  * @param <Entity>
  * @param <ID>
  */
 public interface BasicService<Entity, ID> {
-	Entity save(Entity e);
+	ResponseEntity<?> save(Entity e);
     
-    void delete(ID id);
+    ResponseEntity<?> delete(ID id);
 
-    Entity findOne(ID id);
+    ResponseEntity<?> findOne(ID id);
 }
