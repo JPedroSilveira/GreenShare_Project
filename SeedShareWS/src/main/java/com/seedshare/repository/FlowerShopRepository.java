@@ -1,16 +1,24 @@
 package com.seedshare.repository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.seedshare.entity.FlowerShop;
 import com.seedshare.entity.User;
 
 /**
- * Repository Class for FlowerShop
+ * Repository Interface for FlowerShop
+ * 
  * @author joao.silva
  */
-public interface FlowerShopRepository extends PagingAndSortingRepository<FlowerShop, Long>{
+public interface FlowerShopRepository extends PagingAndSortingRepository<FlowerShop, Long> {
 	FlowerShop findByUser(User user);
-	
+
 	FlowerShop findByCnpj(String cnpj);
+
+	@Query(value = "select fs from flowerShop fs where fs.address.city.state.id = ?1")
+	Iterable<FlowerShop> findAllByState(Long id);
+	
+	@Query(value = "select fs from flowerShop fs where fs.address.city.id = ?1")
+	Iterable<FlowerShop> findAllByCity(Long id);
 }
