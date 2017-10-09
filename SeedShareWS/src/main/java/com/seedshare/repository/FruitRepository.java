@@ -5,9 +5,10 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.seedshare.entity.Fruit;
 
 /**
- * Repository Class for Fruit
+ * Repository Interface for Fruit
+ * 
  * @author joao.silva
  */
-public interface FruitRepository extends PagingAndSortingRepository<Fruit, Long>{
+public interface FruitRepository extends PagingAndSortingRepository<Fruit, Long> {
 
 }

@@ -5,9 +5,10 @@ import org.springframework.data.repository.CrudRepository;
 import com.seedshare.entity.Growth;
 
 /**
- * Repository Class for Growth
+ * Repository Interface for Growth
+ * 
  * @author joao.silva
  */
-public interface GrowthRepository extends CrudRepository<Growth, Long>{
+public interface GrowthRepository extends CrudRepository<Growth, Long> {
 
 }

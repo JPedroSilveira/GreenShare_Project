@@ -6,10 +6,11 @@ import org.springframework.stereotype.Repository;
 import com.seedshare.entity.Request;
 
 /**
- * Repository Class for Request
+ * Repository Interface for Request
+ * 
  * @author joao.silva
  */
 @Repository
-public interface RequestRepository extends CrudRepository<Request, Long>{
+public interface RequestRepository extends CrudRepository<Request, Long> {
 
 }

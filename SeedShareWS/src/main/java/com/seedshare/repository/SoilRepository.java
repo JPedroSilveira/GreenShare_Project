@@ -6,10 +6,11 @@ import org.springframework.stereotype.Repository;
 import com.seedshare.entity.Soil;
 
 /**
- * Repository Class for Soil
+ * Repository Interface for Soil
+ * 
  * @author joao.silva
  */
 @Repository
-public interface SoilRepository extends CrudRepository<Soil, Long>{
+public interface SoilRepository extends CrudRepository<Soil, Long> {
 
 }
