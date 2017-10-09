@@ -18,14 +18,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.user.UserServiceImpl;
 
 /**
+ * Controller class for Login
+ * 
  * @author joao.silva
  */
 @RestController
 @RequestMapping("/auth")
-public class LoginControllerImpl implements LoginController{
+public class LoginControllerImpl extends IsHelper implements LoginController{
 
     @Autowired
     UserServiceImpl userService;
@@ -46,7 +49,7 @@ public class LoginControllerImpl implements LoginController{
     @PostMapping(value = "/register")
     public ResponseEntity<?> create(@RequestBody @Valid com.seedshare.entity.User user) {
     	com.seedshare.entity.User createdUser = userService.create(user); 
-        if(createdUser.getValidationErrors().isEmpty()){
+        if(isNotNull(createdUser) && createdUser.getValidationErrors().isEmpty()){
             return new ResponseEntity<com.seedshare.entity.User>(createdUser, HttpStatus.CREATED);
         }else{
         	return new ResponseEntity<List<String>>(createdUser.getValidationErrors(), HttpStatus.BAD_REQUEST);        	
