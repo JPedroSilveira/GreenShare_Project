@@ -1,7 +1,5 @@
 package com.seedshare.controller.flower;
 
-import org.springframework.http.ResponseEntity;
-
 import com.seedshare.controller.BasicController;
 import com.seedshare.entity.Flower;
 

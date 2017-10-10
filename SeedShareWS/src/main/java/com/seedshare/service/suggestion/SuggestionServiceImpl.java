@@ -3,62 +3,93 @@ package com.seedshare.service.suggestion;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.seedshare.entity.Species;
 import com.seedshare.entity.Suggestion;
+import com.seedshare.entity.User;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.SpeciesRepository;
 import com.seedshare.repository.SuggestionRepository;
 
 /**
- * Implementation of  SuggestionService interface
+ * Implementation of SuggestionService interface
+ * 
  * @author joao.silva
  */
 @Service
-public class SuggestionServiceImpl extends IsHelper implements SuggestionService{
+public class SuggestionServiceImpl extends IsHelper implements SuggestionService {
 
 	@Autowired
 	SuggestionRepository suggestionRepository;
-	
+
 	@Autowired
 	SpeciesRepository speciesRepository;
-	
-	@Override
-	public boolean delete(long id) {
-		Suggestion suggestion = suggestionRepository.findOne(id);
-		if(isNotNull(suggestion) && suggestion.getUser().getId() == getCurrentUserId()) {
-			suggestion.setIsActive(false);
-			suggestionRepository.save(suggestion);
-			return true;
-		}
-		return false;
-	}
 
 	@Override
-	public Suggestion save(Suggestion suggestion) {
-		Suggestion dbSuggestion = suggestionRepository.findOne(suggestion.getId());
-		if(isNull(dbSuggestion)) {
-			Suggestion newSuggestion = new Suggestion(suggestion.getUser(),suggestion.getSpecies());
-			if(newSuggestion.isValid()) {
-				return suggestionRepository.save(newSuggestion);
+	public ResponseEntity<?> delete(Long id) {
+		if (isNotNull(id)) {
+			Suggestion suggestionDB = suggestionRepository.findOne(id);
+			if (isNotNull(suggestionDB) && suggestionDB.getUser().getId() == getCurrentUserId()) {
+				suggestionDB.setIsActive(false);
+				suggestionRepository.save(suggestionDB);
+				return new ResponseEntity<String>("Sugestão desativada", HttpStatus.OK);
 			}
+			return new ResponseEntity<String>("Sugestão não pertence ao usuário atual.", HttpStatus.UNAUTHORIZED);
 		}
-		return null;
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
-	public List<Suggestion> findByUser() {
-		return suggestionRepository.findByUser(getCurrentUser());
+	public ResponseEntity<?> save(Suggestion suggestion) {
+		if (isNotNull(suggestion)) {
+			Suggestion newSuggestion = new Suggestion(suggestion.getUser(), suggestion.getSpecies());
+			if (newSuggestion.isValid()) {
+				Species species = newSuggestion.getSpecies();
+				Species newSpecies = new Species(species.getAttractBirds(), species.getDescription(),
+						species.getCultivationGuide(), species.getIsMedicinal(), species.getAttractBees(),
+						species.getScientificName(), species.getCommonName(), species.getIsOrnamental(),
+						species.getAverageHeight(), species.getGrowth());
+				if (newSpecies.isValid()) {
+					newSuggestion.getUser().cleanPrivateDate();
+					return new ResponseEntity<Suggestion>(newSuggestion, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(newSpecies.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<List<String>>(newSuggestion.getValidationErrors(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
-	public Suggestion findOne(long id) {
-		return suggestionRepository.findOne(id);
+	public ResponseEntity<?> findByCurrentUser() {
+		User currentUser = getCurrentUser();
+		if(isNotNull(currentUser)) {
+			Iterable<Suggestion> suggestionListDB = suggestionRepository.findByUser(getCurrentUser());
+			suggestionListDB.forEach(s -> s.getUser().cleanPrivateDate());
+			return new ResponseEntity<Iterable<Suggestion>>(suggestionListDB, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Nenhum usuário logado.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
-	public List<Suggestion> findAll() {
-		return (List<Suggestion>) suggestionRepository.findAll();
+	public ResponseEntity<?> findOne(Long id) {
+		if(isNotNull(id)) {
+			Suggestion suggestionDB = suggestionRepository.findOne(id);
+			if(isNotNull(suggestionDB)) {
+				return new ResponseEntity<Suggestion>(suggestionDB, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>("Sugestão não encontrada.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> findAll() {
+		Iterable<Suggestion> suggestionListDB = suggestionRepository.findAll();
+		return new ResponseEntity<Iterable<Suggestion>>(suggestionListDB, HttpStatus.OK);
 	}
 
 }

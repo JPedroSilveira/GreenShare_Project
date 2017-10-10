@@ -1,8 +1,8 @@
 package com.seedshare.service.species;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.seedshare.entity.Species;
@@ -20,30 +20,30 @@ public class SpeciesServiceImpl extends IsHelper implements SpeciesService{
     SpeciesRepository speciesRepository;
 
 	@Override
-	public Species findOne(Long id) {
-		if(id != null) {
-			return speciesRepository.findOne(id);
+	public ResponseEntity<?> findOne(Long id) {
+		if(isNotNull(id)) {
+			Species speciesDB = speciesRepository.findOne(id);
+			return isNotNull(speciesDB) ? new ResponseEntity<Species>(speciesDB, HttpStatus.OK)
+					: new ResponseEntity<String>("Postagem não encontrada.", HttpStatus.NOT_FOUND);
 		}
-		return null;
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
-	public Species findOneByCommonName(String commonName) {
+	public ResponseEntity<?> findOneByCommonName(String commonName) {
 		if(commonName != null) {
-			List<Species> speciesDB = speciesRepository.findOneByCommonName(commonName);
-			Species response = speciesDB.stream().filter(species -> species.getIsApproved()).findFirst().orElse(null);
-			return response;
+			Iterable<Species> speciesDB = speciesRepository.findOneByCommonName(commonName);
+			return new ResponseEntity<Iterable<Species>>(speciesDB, HttpStatus.OK);
 		}
-		return null;
+		return new ResponseEntity<String>("Nome da espécie não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 	
 	@Override
-	public Species findOneByScientificName(String scientificName) {
+	public ResponseEntity<?> findOneByScientificName(String scientificName) {
 		if(isNotNull(scientificName)) {
-			List<Species> speciesDB = speciesRepository.findOneByScientificName(scientificName);
-			Species response = speciesDB.stream().filter(species -> species.getIsApproved()).findFirst().orElse(null);
-			return response;
+			Iterable<Species> speciesDB = speciesRepository.findOneByScientificName(scientificName);
+			return new ResponseEntity<Iterable<Species>>(speciesDB, HttpStatus.OK);
 		}
-		return null;
+		return new ResponseEntity<String>("Nome científico da espécie não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 }

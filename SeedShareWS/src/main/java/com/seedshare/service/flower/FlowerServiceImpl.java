@@ -1,5 +1,7 @@
 package com.seedshare.service.flower;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +27,8 @@ public class FlowerServiceImpl extends IsHelper implements FlowerService {
 		if (isNotNull(flower)) {
 			Flower newFlower = new Flower(flower.getIsAromatic(), flower.getDescription(), flower.getName(),
 					flower.getSpecies());
-			if (newFlower.isValid()) {
-				newFlower = flowerRepository.save(newFlower);
-				return new ResponseEntity<Flower>(newFlower, HttpStatus.OK);
-			}
+			return newFlower.isValid() ? new ResponseEntity<Flower>(flowerRepository.save(newFlower), HttpStatus.OK)
+					: new ResponseEntity<List<String>>(newFlower.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Cor inválida.", HttpStatus.BAD_REQUEST);
 	}

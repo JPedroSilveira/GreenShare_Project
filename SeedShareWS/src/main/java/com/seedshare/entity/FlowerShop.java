@@ -3,6 +3,7 @@ package com.seedshare.entity;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -67,6 +68,10 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	@OneToOne
 	@JoinColumn(name = "user_id", unique = true)
 	private User user;
+	
+	@Valid
+	@OneToMany(mappedBy="user")
+	private List<Offer> offers;
 
 	protected FlowerShop() {
 		super(PHOTO_TYPE, false);

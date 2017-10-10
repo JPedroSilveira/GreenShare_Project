@@ -1,6 +1,6 @@
 package com.seedshare.service.suggestion;
 
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 import com.seedshare.entity.Suggestion;
 
@@ -10,13 +10,13 @@ import com.seedshare.entity.Suggestion;
  */
 public interface SuggestionService {
 	
-	boolean delete(long id);
+	ResponseEntity<?> save(Suggestion suggestion);
+		
+	ResponseEntity<?> findOne(Long id);
 	
-	Suggestion save(Suggestion suggestion);
-	
-	List<Suggestion> findByUser();
-	
-	Suggestion findOne(long id);
-	
-	List<Suggestion> findAll();
+	ResponseEntity<?> findAll();
+
+	ResponseEntity<?> delete(Long id);
+
+	ResponseEntity<?> findByCurrentUser();
 }

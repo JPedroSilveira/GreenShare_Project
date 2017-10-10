@@ -17,9 +17,9 @@ import com.seedshare.enumeration.PhotoType;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Persistence class for the table offer
+ * 
  * @author joao.silva
  */
 @Entity
@@ -28,13 +28,13 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "offer_seq";
-	
+
 	private static final PhotoType PHOTO_TYPE = PhotoType.OFFER;
 
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
-    @Basic(optional = false)
+	@SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
+	@Basic(optional = false)
 	@Column(name = "offer_id")
 	private Long id;
 
@@ -51,7 +51,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private Integer amount;
 
 	@Basic(optional = false)
-	@Column(name = "offer_status", columnDefinition="TEXT")
+	@Column(name = "offer_status", columnDefinition = "TEXT")
 	private Integer offerStatus;
 
 	@Basic(optional = false)
@@ -59,38 +59,61 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private Integer type;
 
 	@ManyToOne
+	@Basic(optional = false)
 	@NotNull(message = "O usuário não pode ser nulo.")
 	@Valid
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 
+	@Valid
+	@OneToMany(mappedBy = "offer")
+	private List<OfferComment> offerComments;
+
 	@ManyToOne
+	@Basic(optional = true)
+	@Valid
+	@JoinColumn(name = "flower_shop_id")
+	private FlowerShop flowerShop;
+
+	@ManyToOne
+	@Basic(optional = false)
 	@NotNull(message = "A espécie não pode ser nula.")
 	@Valid
-	@JoinColumn(name="species_id")
+	@JoinColumn(name = "species_id")
 	private Species species;
 
+	@ManyToOne
+	@Basic(optional = false)
+	@NotNull(message = "O endereço não pode ser nulo.")
 	@Valid
-	@OneToMany(mappedBy="offer")
+	@JoinColumn(name = "offer")
+	private Address address;
+
+	@Valid
+	@OneToMany(mappedBy = "offer")
 	private List<Request> requests;
-	
+
+	@Valid
+	@OneToMany(mappedBy = "offer")
+	private List<Offer> offers;
+
 	@Basic(optional = false)
 	@NotNull(message = "A descrição não pode ser nula.")
 	@Size(min = 1, max = 2500, message = "A descrição deve conter de 1 a 2500 caracteres.")
-	@Column(name = "description", columnDefinition="TEXT", length = 2500)
+	@Column(name = "description", columnDefinition = "TEXT", length = 2500)
 	private String description;
-	
+
 	protected Offer() {
 		super(PHOTO_TYPE, false);
 		this.validationErrors = new ArrayList<String>();
 	}
-	
+
 	public Offer(Float unitPrice, Integer amount, User user, Species species, String description) {
 		super(PHOTO_TYPE, true);
-		if(this.unitPrice == null || this.unitPrice == (float) 0) {
+		if (this.unitPrice == null || this.unitPrice == (float) 0) {
 			this.type = OfferType.Donation.getOfferType();
 			this.unitPrice = (float) 0;
-		}else {
+		} else {
 			this.type = OfferType.Sale.getOfferType();
 			this.unitPrice = unitPrice;
 		}
@@ -99,40 +122,43 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		this.offerStatus = OfferStatus.Active.getOfferStatus();
 		this.description = description;
 	}
-	
+
 	@JsonIgnore
 	public boolean isValid() {
 		this.validationErrors.clear();
-		
-		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)){
+
+		if (isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)) {
 			this.validationErrors.add("Descrição inválida.");
 		}
-		if(isNotNull(this.type) && isNotNull(this.unitPrice)) {
-			if(this.type == OfferType.Sale.getOfferType() && is(this.unitPrice).smallerOrEqual(0)) {
+		if (isNotNull(this.type) && isNotNull(this.unitPrice)) {
+			if (this.type == OfferType.Sale.getOfferType() && is(this.unitPrice).smallerOrEqual(0)) {
 				this.validationErrors.add("Preço unitário inválido para uma venda.");
 			}
-			if(this.type == OfferType.Donation.getOfferType() && is(this.unitPrice).notEqual(0)) {
+			if (this.type == OfferType.Donation.getOfferType() && is(this.unitPrice).notEqual(0)) {
 				this.validationErrors.add("Preço unitário inválido para uma doação.");
 			}
 		} else {
-			if(isNull(this.type)) {
+			if (isNull(this.type)) {
 				this.validationErrors.add("Tipo de oferta inválida.");
 			}
-			if(isNull(this.unitPrice)) {
+			if (isNull(this.unitPrice)) {
 				this.validationErrors.add("Preço unitário inválido.");
 			}
 		}
-		if(isNull(this.amount) || is(this.amount).smallerOrEqual(0)) {
+		if (isNull(this.amount) || is(this.amount).smallerOrEqual(0)) {
 			this.validationErrors.add("Quantidade inválida.");
 		}
-		if(isNull(this.user)) {
+		if (isNull(this.user)) {
 			this.validationErrors.add("O usuário não pode ser nulo.");
-		}else if(this.user.isNotValid()) {
+		} else if (this.user.isNotValid()) {
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
-		if(isNull(this.species)){
+		if (isNull(this.species)) {
 			this.validationErrors.add("A espécie não pode ser nula.");
-		}else if(this.species.isNotValid()) {
+		} else if (this.species.isNotValid()) {
+			this.validationErrors.addAll(this.species.getValidationErrors());
+		}
+		if (isNotNull(this.flowerShop) && this.flowerShop.isNotValid()) {
 			this.validationErrors.addAll(this.species.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
@@ -190,12 +216,32 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	public List<Request> getRequests() {
 		return this.requests;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<OfferComment> getOfferComments() {
+		return offerComments;
+	}
+
+	public FlowerShop getFlowerShop() {
+		return flowerShop;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public List<Offer> getOffers() {
+		return offers;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 }

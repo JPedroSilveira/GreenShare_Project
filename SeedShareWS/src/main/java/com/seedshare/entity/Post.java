@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
@@ -58,7 +60,11 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	@Size(min = 1, max = 500, message = "O texto deve conter entre 1 e 500 caracteres.")
 	@Column(name = "text", columnDefinition="TEXT", length = 500)
 	private String text;
-
+	
+	@Valid
+	@OneToMany(mappedBy = "post")
+	private List<PostComment> postComments;
+	
 	protected Post() {
 		super(PHOTO_TYPE, false);
 		this.validationErrors = new ArrayList<String>();
@@ -119,4 +125,9 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	public void setText(String text) {
 		this.text = text;
 	}
+	
+	public List<PostComment> getPostComments() {
+		return postComments;
+	}
+
 }

@@ -1,5 +1,7 @@
 package com.seedshare.service.city;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +36,9 @@ public class CityServiceImpl extends IsHelper implements CityService {
 	public ResponseEntity<?> save(City city) {
 		if (isNotNull(city)) {
 			City newCity = new City(city.getName(), city.getState());
-			if (newCity.isValid()) {
-				newCity = cityRepository.save(newCity);
-				return new ResponseEntity<City>(newCity, HttpStatus.OK);
-			}
+			return newCity.isValid()
+					? new ResponseEntity<City>(cityRepository.save(newCity), HttpStatus.OK)
+					: new ResponseEntity<List<String>>(newCity.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Cidade inválida.", HttpStatus.BAD_REQUEST);
 	}

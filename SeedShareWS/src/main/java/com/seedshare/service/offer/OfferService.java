@@ -19,4 +19,12 @@ public interface OfferService extends BasicService<Offer,Long>{
 
 	ResponseEntity<?> findAllBySpecies(Long id);
 
+	ResponseEntity<?> findAllByState(Long id);
+
+	ResponseEntity<?> findAllByCity(Long id);
+
+	ResponseEntity<?> addComment(Long id, String text);
+
+	ResponseEntity<?> deleteComment(Long id);
+
 }

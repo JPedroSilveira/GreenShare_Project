@@ -12,8 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 import java.math.BigDecimal;
-import java.util.List;
-
 /**
  * Persistence class for the table address
  * 
@@ -56,14 +54,11 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	private Integer cep;
 
 	@JsonIgnore
+	@Basic(optional = true)
 	@ManyToOne
 	@Valid
 	@JoinColumn(name = "user_id")
 	private User user;
-	
-	@OneToMany(mappedBy="address")
-	@Valid
-	private List<Address> address;
 
 	protected Address() {
 		super(false);

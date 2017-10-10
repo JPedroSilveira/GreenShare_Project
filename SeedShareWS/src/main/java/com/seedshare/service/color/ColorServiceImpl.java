@@ -1,5 +1,7 @@
 package com.seedshare.service.color;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +28,9 @@ public class ColorServiceImpl extends IsHelper implements ColorService {
 			Color colorDB = colorRepository.findOneByName(color.getName());
 			if (isNull(colorDB)) {
 				Color newColor = new Color(color.getName());
-				if (newColor.isValid()) {
-					newColor = colorRepository.save(newColor);
-					return new ResponseEntity<Color>(newColor, HttpStatus.OK);
-				}
+				return newColor.isValid()
+						? new ResponseEntity<Color>(colorRepository.save(newColor), HttpStatus.OK)
+						: new ResponseEntity<List<String>>(newColor.getValidationErrors(), HttpStatus.BAD_REQUEST);							
 			}
 			return new ResponseEntity<String>("Nome de cor já cadastrado.", HttpStatus.CONFLICT);
 		}

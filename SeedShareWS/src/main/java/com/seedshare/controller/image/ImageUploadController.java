@@ -23,4 +23,20 @@ public interface ImageUploadController{
 	ResponseEntity<?> getFlowerShopImage();
 
 	ResponseEntity<?> getUserImage();
+
+	ResponseEntity<String> uploadFruitImage(MultipartFile multipartFile, Long speciesId);
+
+	ResponseEntity<String> uploadFlowerImage(MultipartFile multipartFile, Long speciesId);
+
+	ResponseEntity<String> uploadAchievementImage(MultipartFile multipartFile, Long speciesId);
+
+	ResponseEntity<String> uploadOfferImage(MultipartFile multipartFile, Long speciesId);
+
+	ResponseEntity<?> getAchievementImage(Long achievementId);
+
+	ResponseEntity<?> getFlowerImage(Long flowerId);
+
+	ResponseEntity<?> getFruitImage(Long fruitId);
+
+	ResponseEntity<?> getOfferImage(Long offerId);
 }

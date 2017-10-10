@@ -1,5 +1,7 @@
 package com.seedshare.service.climate;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +26,9 @@ public class ClimateServiceImpl extends IsHelper implements ClimateService {
 	public ResponseEntity<?> save(Climate climate) {
 		if (isNotNull(climate)) {
 			Climate newClimate = new Climate(climate.getDescription(), climate.getName());
-			if (newClimate.isValid()) {
-				newClimate = climateRepository.save(newClimate);
-				return new ResponseEntity<Climate>(newClimate, HttpStatus.OK);
-			}
+			return newClimate.isValid()
+					? new ResponseEntity<Climate>(climateRepository.save(newClimate), HttpStatus.OK)
+					: new ResponseEntity<List<String>>(newClimate.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Clima inválido.", HttpStatus.BAD_REQUEST);
 	}

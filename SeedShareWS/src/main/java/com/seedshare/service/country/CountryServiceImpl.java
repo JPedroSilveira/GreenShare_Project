@@ -1,5 +1,7 @@
 package com.seedshare.service.country;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +28,9 @@ public class CountryServiceImpl extends IsHelper implements CountryService {
 			Country countryDB = countryRepository.findOneByName(country.getName());
 			if(isNull(countryDB)) {
 				Country newCountry = new Country(country.getName());
-				if (newCountry.isValid()) {
-					newCountry = countryRepository.save(newCountry);
-					return new ResponseEntity<Country>(newCountry, HttpStatus.OK);
-				}
+				return newCountry.isValid()
+						? new ResponseEntity<Country>(countryRepository.save(newCountry), HttpStatus.OK)
+						: new ResponseEntity<List<String>>(newCountry.getValidationErrors(), HttpStatus.BAD_REQUEST);	
 			}
 			return new ResponseEntity<String>("Nome de pais já cadastrado.", HttpStatus.CONFLICT);
 		}

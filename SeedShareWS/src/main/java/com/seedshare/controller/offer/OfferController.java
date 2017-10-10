@@ -26,4 +26,6 @@ public interface OfferController extends BasicController<Offer, Long>{
 	ResponseEntity<?> findAllBySpecies(Species species);
 
 	ResponseEntity<?> findAllBySpecies(Long id);
+
+	ResponseEntity<?> delete(Offer offer);
 }

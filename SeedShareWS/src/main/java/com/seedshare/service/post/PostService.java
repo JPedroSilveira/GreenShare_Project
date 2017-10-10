@@ -1,6 +1,6 @@
 package com.seedshare.service.post;
 
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 import com.seedshare.entity.Post;
 import com.seedshare.service.BasicService;
@@ -11,6 +11,6 @@ import com.seedshare.service.BasicService;
  */
 public interface PostService extends BasicService<Post,Long>{
 
-	List<Post> findAll();
+	ResponseEntity<?> findAllByPage(Integer page, Integer size);
 	
 }

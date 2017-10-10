@@ -1,6 +1,6 @@
 package com.seedshare.service.species;
 
-import com.seedshare.entity.Species;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Service interface of Species
@@ -8,10 +8,10 @@ import com.seedshare.entity.Species;
  */
 public interface SpeciesService{
 
-	Species findOneByCommonName(String commonName);
+	ResponseEntity<?> findOneByCommonName(String commonName);
 
-	Species findOne(Long id);
+	ResponseEntity<?> findOne(Long id);
 
-	Species findOneByScientificName(String scientificName);
+	ResponseEntity<?> findOneByScientificName(String scientificName);
 
 }
