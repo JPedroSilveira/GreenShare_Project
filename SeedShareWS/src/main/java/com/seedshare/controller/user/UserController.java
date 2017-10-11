@@ -12,5 +12,5 @@ public interface UserController{
 
 	ResponseEntity<?> changeName(User user);
 
-	ResponseEntity<?> changeName(String name);
+	ResponseEntity<?> create(User user);
 }

@@ -1,7 +1,5 @@
 package com.seedshare.controller.auth;
 
-import org.springframework.http.ResponseEntity;
-
 import com.seedshare.entity.User;
 
 /**
@@ -10,7 +8,5 @@ import com.seedshare.entity.User;
 public interface LoginController {
 
 	User getUserDetails();
-	
-	ResponseEntity<?> create(User user);
 	
 }
