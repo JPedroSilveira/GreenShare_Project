@@ -23,14 +23,14 @@ import com.seedshare.entity.User;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${social.security.public:/auth/register}") 
-    private String[] securityPublicRegistroDeUsuario;
+    @Value("${social.security.public:/user/register/}") 
+    private String[] securityPublicUserRegister;
     
 	@Autowired
 	private UserSecurityService userDetailsService;
     
 	@Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
+    public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
@@ -43,7 +43,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity webSecurity) throws Exception {
 	   webSecurity.ignoring()
-	           .antMatchers(securityPublicRegistroDeUsuario);
+	           .antMatchers(securityPublicUserRegister);
 	}
 	
 	@Bean
