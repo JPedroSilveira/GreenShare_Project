@@ -1,8 +1,6 @@
 package com.seedshare.helpers;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author joao.silva
