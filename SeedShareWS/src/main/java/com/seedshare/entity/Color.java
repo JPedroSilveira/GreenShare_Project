@@ -47,8 +47,8 @@ public class Color extends AbstractEntity<Color> implements Serializable {
 
 	@Valid
 	@ManyToMany(mappedBy="colors")
-	private List<Species> species;
-	
+	private List<Flower> flowers;
+
 	protected Color() {
 		super(false);
 	}
@@ -56,14 +56,6 @@ public class Color extends AbstractEntity<Color> implements Serializable {
 	public Color(String name) {
 		super(true);
 		this.name = name;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	@Override
@@ -76,6 +68,18 @@ public class Color extends AbstractEntity<Color> implements Serializable {
 
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+	
+	public List<Flower> getFlowers() {
+		return flowers;
 	}
 
 }

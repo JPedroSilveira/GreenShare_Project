@@ -62,7 +62,7 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	@Valid
 	@ManyToMany
 	@JoinTable(
-		name="flower_clor"
+		name="flower_color"
 		, joinColumns={
 			@JoinColumn(name="flower_id")
 			}

@@ -3,6 +3,7 @@ package com.seedshare.entity;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
@@ -50,6 +52,10 @@ public class City extends AbstractEntity<City> implements Serializable {
 	@Valid
 	@JoinColumn(name = "state_id")
 	private State state;
+	
+	@Valid
+	@OneToMany(mappedBy = "city")
+	private List<Address> addresses;
 
 	protected City() {
 		super(false);
@@ -90,5 +96,9 @@ public class City extends AbstractEntity<City> implements Serializable {
 
 	public State getState() {
 		return state;
+	}
+	
+	public List<Address> getAddresses() {
+		return addresses;
 	}
 }

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 import java.math.BigDecimal;
+import java.util.List;
 /**
  * Persistence class for the table address
  * 
@@ -41,12 +42,6 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@Column(name = "longitude")
 	private BigDecimal longitude;
 
-	@Valid
-	@Basic(optional = false)
-	@NotNull(message = "Cidade não poder ser nula.")
-	@Column(name = "city")
-	private City city;
-
 	@Basic(optional = false)
 	@NotNull(message = "CEP não pode ser nulo.")
 	@Size(max = 8, min = 8, message = "O CEP deve conter oito dígitos.")
@@ -59,6 +54,18 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@Valid
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@JsonIgnore
+	@Basic(optional = false)
+	@NotNull(message = "Cidade não poder ser nula.")
+	@ManyToOne
+	@Valid
+	@JoinColumn(name = "city_id")
+	private City city;
+	
+	@Valid
+	@OneToMany(mappedBy = "address")
+	private List<Offer> offers;
 
 	protected Address() {
 		super(false);
@@ -132,5 +139,13 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 
 	public void setCity(City city) {
 		this.city = city;
+	}
+	
+	public Integer getCep() {
+		return cep;
+	}
+
+	public List<Offer> getOffers() {
+		return offers;
 	}
 }

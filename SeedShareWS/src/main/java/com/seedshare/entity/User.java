@@ -140,7 +140,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		this.cpf = (isLegalPerson != null) ? (isLegalPerson ? null : cpf) : cpf;
 		this.validationErrors = new ArrayList<String>();
 		this.hasImage = false;
-		if (this.password != null) {
+		if (this.password != null && this.password.length() > 8) {
 			this.encodePassword();
 		}
 	}
@@ -319,8 +319,8 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 
 	public void cleanPrivateDate() {
 		this.cpf = null;
-		this.addresses = null;
 		this.password = null;
+		this.insertionDate = null;
+		this.lastModificationDate = null;
 	}
-
 }

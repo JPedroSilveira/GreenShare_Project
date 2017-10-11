@@ -86,16 +86,12 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	@Basic(optional = false)
 	@NotNull(message = "O endereço não pode ser nulo.")
 	@Valid
-	@JoinColumn(name = "offer")
+	@JoinColumn(name = "address_id")
 	private Address address;
 
 	@Valid
 	@OneToMany(mappedBy = "offer")
 	private List<Request> requests;
-
-	@Valid
-	@OneToMany(mappedBy = "offer")
-	private List<Offer> offers;
 
 	@Basic(optional = false)
 	@NotNull(message = "A descrição não pode ser nula.")
@@ -235,10 +231,6 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 
 	public Address getAddress() {
 		return address;
-	}
-
-	public List<Offer> getOffers() {
-		return offers;
 	}
 
 	public void setAddress(Address address) {
