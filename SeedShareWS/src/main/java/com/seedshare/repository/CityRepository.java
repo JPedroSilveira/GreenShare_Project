@@ -1,10 +1,9 @@
 package com.seedshare.repository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.seedshare.entity.City;
-import com.seedshare.entity.Country;
-import com.seedshare.entity.State;
 
 /**
  * Repository Interface for City
@@ -12,7 +11,8 @@ import com.seedshare.entity.State;
  * @author joao.silva
  */
 public interface CityRepository extends CrudRepository<City, Long> {
-	Iterable<City> findAllByState(State state);
+	Iterable<City> findAllByState(Long id);
 
-	Iterable<City> findAllByCountry(Country country);
+	@Query(value = "select c from City c where c.state.country.id = ?1")
+	Iterable<City> findAllByCountry(Long id);
 }

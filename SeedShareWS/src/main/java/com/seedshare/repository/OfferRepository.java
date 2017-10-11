@@ -20,10 +20,10 @@ public interface OfferRepository extends CrudRepository<Offer, Long> {
 
 	Iterable<Offer> findAllByFlowerShop(Long id);
 
-	@Query(value = "select of from offer of where of.address.city.state.id = ?1")
+	@Query(value = "select offer from Offer offer where offer.address.city.state.id = ?1")
 	Iterable<Offer> findAllByState(Long id);
 
-	@Query(value = "select of from offer of where fs.address.city.id = ?1")
+	@Query(value = "select offer from Offer offer where offer.address.city.id = ?1")
 	Iterable<Offer> findAllByCity(Long id);
 
 }
