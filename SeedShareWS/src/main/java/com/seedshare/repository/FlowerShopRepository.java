@@ -16,9 +16,9 @@ public interface FlowerShopRepository extends PagingAndSortingRepository<FlowerS
 
 	FlowerShop findByCnpj(String cnpj);
 
-	@Query(value = "select fs from flowerShop fs where fs.address.city.state.id = ?1")
+	@Query(value = "select fs from FlowerShop fs where fs.address.city.state.id = ?1")
 	Iterable<FlowerShop> findAllByState(Long id);
 	
-	@Query(value = "select fs from flowerShop fs where fs.address.city.id = ?1")
+	@Query(value = "select fs from FlowerShop fs where fs.address.city.id = ?1")
 	Iterable<FlowerShop> findAllByCity(Long id);
 }
