@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.seedshare.entity.City;
-import com.seedshare.entity.Country;
-import com.seedshare.entity.State;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.CityRepository;
 import com.seedshare.repository.CountryRepository;
@@ -36,8 +34,7 @@ public class CityServiceImpl extends IsHelper implements CityService {
 	public ResponseEntity<?> save(City city) {
 		if (isNotNull(city)) {
 			City newCity = new City(city.getName(), city.getState());
-			return newCity.isValid()
-					? new ResponseEntity<City>(cityRepository.save(newCity), HttpStatus.OK)
+			return newCity.isValid() ? new ResponseEntity<City>(cityRepository.save(newCity), HttpStatus.OK)
 					: new ResponseEntity<List<String>>(newCity.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Cidade inválida.", HttpStatus.BAD_REQUEST);
@@ -67,27 +64,19 @@ public class CityServiceImpl extends IsHelper implements CityService {
 	@Override
 	public ResponseEntity<?> findByState(Long id) {
 		if (isNotNull(id)) {
-			State stateDB = stateRepository.findOne(id);
-			if (isNotNull(stateDB)) {
-				Iterable<City> citiesDB = cityRepository.findAllByState(stateDB);
-				return new ResponseEntity<Iterable<City>>(citiesDB, HttpStatus.OK);
-			}
-			return new ResponseEntity<String>("Estado não encontrado.", HttpStatus.NOT_FOUND);
+			Iterable<City> citiesDB = cityRepository.findAllByState(id);
+			return new ResponseEntity<Iterable<City>>(citiesDB, HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("Estado não pode ser nulo.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
 	public ResponseEntity<?> findByCountry(Long id) {
 		if (isNotNull(id)) {
-			Country countryDB = countryRepository.findOne(id);
-			if (isNotNull(countryDB)) {
-				Iterable<City> citiesDB = cityRepository.findAllByCountry(countryDB);
-				return new ResponseEntity<Iterable<City>>(citiesDB, HttpStatus.OK);
-			}
-			return new ResponseEntity<String>("Pais não encontrado.", HttpStatus.NOT_FOUND);
+			Iterable<City> citiesDB = cityRepository.findAllByCountry(id);
+			return new ResponseEntity<Iterable<City>>(citiesDB, HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("Pais não pode ser nulo.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 }
