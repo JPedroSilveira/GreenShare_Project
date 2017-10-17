@@ -14,9 +14,9 @@ import com.seedshare.enumeration.PhotoType;
 
 import java.util.List;
 
-
 /**
  * Persistence class for the table flower
+ * 
  * @author joao.silva
  */
 @Entity
@@ -25,13 +25,13 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "flower_seq";
-	
+
 	private static final PhotoType PHOTO_TYPE = PhotoType.FLOWER;
-	
+
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
-    @Basic(optional = false)
+	@SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
+	@Basic(optional = false)
 	@Column(name = "flower_id")
 	private Long id;
 
@@ -43,7 +43,7 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	@Basic(optional = false)
 	@NotNull(message = "A descrição não pode ser nula.")
 	@Size(min = 1, max = 2500, message = "A descrição deve conter de 1 a 2500 caracteres.")
-	@Column(name = "description", columnDefinition="TEXT", length = 2500)
+	@Column(name = "description", columnDefinition = "TEXT", length = 2500)
 	private String description;
 
 	@Basic(optional = false)
@@ -56,22 +56,15 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	@ManyToOne
 	@NotNull(message = "A espécie não pode ser nula.")
 	@Valid
-	@JoinColumn(name="species_id")
+	@JoinColumn(name = "species_id")
 	private Species species;
-	
+
 	@Valid
 	@ManyToMany
-	@JoinTable(
-		name="flower_color"
-		, joinColumns={
-			@JoinColumn(name="flower_id")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="color_id")
-			}
-		)
+	@JoinTable(name = "flower_color", joinColumns = { @JoinColumn(name = "flower_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "color_id") })
 	private List<Color> colors;
-	
+
 	@ElementCollection(targetClass = Month.class)
 	@JoinTable(name = "Flowering_Month", joinColumns = @JoinColumn(name = "flower_id"))
 	@Column(name = "month", nullable = false)
@@ -81,7 +74,7 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	protected Flower() {
 		super(PHOTO_TYPE, false);
 	}
-	
+
 	public Flower(Boolean isAromatic, String description, String name, Species species) {
 		super(PHOTO_TYPE, true);
 		this.isAromatic = isAromatic;
@@ -89,21 +82,21 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 		this.name = name;
 		this.species = species;
 	}
-	
+
 	@Override
 	public boolean isValid() {
 		this.validationErrors.clear();
-		
-		if(isNull(this.isAromatic)){
+
+		if (isNull(this.isAromatic)) {
 			this.validationErrors.add("Dado isAromatic inválido.");
 		}
-		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)){
+		if (isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)) {
 			this.validationErrors.add("Espécie inválida.");
 		}
-		if(isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
+		if (isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome inválido.");
 		}
-		if(isNull(this.species) || this.species.isNotValid()) {
+		if (isNull(this.species) || this.species.isNotValid()) {
 			this.validationErrors.add("Espécie de vegetal inválida.");
 		}
 		addAbstractAttributesValidation();
@@ -133,12 +126,12 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	public void setFloweringMonths(List<Month> months) {
 		this.floweringMonths = months;
 	}
-	
+
 	public Month addFloweringMonths(Month month) {
 		getFloweringMonths().add(month);
 		return month;
 	}
-	
+
 	public Month removeFloweringMonths(Month month) {
 		getFloweringMonths().remove(month);
 		return month;
@@ -151,6 +144,7 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public String getName() {
 		return this.name;
 	}

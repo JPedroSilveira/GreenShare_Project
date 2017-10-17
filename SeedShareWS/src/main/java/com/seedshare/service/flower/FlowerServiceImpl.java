@@ -53,4 +53,10 @@ public class FlowerServiceImpl extends IsHelper implements FlowerService {
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
+	
+	@Override
+	public ResponseEntity<?> findAll() {
+		Iterable<Flower> flowersDB = flowerRepository.findAll();
+		return new ResponseEntity<Iterable<Flower>>(flowersDB, HttpStatus.OK);
+	}
 }
