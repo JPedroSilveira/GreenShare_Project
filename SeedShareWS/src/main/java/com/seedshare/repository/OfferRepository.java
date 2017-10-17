@@ -15,7 +15,7 @@ import com.seedshare.entity.Offer;
 public interface OfferRepository extends CrudRepository<Offer, Long> {
 
 	Iterable<Offer> findAllByUser(Long id);
-
+	
 	Iterable<Offer> findAllBySpecies(Long id);
 
 	Iterable<Offer> findAllByFlowerShop(Long id);

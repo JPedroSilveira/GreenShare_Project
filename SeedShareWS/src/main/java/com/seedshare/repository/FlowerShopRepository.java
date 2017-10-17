@@ -12,9 +12,9 @@ import com.seedshare.entity.User;
  * @author joao.silva
  */
 public interface FlowerShopRepository extends PagingAndSortingRepository<FlowerShop, Long> {
-	FlowerShop findByUser(User user);
+	FlowerShop findOneByUser(User user);
 
-	FlowerShop findByCnpj(String cnpj);
+	FlowerShop findOneByCnpj(String cnpj);
 
 	@Query(value = "select fs from FlowerShop fs where fs.address.city.state.id = ?1")
 	Iterable<FlowerShop> findAllByState(Long id);
