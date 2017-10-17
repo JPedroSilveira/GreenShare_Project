@@ -1,19 +1,23 @@
 package com.seedshare.service.user;
 
+import org.springframework.http.ResponseEntity;
+
 import com.seedshare.entity.User;
 
 /**
- * Service interface of User
+ * Service interface of {@link com.seedshare.entity.User}
+ * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
-public interface UserService{
-		
-	User create(User user);
+public interface UserService {
 
-	boolean changePassword(User user);
+	ResponseEntity<?> create(User user);
 
-	String changeName(String name);
+	ResponseEntity<?> changePassword(User user);
 
-	User findOne(Long id);
+	ResponseEntity<?> changeName(String name);
+
+	ResponseEntity<?> findOne(Long id);
 
 }
