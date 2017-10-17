@@ -1,5 +1,7 @@
 package com.seedshare.service.fruit;
 
+import org.springframework.http.ResponseEntity;
+
 import com.seedshare.entity.Fruit;
 import com.seedshare.service.BasicService;
 
@@ -9,5 +11,7 @@ import com.seedshare.service.BasicService;
  * @author joao.silva
  */
 public interface FruitService extends BasicService<Fruit, Long> {
+
+	ResponseEntity<?> findAll();
 
 }

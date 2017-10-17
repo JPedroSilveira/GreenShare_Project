@@ -29,7 +29,7 @@ public class FruitServiceImpl extends IsHelper implements FruitService{
 			return newFruit.isValid() ? new ResponseEntity<Fruit>(fruitRepository.save(newFruit), HttpStatus.OK)
 					: new ResponseEntity<List<String>>(newFruit.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>("Cor inválida.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Fruto não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
@@ -51,6 +51,12 @@ public class FruitServiceImpl extends IsHelper implements FruitService{
 			return new ResponseEntity<String>("Fruto não encontrado.", HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+	
+	@Override
+	public ResponseEntity<?> findAll() {
+		Iterable<Fruit> fruitListDB = fruitRepository.findAll();
+		return new ResponseEntity<Iterable<Fruit>>(fruitListDB, HttpStatus.OK);
 	}
 
 }
