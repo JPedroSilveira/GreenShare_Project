@@ -34,7 +34,7 @@ public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEn
 	@Column(name = "last_modification_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date lastModificationDate;
-
+	
 	@JsonIgnore
 	@Transient
 	protected List<String> validationErrors;
