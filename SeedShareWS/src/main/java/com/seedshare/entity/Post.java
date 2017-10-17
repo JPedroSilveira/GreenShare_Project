@@ -26,6 +26,7 @@ import com.seedshare.enumeration.PhotoType;
 /**
  * Persistence class for the table post
  * @author joao.silva
+ * @author gabriel.schneider
  */
 @Entity
 @Table(name = "post")
