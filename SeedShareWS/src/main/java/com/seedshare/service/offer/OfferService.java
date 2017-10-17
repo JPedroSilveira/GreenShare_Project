@@ -6,11 +6,13 @@ import com.seedshare.entity.Offer;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of Offer
+ * Service interface of {@link com.seedshare.entity.Offer}
+ * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
-public interface OfferService extends BasicService<Offer,Long>{
-	
+public interface OfferService extends BasicService<Offer, Long> {
+
 	ResponseEntity<?> findAllByFlowerShop(Long id);
 
 	ResponseEntity<?> delete(Long id);
@@ -26,5 +28,4 @@ public interface OfferService extends BasicService<Offer,Long>{
 	ResponseEntity<?> addComment(Long id, String text);
 
 	ResponseEntity<?> deleteComment(Long id);
-
 }

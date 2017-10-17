@@ -104,7 +104,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		this.validationErrors = new ArrayList<String>();
 	}
 
-	public Offer(Float unitPrice, Integer amount, User user, Species species, String description) {
+	public Offer(Float unitPrice, Integer amount, User user, Species species, String description, FlowerShop flowerShop) {
 		super(PHOTO_TYPE, true);
 		if (this.unitPrice == null || this.unitPrice == (float) 0) {
 			this.type = OfferType.Donation.getOfferType();
@@ -112,6 +112,9 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		} else {
 			this.type = OfferType.Sale.getOfferType();
 			this.unitPrice = unitPrice;
+		}
+		if(user.getIsLegalPerson()) {
+			this.flowerShop = flowerShop;
 		}
 		this.amount = amount;
 		this.species = species;
