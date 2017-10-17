@@ -9,7 +9,12 @@ import com.seedshare.service.BasicService;
  * Service interface of Achievement
  * 
  * @author joao.silva
+ * @author gabriel.schneider
  */
-public interface AchievementService extends BasicService<Achievement,Long>{
+public interface AchievementService extends BasicService<Achievement, Long> {
+	
 	ResponseEntity<?> findAll();
+
+	ResponseEntity<?> findAllByCategory(Short category);
+
 }

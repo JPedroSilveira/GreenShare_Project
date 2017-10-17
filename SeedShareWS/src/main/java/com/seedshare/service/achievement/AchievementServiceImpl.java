@@ -15,6 +15,7 @@ import com.seedshare.repository.AchievementRepository;
  * Service class of Achievement
  * 
  * @author joao.silva
+ * @author gabriel.schneider
  */
 @Service
 public class AchievementServiceImpl extends IsHelper implements AchievementService {
@@ -29,6 +30,7 @@ public class AchievementServiceImpl extends IsHelper implements AchievementServi
 		return newAchievement.isValid()
 				? new ResponseEntity<Achievement>(achievementRepository.save(newAchievement), HttpStatus.OK)
 				: new ResponseEntity<List<String>>(newAchievement.getValidationErrors(), HttpStatus.BAD_REQUEST);
+
 	}
 
 	@Override
@@ -53,6 +55,12 @@ public class AchievementServiceImpl extends IsHelper implements AchievementServi
 	@Override
 	public ResponseEntity<?> findAll() {
 		Iterable<Achievement> achievementsDB = achievementRepository.findAll();
+		return new ResponseEntity<Iterable<Achievement>>(achievementsDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> findAllByCategory(Short category) {
+		Iterable<Achievement> achievementsDB = achievementRepository.findAllByCategory(category);
 		return new ResponseEntity<Iterable<Achievement>>(achievementsDB, HttpStatus.OK);
 	}
 
