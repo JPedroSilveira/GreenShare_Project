@@ -13,23 +13,24 @@ import javax.validation.constraints.Size;
 
 import com.seedshare.entity.abstracts.AbstractEntity;
 
-
 /**
  * Persistence class for the table USER_ACHIEVEMENT
+ * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity
 @Table(name = "user_achievement")
 public class UserAchievement extends AbstractEntity<UserAchievement> implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "user_achievement_seq";
-	
+
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
-    @Basic(optional = false)
+	@SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
+	@Basic(optional = false)
 	@Column(name = "user_achievement_id")
 	private Long id;
 
@@ -42,15 +43,15 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	@Valid
 	@NotNull(message = "Usuário não pode ser nulo.")
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@Valid
 	@NotNull(message = "A conquista não pode ser nula.")
 	@ManyToOne
-	@JoinColumn(name="achievement_id")
+	@JoinColumn(name = "achievement_id")
 	private Achievement achievement;
-	
+
 	@Past
 	@Basic(optional = true)
 	@Column(name = "conquest_date")
@@ -60,29 +61,29 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	protected UserAchievement() {
 		super(false);
 	}
-	
+
 	public UserAchievement(User user, Achievement achievement) {
 		super(true);
 		this.score = 0L;
 		this.achievement = achievement;
 	}
-	
+
 	@Override
 	public boolean isValid() {
 		this.validationErrors.clear();
-		
-		if(isNull(this.user)){
+
+		if (isNull(this.user)) {
 			this.validationErrors.add("Usuário não pode ser nulo.");
-		}else if(this.user.isNotValid()) {
+		} else if (this.user.isNotValid()) {
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
-		if(isNull(this.score) || isPositive(this.score)){
+		if (isNull(this.score) || isPositive(this.score)) {
 			this.validationErrors.add("Pontuação inválida.");
 		}
-		if(isNull(this.achievement) || this.achievement.isNotValid()) {
+		if (isNull(this.achievement) || this.achievement.isNotValid()) {
 			this.validationErrors.add("Conquista inválida.");
 		}
-		if(isFromTheFuture(this.conquestDate)) {
+		if (isFromTheFuture(this.conquestDate)) {
 			this.validationErrors.add("Data de conquista inválida.");
 		}
 		addAbstractAttributesValidation();
@@ -108,7 +109,7 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	public Achievement getAchievement() {
 		return this.achievement;
 	}
-	
+
 	public Date getConquestDate() {
 		return this.conquestDate;
 	}
