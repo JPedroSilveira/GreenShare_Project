@@ -12,6 +12,8 @@ import com.seedshare.entity.abstracts.AbstractEntity;
 
 /**
  * Persistence class for the table request
+ * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity
@@ -20,11 +22,11 @@ public class Request extends AbstractEntity<Request> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "request_seq";
-	
+
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
-    @Basic(optional = false)
+	@SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
+	@Basic(optional = false)
 	@Column(name = "request_id")
 	private Long id;
 
@@ -34,44 +36,50 @@ public class Request extends AbstractEntity<Request> implements Serializable {
 	@Column(name = "amount")
 	private Integer amount;
 
+	@Basic(optional = false)
+	@NotNull(message = "Obrigatório informar se a requisição foi aceita.")
+	@Column(name = "was_accepted")
+	private Boolean wasAccepted;
+
 	@ManyToOne
 	@NotNull(message = "A oferta não pode ser nula.")
 	@Valid
-	@JoinColumn(name="offer_id")
+	@JoinColumn(name = "offer_id")
 	private Offer offer;
 
 	@ManyToOne
 	@NotNull(message = "O usuário não pode ser nulo.")
 	@Valid
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	protected Request() {
 		super(false);
 	}
-	
-	protected Request(Integer amount, Offer offer, User user) {
+
+	public Request(Integer amount, Offer offer, User user) {
 		super(true);
 		this.amount = amount;
 		this.offer = offer;
 		this.user = user;
+		this.wasAccepted = false;
 	}
-	
+
 	@Override
 	public boolean isValid() {
 		this.validationErrors.clear();
-		
-		if(isNull(this.amount) || is(this.amount).orSmallerThan(1).orBiggerThan(9999)){
+
+		if (isNull(this.amount) || is(this.amount).orSmallerThan(1).orBiggerThan(9999)) {
 			this.validationErrors.add("Quantidade inválida.");
 		}
-		if(isNull(this.offer)) {
+		if (isNull(this.offer)) {
 			this.validationErrors.add("A oferta não pode ser nula.");
-		}else if(this.offer.isNotValid()){
+		} else if (this.offer.isNotValid()) {
 			this.validationErrors.addAll(this.offer.getValidationErrors());
 		}
-		if(isNull(this.user)){
+		if (isNull(this.user)) {
 			this.validationErrors.add("O usuário não pode ser nulo.");
-		}else if(this.user.isNotValid()){
+		} else if (this.user.isNotValid()) {
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
@@ -88,6 +96,14 @@ public class Request extends AbstractEntity<Request> implements Serializable {
 
 	public void setAmount(Integer amount) {
 		this.amount = amount;
+	}
+	
+	public Boolean getWasAccepted() {
+		return wasAccepted;
+	}
+
+	public void setWasAccepted(Boolean wasAccepted) {
+		this.wasAccepted = wasAccepted;
 	}
 
 	public Offer getOffer() {
