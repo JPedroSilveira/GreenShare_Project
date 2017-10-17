@@ -3,6 +3,9 @@ package com.seedshare.service.suggestion;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import com.seedshare.repository.SuggestionRepository;
 /**
  * Implementation of SuggestionService interface
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @Service
@@ -27,6 +31,8 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 
 	@Autowired
 	SpeciesRepository speciesRepository;
+	
+	private static final int MAX_PAGE_SIZE = 100; 
 
 	@Override
 	public ResponseEntity<?> delete(Long id) {
@@ -53,7 +59,7 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 						species.getScientificName(), species.getCommonName(), species.getIsOrnamental(),
 						species.getAverageHeight(), species.getGrowth());
 				if (newSpecies.isValid()) {
-					newSuggestion.getUser().cleanPrivateDate();
+					newSuggestion.getUser().clearPrivateData();
 					return new ResponseEntity<Suggestion>(newSuggestion, HttpStatus.OK);
 				}
 				return new ResponseEntity<List<String>>(newSpecies.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -68,7 +74,7 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 		User currentUser = getCurrentUser();
 		if(isNotNull(currentUser)) {
 			Iterable<Suggestion> suggestionListDB = suggestionRepository.findByUser(getCurrentUser());
-			suggestionListDB.forEach(s -> s.getUser().cleanPrivateDate());
+			suggestionListDB.forEach(s -> s.getUser().clearPrivateData());
 			return new ResponseEntity<Iterable<Suggestion>>(suggestionListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Nenhum usuário logado.", HttpStatus.BAD_REQUEST);
@@ -87,9 +93,13 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 	}
 
 	@Override
-	public ResponseEntity<?> findAll() {
-		Iterable<Suggestion> suggestionListDB = suggestionRepository.findAll();
-		return new ResponseEntity<Iterable<Suggestion>>(suggestionListDB, HttpStatus.OK);
+	public ResponseEntity<?> findAllByPage(Integer page, Integer size) {
+		if(isNotNull(page) && isNotNull(size) && is(size).smallerOrEqual(MAX_PAGE_SIZE)) {
+			Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "lastModificationDate"));
+			Iterable<Suggestion> suggestionListDB = suggestionRepository.findAll(pageable);
+			return new ResponseEntity<Iterable<Suggestion>>(suggestionListDB, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Paginação inválida.", HttpStatus.BAD_REQUEST);
 	}
 
 }

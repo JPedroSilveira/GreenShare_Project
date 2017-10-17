@@ -13,10 +13,10 @@ public interface SuggestionService {
 	ResponseEntity<?> save(Suggestion suggestion);
 		
 	ResponseEntity<?> findOne(Long id);
-	
-	ResponseEntity<?> findAll();
 
 	ResponseEntity<?> delete(Long id);
 
 	ResponseEntity<?> findByCurrentUser();
+
+	ResponseEntity<?> findAllByPage(Integer page, Integer size);
 }

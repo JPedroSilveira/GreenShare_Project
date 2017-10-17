@@ -17,20 +17,21 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.suggestion.SuggestionServiceImpl;
 
 /**
- * Implementation of  SuggestionController interface
+ * Implementation of {@link com.seedshare.controller.suggestion.SuggestionController} interface
+ * 
  * @author joao.silva
  */
 @RestController
 @RequestMapping("/suggestion")
-public class SuggestionControllerImpl extends IsHelper implements SuggestionController{
+public class SuggestionControllerImpl extends IsHelper implements SuggestionController {
 
 	@Autowired
 	SuggestionServiceImpl suggestionService;
-	
+
 	@Override
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> delete(@PathVariable long id) {
-		return suggestionService.delete(id); 
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		return suggestionService.delete(id);
 	}
 
 	@Override
@@ -47,14 +48,14 @@ public class SuggestionControllerImpl extends IsHelper implements SuggestionCont
 
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<?> findOne(long id) {
+	public ResponseEntity<?> findOne(Long id) {
 		return suggestionService.findOne(id);
 	}
 
 	@Override
-	@GetMapping("/")
-	public ResponseEntity<?> findAll() {
-		return suggestionService.findAll(); 
+	@GetMapping("/{page}/{size}")
+	public ResponseEntity<?> findAllByPage(@PathVariable Integer page, @PathVariable Integer size) {
+		return suggestionService.findAllByPage(page, size);
 	}
-	
+
 }
