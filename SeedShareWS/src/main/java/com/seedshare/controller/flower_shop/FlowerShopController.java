@@ -13,11 +13,11 @@ public interface FlowerShopController {
 
 	ResponseEntity<?> save(FlowerShop flowerShop);
 
-	ResponseEntity<?> findByCurrentUser();
+	ResponseEntity<?> findOneByCurrentUser();
 
-	ResponseEntity<?> findByUser(Long id);
+	ResponseEntity<?> findOneByUser(Long id);
 
-	ResponseEntity<?> findByCnpj(String cnpj);
+	ResponseEntity<?> findOneByCnpj(String cnpj);
 
 	ResponseEntity<?> update(FlowerShop flowerShop);
 

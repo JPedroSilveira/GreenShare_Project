@@ -34,20 +34,20 @@ public class FlowerShopControllerImpl extends IsHelper implements FlowerShopCont
 
 	@Override
 	@GetMapping("/current_user/")
-	public ResponseEntity<?> findByCurrentUser() {
-		return flowerShopService.findByCurrentUser();
+	public ResponseEntity<?> findOneByCurrentUser() {
+		return flowerShopService.findOneByCurrentUser();
 	}
 
 	@Override
 	@GetMapping("/user/{id}")
-	public ResponseEntity<?> findByUser(@PathVariable Long id) {
-		return flowerShopService.findByUser(id);
+	public ResponseEntity<?> findOneByUser(@PathVariable Long id) {
+		return flowerShopService.findOneByUser(id);
 	}
 
 	@Override
 	@GetMapping("/{cnpj}")
-	public ResponseEntity<?> findByCnpj(@PathVariable String cnpj) {
-		return flowerShopService.findByCnpj(cnpj);
+	public ResponseEntity<?> findOneByCnpj(@PathVariable String cnpj) {
+		return flowerShopService.findOneByCnpj(cnpj);
 	}
 
 	@Override

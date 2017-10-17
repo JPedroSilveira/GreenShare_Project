@@ -31,15 +31,15 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	public ResponseEntity<?> save(FlowerShop flowerShop) {
 		User currentUser = getCurrentUser();
 		if (currentUser.getIsLegalPerson()) {
-			FlowerShop flowerShopDB = flowerShopRepository.findByUser(currentUser);
+			FlowerShop flowerShopDB = flowerShopRepository.findOneByUser(currentUser);
 			if (isNull(flowerShopDB)) {
-				flowerShopDB = flowerShopRepository.findByCnpj(flowerShop.getCnpj());
+				flowerShopDB = flowerShopRepository.findOneByCnpj(flowerShop.getCnpj());
 				if (isNull(flowerShopDB) || !flowerShopDB.getIsActive()) {
 					FlowerShop newFlowerShop = new FlowerShop(flowerShop.getCnpj(), flowerShop.getDescription(),
 							currentUser);
 					if (newFlowerShop.isValid()) {
 						newFlowerShop = flowerShopRepository.save(newFlowerShop);
-						newFlowerShop.getUser().cleanPrivateDate();
+						newFlowerShop.getUser().clearPrivateData();
 						return new ResponseEntity<FlowerShop>(newFlowerShop, HttpStatus.OK);
 					}
 					return new ResponseEntity<List<String>>(newFlowerShop.getValidationErrors(),
@@ -55,13 +55,13 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	@Override
 	public ResponseEntity<?> update(FlowerShop flowerShop) {
 		User currentUser = getCurrentUser();
-		FlowerShop flowerShopDB = flowerShopRepository.findByUser(currentUser);
+		FlowerShop flowerShopDB = flowerShopRepository.findOneByUser(currentUser);
 		if (isNotNull(flowerShopDB) && flowerShopDB.getIsActive()) {
 			flowerShopDB.setDescription(flowerShop.getDescription());
 			flowerShopDB.setName(flowerShop.getName());
 			if (flowerShopDB.isValid()) {
 				flowerShopDB = flowerShopRepository.save(flowerShopDB);
-				flowerShopDB.getUser().cleanPrivateDate();
+				flowerShopDB.getUser().clearPrivateData();
 				return new ResponseEntity<FlowerShop>(flowerShopDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<List<String>>(flowerShopDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -72,11 +72,11 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	@Override
 	public ResponseEntity<?> delete(Long id) {
 		if (isNotNull(id)) {
-			FlowerShop flowerShop = flowerShopRepository.findOne(id);
-			if (flowerShop.getUser().getId() == getCurrentUserId()) {
+			FlowerShop flowerShop = flowerShopRepository.findOneByUser(getCurrentUser());
+			if (flowerShop.getId() == id) {
 				flowerShop.setIsActive(false);
 				flowerShopRepository.save(flowerShop);
-				return new ResponseEntity<String>("Floricultura desativada com sucesso.", HttpStatus.OK);
+				return new ResponseEntity<String>("Floricultura removida com sucesso.", HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Floricultura não associada ao usuário atual.", HttpStatus.BAD_REQUEST);
 		}
@@ -88,7 +88,7 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 		if (isNotNull(id)) {
 			FlowerShop flowerDB = flowerShopRepository.findOne(id);
 			if (isNotNull(flowerDB)) {
-				flowerDB.getUser().cleanPrivateDate();
+				flowerDB.getUser().clearPrivateData();
 				return new ResponseEntity<FlowerShop>(flowerDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Nenhuma floricultura encontrada.", HttpStatus.NOT_FOUND);
@@ -97,11 +97,11 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	}
 
 	@Override
-	public ResponseEntity<?> findByCnpj(String cnpj) {
+	public ResponseEntity<?> findOneByCnpj(String cnpj) {
 		if (isNotNull(cnpj)) {
-			FlowerShop flowerDB = flowerShopRepository.findByCnpj(cnpj);
+			FlowerShop flowerDB = flowerShopRepository.findOneByCnpj(cnpj);
 			if (isNotNull(flowerDB)) {
-				flowerDB.getUser().cleanPrivateDate();
+				flowerDB.getUser().clearPrivateData();
 				return new ResponseEntity<FlowerShop>(flowerDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Nenhuma floricultura encontrada.", HttpStatus.NOT_FOUND);
@@ -110,12 +110,12 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	}
 
 	@Override
-	public ResponseEntity<?> findByCurrentUser() {
+	public ResponseEntity<?> findOneByCurrentUser() {
 		User currentUser = getCurrentUser();
 		if (isNotNull(currentUser) && currentUser.getIsLegalPerson()) {
-			FlowerShop flowerDB = flowerShopRepository.findByUser(getCurrentUser());
+			FlowerShop flowerDB = flowerShopRepository.findOneByUser(getCurrentUser());
 			if (isNotNull(flowerDB)) {
-				flowerDB.getUser().cleanPrivateDate();
+				flowerDB.getUser().clearPrivateData();
 				return new ResponseEntity<FlowerShop>(flowerDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Nenhuma floricultura encontrada.", HttpStatus.NOT_FOUND);
@@ -124,13 +124,13 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	}
 
 	@Override
-	public ResponseEntity<?> findByUser(Long id) {
+	public ResponseEntity<?> findOneByUser(Long id) {
 		if (isNotNull(id)) {
 			User userDB = userRepository.findOne(id);
 			if (isNotNull(userDB) && userDB.getIsLegalPerson()) {
-				FlowerShop flowerDB = flowerShopRepository.findByUser(userDB);
+				FlowerShop flowerDB = flowerShopRepository.findOneByUser(userDB);
 				if (isNotNull(flowerDB)) {
-					flowerDB.getUser().cleanPrivateDate();
+					flowerDB.getUser().clearPrivateData();
 					return new ResponseEntity<FlowerShop>(flowerDB, HttpStatus.OK);
 				}
 				return new ResponseEntity<String>("Nenhuma floricultura encontrada.", HttpStatus.NOT_FOUND);

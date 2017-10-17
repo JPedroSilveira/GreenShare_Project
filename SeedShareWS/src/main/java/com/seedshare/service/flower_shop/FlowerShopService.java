@@ -12,15 +12,16 @@ import com.seedshare.service.BasicService;
  */
 public interface FlowerShopService extends BasicService<FlowerShop, Long> {
 
-	ResponseEntity<?> findByCnpj(String cnpj);
+	ResponseEntity<?> findOneByCnpj(String cnpj);
 
-	ResponseEntity<?> findByUser(Long id);
+	ResponseEntity<?> findOneByUser(Long id);
 
-	ResponseEntity<?> findByCurrentUser();
+	ResponseEntity<?> findOneByCurrentUser();
 
 	ResponseEntity<?> update(FlowerShop flowerShop);
 
 	ResponseEntity<?> findAllByState(Long id);
 
 	ResponseEntity<?> findAllByCity(Long id);
+
 }
