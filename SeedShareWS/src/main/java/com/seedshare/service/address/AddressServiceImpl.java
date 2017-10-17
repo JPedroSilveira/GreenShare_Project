@@ -32,7 +32,7 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 					getCurrentUser());
 			if (newAddress.isValid()) {
 				newAddress = addressRepository.save(newAddress);
-				newAddress.getUser().cleanPrivateDate();
+				newAddress.getUser().clearPrivateData();
 				return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
 			}
 		}
@@ -42,8 +42,12 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 	@Override
 	public ResponseEntity<?> delete(Long id) {
 		if (isNotNull(id)) {
-			addressRepository.delete(id);
-			return new ResponseEntity<String>("Endereço deletado.", HttpStatus.OK);
+			Address address = addressRepository.findOne(id);
+			if(address.getUser().getId() == getCurrentUser().getId()) {
+				addressRepository.delete(id);
+				return new ResponseEntity<String>("Endereço deletado.", HttpStatus.OK);				
+			}
+			return new ResponseEntity<String>("Endereço não pertence ao usuário atual.", HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<String>("É necessário informar um ID.", HttpStatus.BAD_REQUEST);
 	}
@@ -66,7 +70,7 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 		User userDB = getCurrentUser();
 		if (isNotNull(userDB)) {
 			Iterable<Address> addressListDB = addressRepository.findAllByUser(userDB);
-			addressListDB.forEach(address -> address.getUser().cleanPrivateDate());
+			addressListDB.forEach(address -> address.getUser().clearPrivateData());
 			return new ResponseEntity<Iterable<Address>>(addressListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Usuário logado inválido.", HttpStatus.BAD_REQUEST);

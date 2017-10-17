@@ -34,7 +34,7 @@ public class CountryServiceImpl extends IsHelper implements CountryService {
 			}
 			return new ResponseEntity<String>("Nome de pais já cadastrado.", HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<String>("Cor inválida.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Pais não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
