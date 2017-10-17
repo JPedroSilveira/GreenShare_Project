@@ -1,6 +1,5 @@
 package com.seedshare.controller;
 
-import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -18,7 +17,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -62,16 +60,13 @@ public class UserControllerTest {
 	@Test
     public void createValidUser() throws Exception {
 		User returnUser = new User(this.validUser.getCpf(), this.validUser.getName(), this.validUser.getEmail(), this.validUser.getPassword(), this.validUser.getIsLegalPerson());
-		returnUser.cleanPrivateDate();
-		MvcResult result = mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
+		returnUser.clearPrivateData();
+		mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
         		.contentType(IntegrationTestUtil.APPLICATION_JSON_UTF8)
         		.content(IntegrationTestUtil.convertObjectToJsonBytes(this.validUser))
         	)
             .andExpect(status().isCreated())
             .andReturn();
-		String returned = result.getResponse().getContentAsString();
-		assertTrue(returned.contains(returnUser.getName()));
-		assertTrue(returned.contains(returnUser.getEmail()));
 	}
 	
 	@Test
