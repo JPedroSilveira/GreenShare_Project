@@ -294,7 +294,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		this.setPassword(passwordEncoder().encode(this.password));
 	}
 
-	public void cleanPassword() {
+	public void clearPassword() {
 		this.password = null;
 	}
 
@@ -317,7 +317,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		return this.hasImage;
 	}
 
-	public void cleanPrivateDate() {
+	public void clearPrivateData() {
 		this.cpf = null;
 		this.password = null;
 		this.insertionDate = null;

@@ -1,12 +1,14 @@
 package com.seedshare.controller.auth;
 
-import com.seedshare.entity.User;
+import org.springframework.http.ResponseEntity;
 
 /**
+ * Controller interface of Login 
+ * 
  * @author joao.silva
  */
 public interface LoginController {
 
-	User getUserDetails();
+	ResponseEntity<?> getUserDetails();
 	
 }

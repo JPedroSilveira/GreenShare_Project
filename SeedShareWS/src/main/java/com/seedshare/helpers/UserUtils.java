@@ -16,11 +16,11 @@ public abstract class UserUtils {
     	Object currentUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	String email;
     	if (currentUser instanceof UserDetails ) {
-    		email= ( (UserDetails)currentUser).getUsername();
+    		email = ( (UserDetails)currentUser).getUsername();
     	} else {
     		email = currentUser.toString();
     	}
-    	return userService.findOneByEmail(email);
+    	return userService.findOneUserByEmail(email);
     }
 	
 	protected Long getCurrentUserId() {
