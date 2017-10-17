@@ -1,5 +1,7 @@
 package com.seedshare.service.growth;
 
+import org.springframework.http.ResponseEntity;
+
 import com.seedshare.entity.Growth;
 import com.seedshare.service.BasicService;
 
@@ -9,5 +11,7 @@ import com.seedshare.service.BasicService;
  * @author joao.silva
  */
 public interface GrowthService extends BasicService<Growth, Long>{
+
+	ResponseEntity<?> findAll();
 
 }

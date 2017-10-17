@@ -52,5 +52,11 @@ public class GrowthServiceImpl extends IsHelper implements GrowthService{
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
+	
+	@Override
+	public ResponseEntity<?> findAll() {
+		Iterable<Growth> growthListDB = growthRepository.findAll();
+		return new ResponseEntity<Iterable<Growth>>(growthListDB, HttpStatus.OK);
+	}
 
 }
