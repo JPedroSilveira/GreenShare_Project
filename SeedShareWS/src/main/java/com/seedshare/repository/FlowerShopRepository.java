@@ -7,7 +7,7 @@ import com.seedshare.entity.FlowerShop;
 import com.seedshare.entity.User;
 
 /**
- * Repository Interface for FlowerShop
+ * Repository Interface of {@link com.seedshare.entity.FlowerShop}
  * 
  * @author joao.silva
  */

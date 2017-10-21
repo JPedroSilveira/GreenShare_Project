@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.seedshare.entity.Post;
 
 /**
- * Repository Interface for Post
+ * Repository Interface of {@link com.seedshare.entity.Post}
  * 
  * @author joao.silva
  */

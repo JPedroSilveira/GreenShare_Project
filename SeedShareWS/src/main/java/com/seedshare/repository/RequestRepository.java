@@ -7,7 +7,7 @@ import com.seedshare.entity.Request;
 import com.seedshare.entity.User;
 
 /**
- * Repository Interface for Request
+ * Repository Interface of {@link com.seedshare.entity.Request}
  * 
  * @author joao.silva
  */

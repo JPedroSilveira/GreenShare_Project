@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.seedshare.entity.Country;
 
 /**
- * Repository Interface for Country
+ * Repository Interface of {@link com.seedshare.entity.Country}
  * 
  * @author joao.silva
  */

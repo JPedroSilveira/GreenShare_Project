@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.seedshare.entity.PostComment;
 
 /**
- * Repository Interface for PostComment
+ * Repository Interface of {@link com.seedshare.entity.PostComment}
  * 
  * @author joao.silva
  */

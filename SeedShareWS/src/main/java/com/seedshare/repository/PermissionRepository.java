@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.seedshare.entity.Permission;
 
 /**
- * Repository Interface for Permission
+ * Repository Interface of {@link com.seedshare.entity.Permission}
  * 
  * @author joao.silva
  */

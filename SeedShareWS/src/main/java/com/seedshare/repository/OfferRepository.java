@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.seedshare.entity.Offer;
 
 /**
- * Repository Interface for Offer
+ * Repository Interface of {@link com.seedshare.entity.Offer}
  * 
  * @author joao.silva
  */

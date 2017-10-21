@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.seedshare.entity.OfferComment;
 
 /**
- * Repository Interface for OfferComment
+ * Repository Interface of {@link com.seedshare.entity.OfferComment}
  * 
  * @author joao.silva
  */

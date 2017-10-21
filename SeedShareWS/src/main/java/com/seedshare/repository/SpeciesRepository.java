@@ -5,7 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.seedshare.entity.Species;
 
 /**
- * Repository Interface for Species
+ * Repository Interface of {@link com.seedshare.entity.Species}
  * 
  * @author joao.silva
  */

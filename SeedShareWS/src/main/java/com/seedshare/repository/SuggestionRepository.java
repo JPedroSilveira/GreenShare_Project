@@ -6,7 +6,7 @@ import com.seedshare.entity.Suggestion;
 import com.seedshare.entity.User;
 
 /**
- * Repository Interface for Suggestion
+ * Repository Interface of {@link com.seedshare.entity.Suggestion}
  * 
  * @author joao.silva
  */

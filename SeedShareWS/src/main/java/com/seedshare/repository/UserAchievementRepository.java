@@ -7,7 +7,7 @@ import com.seedshare.entity.User;
 import com.seedshare.entity.UserAchievement;
 
 /**
- * Repository Interface for UserAchievement
+ * Repository Interface of {@link com.seedshare.entity.UserAchievement}
  * 
  * @author joao.silva
  */

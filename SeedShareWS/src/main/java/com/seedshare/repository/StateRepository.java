@@ -6,7 +6,7 @@ import com.seedshare.entity.Country;
 import com.seedshare.entity.State;
 
 /**
- * Repository Interface for State
+ * Repository Interface of {@link com.seedshare.entity.State}
  * 
  * @author joao.silva
  */

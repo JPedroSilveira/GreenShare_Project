@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.seedshare.entity.User;
 
 /**
- * Repository Interface for User
+ * Repository Interface of {@link com.seedshare.entity.User}
  * 
  * @author joao.silva
  */

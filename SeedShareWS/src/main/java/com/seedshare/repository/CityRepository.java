@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.seedshare.entity.City;
 
 /**
- * Repository Interface for City
+ * Repository Interface of {@link com.seedshare.entity.City}
  * 
  * @author joao.silva
  */

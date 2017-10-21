@@ -11,6 +11,8 @@ import com.seedshare.entity.Achievement;
  */
 public interface AchievementRepository extends PagingAndSortingRepository<Achievement, Long> {
 
-	Iterable<Achievement> findAllByCategory(Short category);
+	Iterable<Achievement> findAllByCategoryByOrderByRequiredScoreAsc(Short category);
+
+	Iterable<Achievement> findAllByOrderByRequiredScoreAsc();
 
 }

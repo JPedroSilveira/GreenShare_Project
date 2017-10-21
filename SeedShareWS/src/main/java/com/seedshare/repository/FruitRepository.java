@@ -5,7 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.seedshare.entity.Fruit;
 
 /**
- * Repository Interface for Fruit
+ * Repository Interface of {@link com.seedshare.entity.Fruit}
  * 
  * @author joao.silva
  */

@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.seedshare.entity.Climate;
 
 /**
- * Repository Interface for Climate
+ * Repository Interface of {@link com.seedshare.entity.Climate}
  * 
  * @author joao.silva
  */

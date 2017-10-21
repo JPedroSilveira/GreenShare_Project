@@ -6,7 +6,7 @@ import com.seedshare.entity.Address;
 import com.seedshare.entity.User;
 
 /**
- * Repository Interface for Address
+ * Repository Interface of {@link com.seedshare.entity.Address}
  * 
  * @author joao.silva
  */

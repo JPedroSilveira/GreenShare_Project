@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.seedshare.entity.Growth;
 
 /**
- * Repository Interface for Growth
+ * Repository Interface of {@link com.seedshare.entity.Growth}
  * 
  * @author joao.silva
  */

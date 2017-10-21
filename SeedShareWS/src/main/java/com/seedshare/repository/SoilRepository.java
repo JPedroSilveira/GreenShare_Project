@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.seedshare.entity.Soil;
 
 /**
- * Repository Interface for Soil
+ * Repository Interface of {@link com.seedshare.entity.Soil}
  * 
  * @author joao.silva
  */

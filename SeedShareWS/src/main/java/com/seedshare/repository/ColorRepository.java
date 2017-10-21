@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.seedshare.entity.Color;
 
 /**
- * Repository Interface for Color
+ * Repository Interface of {@link com.seedshare.entity.Color}
  * 
  * @author joao.silva
  */
