@@ -59,7 +59,6 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 						species.getScientificName(), species.getCommonName(), species.getIsOrnamental(),
 						species.getAverageHeight(), species.getGrowth());
 				if (newSpecies.isValid()) {
-					newSuggestion.getUser().clearPrivateData();
 					return new ResponseEntity<Suggestion>(newSuggestion, HttpStatus.OK);
 				}
 				return new ResponseEntity<List<String>>(newSpecies.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -74,7 +73,6 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 		User currentUser = getCurrentUser();
 		if(isNotNull(currentUser)) {
 			Iterable<Suggestion> suggestionListDB = suggestionRepository.findByUser(getCurrentUser());
-			suggestionListDB.forEach(s -> s.getUser().clearPrivateData());
 			return new ResponseEntity<Iterable<Suggestion>>(suggestionListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Nenhum usuário logado.", HttpStatus.BAD_REQUEST);

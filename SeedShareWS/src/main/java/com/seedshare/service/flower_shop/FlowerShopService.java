@@ -6,7 +6,7 @@ import com.seedshare.entity.FlowerShop;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of FlowerShop
+ * Service interface of {@link com.seedshare.entity.FlowerShop}
  * 
  * @author joao.silva
  */
@@ -19,7 +19,7 @@ public interface FlowerShopService extends BasicService<FlowerShop, Long> {
 	ResponseEntity<?> findOneByCurrentUser();
 
 	ResponseEntity<?> update(FlowerShop flowerShop);
-
+	
 	ResponseEntity<?> findAllByState(Long id);
 
 	ResponseEntity<?> findAllByCity(Long id);

@@ -23,6 +23,7 @@ import com.seedshare.entity.abstracts.AbstractEntity;
 /**
  * Persistence class for the table color
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity
@@ -43,12 +44,12 @@ public class Color extends AbstractEntity<Color> implements Serializable {
 	@Basic(optional = false)
 	@NotNull(message = "O nome não pode ser nulo.")
 	@Size(min = 1, max = 50, message = "O nome deve conter de 1 a 50 caracteres.")
-	@Column(name = "name", length = 25, unique=true)
+	@Column(name = "name", length = 25, unique = true)
 	private String name;
 
 	@Valid
 	@JsonIgnore
-	@ManyToMany(mappedBy="colors")
+	@ManyToMany(mappedBy = "colors")
 	private List<Flower> flowers;
 
 	protected Color() {
@@ -71,7 +72,7 @@ public class Color extends AbstractEntity<Color> implements Serializable {
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -79,7 +80,7 @@ public class Color extends AbstractEntity<Color> implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	public List<Flower> getFlowers() {
 		return flowers;
 	}

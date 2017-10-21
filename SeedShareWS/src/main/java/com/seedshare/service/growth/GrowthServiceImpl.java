@@ -12,16 +12,16 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.GrowthRepository;
 
 /**
- * Service class of Growth
+ * Service implementation of {@link com.seedshare.service.growth.GrowthService}
  * 
  * @author joao.silva
  */
 @Service
-public class GrowthServiceImpl extends IsHelper implements GrowthService{
+public class GrowthServiceImpl extends IsHelper implements GrowthService {
 
 	@Autowired
-	GrowthRepository growthRepository;	
-	
+	GrowthRepository growthRepository;
+
 	@Override
 	public ResponseEntity<?> save(Growth growth) {
 		if (isNotNull(growth)) {
@@ -52,7 +52,7 @@ public class GrowthServiceImpl extends IsHelper implements GrowthService{
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Override
 	public ResponseEntity<?> findAll() {
 		Iterable<Growth> growthListDB = growthRepository.findAll();

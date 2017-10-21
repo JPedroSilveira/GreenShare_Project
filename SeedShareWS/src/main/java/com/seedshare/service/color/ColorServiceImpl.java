@@ -12,7 +12,8 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.ColorRepository;
 
 /**
- * Service class of Color
+ * Service class implementation of
+ * {@link com.seedshare.service.color.ColorService}
  * 
  * @author joao.silva
  */
@@ -28,9 +29,8 @@ public class ColorServiceImpl extends IsHelper implements ColorService {
 			Color colorDB = colorRepository.findOneByName(color.getName());
 			if (isNull(colorDB)) {
 				Color newColor = new Color(color.getName());
-				return newColor.isValid()
-						? new ResponseEntity<Color>(colorRepository.save(newColor), HttpStatus.OK)
-						: new ResponseEntity<List<String>>(newColor.getValidationErrors(), HttpStatus.BAD_REQUEST);							
+				return newColor.isValid() ? new ResponseEntity<Color>(colorRepository.save(newColor), HttpStatus.OK)
+						: new ResponseEntity<List<String>>(newColor.getValidationErrors(), HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity<String>("Nome de cor já cadastrado.", HttpStatus.CONFLICT);
 		}

@@ -12,20 +12,22 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.FruitRepository;
 
 /**
- * Service class of Fruit
+ * Service implementation of {@link com.seedshare.service.fruit.FruitService}
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @Service
-public class FruitServiceImpl extends IsHelper implements FruitService{
+public class FruitServiceImpl extends IsHelper implements FruitService {
 
 	@Autowired
-	FruitRepository fruitRepository;	
-	
+	FruitRepository fruitRepository;
+
 	@Override
 	public ResponseEntity<?> save(Fruit fruit) {
 		if (isNotNull(fruit)) {
-			Fruit newFruit = new Fruit(fruit.getFaunaConsumption(), fruit.getHumanConsumption(), fruit.getDescription(), fruit.getName(), fruit.getSpecies());
+			Fruit newFruit = new Fruit(fruit.getFaunaConsumption(), fruit.getHumanConsumption(), fruit.getDescription(),
+					fruit.getName(), fruit.getSpecies());
 			return newFruit.isValid() ? new ResponseEntity<Fruit>(fruitRepository.save(newFruit), HttpStatus.OK)
 					: new ResponseEntity<List<String>>(newFruit.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
@@ -52,7 +54,7 @@ public class FruitServiceImpl extends IsHelper implements FruitService{
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Override
 	public ResponseEntity<?> findAll() {
 		Iterable<Fruit> fruitListDB = fruitRepository.findAll();

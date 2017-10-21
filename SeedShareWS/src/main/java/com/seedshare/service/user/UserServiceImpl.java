@@ -30,7 +30,6 @@ public class UserServiceImpl extends IsHelper implements UserService {
 					user.getIsLegalPerson());
 			if (newUser.isValid() && validUniqueKeys(newUser)) {
 				User response = userRepository.save(newUser);
-				response.clearPrivateData();
 				return new ResponseEntity<User>(response, HttpStatus.OK);
 			} else {
 				if (!isUniqueEmail(newUser.getEmail())) {
@@ -53,7 +52,6 @@ public class UserServiceImpl extends IsHelper implements UserService {
 				currentUser.setPassword(user.getPassword());
 				currentUser.encodePassword();
 				currentUser = userRepository.save(currentUser);
-				currentUser.clearPrivateData();
 				return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Senha inválida.", HttpStatus.BAD_REQUEST);
@@ -68,7 +66,6 @@ public class UserServiceImpl extends IsHelper implements UserService {
 			currentUser.setName(name);
 			if (currentUser.hasValidName()) {
 				currentUser = userRepository.save(currentUser);
-				currentUser.clearPrivateData();
 				return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Nome inválido.", HttpStatus.BAD_REQUEST);
@@ -81,7 +78,6 @@ public class UserServiceImpl extends IsHelper implements UserService {
 		if (isNotNull(id)) {
 			User userDB = userRepository.findOne(id);
 			if (isNotNull(userDB)) {
-				userDB.clearPrivateData();
 				return new ResponseEntity<User>(userDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
@@ -93,19 +89,17 @@ public class UserServiceImpl extends IsHelper implements UserService {
 		if (isNotNull(email)) {
 			User userDB = userRepository.findOneByEmail(email);
 			if (isNotNull(userDB)) {
-				userDB.clearPrivateData();
 				return new ResponseEntity<User>(userDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>("Email não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	public User findOneUserByEmail(String email) {
 		if (isNotNull(email)) {
 			User userDB = userRepository.findOneByEmail(email);
 			if (isNotNull(userDB)) {
-				userDB.clearPrivateData();
 				return userDB;
 			}
 			return null;

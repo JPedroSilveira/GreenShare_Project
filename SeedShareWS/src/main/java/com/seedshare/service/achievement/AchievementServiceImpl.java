@@ -12,7 +12,8 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.AchievementRepository;
 
 /**
- * Service class of Achievement
+ * Service class implementation of
+ * {@link com.seedshare.service.achievement.AchievementService}
  * 
  * @author joao.silva
  * @author gabriel.schneider
@@ -54,13 +55,13 @@ public class AchievementServiceImpl extends IsHelper implements AchievementServi
 
 	@Override
 	public ResponseEntity<?> findAll() {
-		Iterable<Achievement> achievementsDB = achievementRepository.findAll();
+		Iterable<Achievement> achievementsDB = achievementRepository.findAllByOrderByRequiredScoreAsc();
 		return new ResponseEntity<Iterable<Achievement>>(achievementsDB, HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<?> findAllByCategory(Short category) {
-		Iterable<Achievement> achievementsDB = achievementRepository.findAllByCategory(category);
+		Iterable<Achievement> achievementsDB = achievementRepository.findAllByCategoryByOrderByRequiredScoreAsc(category);
 		return new ResponseEntity<Iterable<Achievement>>(achievementsDB, HttpStatus.OK);
 	}
 

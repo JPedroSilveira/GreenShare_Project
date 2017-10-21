@@ -12,7 +12,8 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.CountryRepository;
 
 /**
- * Service class of Country
+ * Service implementation of
+ * {@link com.seedshare.service.country.CountryService}
  * 
  * @author joao.silva
  */
@@ -26,11 +27,11 @@ public class CountryServiceImpl extends IsHelper implements CountryService {
 	public ResponseEntity<?> save(Country country) {
 		if (isNotNull(country)) {
 			Country countryDB = countryRepository.findOneByName(country.getName());
-			if(isNull(countryDB)) {
+			if (isNull(countryDB)) {
 				Country newCountry = new Country(country.getName());
 				return newCountry.isValid()
 						? new ResponseEntity<Country>(countryRepository.save(newCountry), HttpStatus.OK)
-						: new ResponseEntity<List<String>>(newCountry.getValidationErrors(), HttpStatus.BAD_REQUEST);	
+						: new ResponseEntity<List<String>>(newCountry.getValidationErrors(), HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity<String>("Nome de pais já cadastrado.", HttpStatus.CONFLICT);
 		}

@@ -6,7 +6,7 @@ import com.seedshare.entity.Address;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of Address
+ * Service interface of {@link com.seedshare.entity.Address}
  * @author joao.silva
  */
 public interface AddressService extends BasicService<Address,Long>{

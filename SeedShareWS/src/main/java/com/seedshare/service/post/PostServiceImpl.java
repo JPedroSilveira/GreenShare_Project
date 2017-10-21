@@ -35,7 +35,6 @@ public class PostServiceImpl extends IsHelper implements PostService {
 			Post newPost = new Post(getCurrentUser(), post.getSpecies(), post.getText());
 			if (newPost.isValid()) {
 				newPost = postRepository.save(newPost);
-				newPost.getUser().clearPrivateData();
 				return new ResponseEntity<Post>(newPost, HttpStatus.OK);
 			}
 			return new ResponseEntity<List<String>>(newPost.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -61,7 +60,6 @@ public class PostServiceImpl extends IsHelper implements PostService {
 		if (isNotNull(id)) {
 			Post postDB = postRepository.findOne(id);
 			if (isNotNull(postDB)) {
-				postDB.getUser().clearPrivateData();
 				return new ResponseEntity<Post>(postDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Postagem não encontrada.", HttpStatus.NOT_FOUND);
@@ -74,7 +72,6 @@ public class PostServiceImpl extends IsHelper implements PostService {
 		if (isValidPage(page, size)) {
 			Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "lastModificationDate"));
 			Page<Post> postListDB = postRepository.findAll(pageable);
-			postListDB.forEach(post -> post.getUser().clearPrivateData());
 			return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Paginação inválida.", HttpStatus.BAD_REQUEST);
@@ -86,7 +83,6 @@ public class PostServiceImpl extends IsHelper implements PostService {
 			if (isNotNull(id)) {
 				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "lastModificationDate"));
 				Page<Post> postListDB = postRepository.findAllByUser(id, pageable);
-				postListDB.forEach(post -> post.getUser().clearPrivateData());
 				return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
@@ -100,7 +96,6 @@ public class PostServiceImpl extends IsHelper implements PostService {
 			if (isNotNull(id)) {
 				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "lastModificationDate"));
 				Page<Post> postListDB = postRepository.findAllBySpecies(id, pageable);
-				postListDB.forEach(post -> post.getUser().clearPrivateData());
 				return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);

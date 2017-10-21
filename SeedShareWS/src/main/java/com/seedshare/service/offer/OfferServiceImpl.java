@@ -56,11 +56,10 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 	@Override
 	public ResponseEntity<?> save(Offer offer) {
 		if(isNotNull(offer)) {
-			Offer newOffer = new Offer(offer.getUnitPrice(), offer.getAmount(), getCurrentUser(), offer.getSpecies(),
+			Offer newOffer = new Offer(offer.getUnitPrice(), offer.getRemainingAmount(), getCurrentUser(), offer.getSpecies(),
 					offer.getDescription(), getCurrentUser().getFlowerShop());
 			if (newOffer.isValid()) {
 				newOffer = offerRepository.save(offer);
-				newOffer.getUser().clearPrivateData();
 				return new ResponseEntity<Offer>(newOffer, HttpStatus.OK);
 			}
 			return new ResponseEntity<List<String>>(newOffer.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -88,7 +87,6 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 		if (isNotNull(id)) {
 			Offer offerDB = offerRepository.findOne(id);
 			if (isNotNull(offerDB)) {
-				offerDB.getUser().clearPrivateData();
 				return new ResponseEntity<Offer>(offerDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Nível de crescimento não encontrado.", HttpStatus.NOT_FOUND);
@@ -101,7 +99,6 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 		if (isNotNull(id)) {
 			Iterable<Offer> offerListDB = offerRepository.findAllByUser(id);
 			if (isNotNull(offerListDB)) {
-				offerListDB.forEach(offer -> offer.getUser().clearPrivateData());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
@@ -115,7 +112,6 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 			FlowerShop flowerShopDB = flowerShopRepository.findOne(id);
 			if (isNotNull(flowerShopDB)) {
 				Iterable<Offer> offerListDB = offerRepository.findAllByFlowerShop(flowerShopDB.getId());
-				offerListDB.forEach(offer -> offer.getUser().clearPrivateData());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Floricultura não encontrada.", HttpStatus.NOT_FOUND);
@@ -129,7 +125,6 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 			Species speciesDB = speciesRepository.findOne(id);
 			if (isNotNull(speciesDB)) {
 				Iterable<Offer> offerListDB = offerRepository.findAllBySpecies(speciesDB.getId());
-				offerListDB.forEach(offer -> offer.getUser().clearPrivateData());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Espécie não encontrada.", HttpStatus.NOT_FOUND);
@@ -143,7 +138,6 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 			State stateDB = stateRepository.findOne(id);
 			if (isNotNull(stateDB)) {
 				Iterable<Offer> offerListDB = offerRepository.findAllByState(stateDB.getId());
-				offerListDB.forEach(offer -> offer.getUser().clearPrivateData());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Estado não encontrado.", HttpStatus.NOT_FOUND);
@@ -157,7 +151,6 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 			City cityDB = cityRepository.findOne(id);
 			if (isNotNull(cityDB)) {
 				Iterable<Offer> offerListDB = offerRepository.findAllByCity(cityDB.getId());
-				offerListDB.forEach(offer -> offer.getUser().clearPrivateData());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.NOT_FOUND);
@@ -173,7 +166,6 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 				OfferComment newOfferComment = new OfferComment(text, getCurrentUser(), offerDB);
 				if(newOfferComment.isValid()) {
 					newOfferComment = offerCommentRepository.save(newOfferComment);
-					newOfferComment.getUser().clearPrivateData();
 					return new ResponseEntity<OfferComment>(newOfferComment, HttpStatus.OK);
 				}
 				return new ResponseEntity<List<String>>(offerDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -194,5 +186,15 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 			return new ResponseEntity<String>("Comentário não pertence ao usuário atual.", HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> findAllByCurrentUser() {
+		Long currentUserID = getCurrentUserId();
+		if(isNotNull(currentUserID)) {
+			Iterable<Offer> offerListDB = offerRepository.findAllByCurrentUser(currentUserID);
+			return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Nenhum usuário logado.", HttpStatus.BAD_REQUEST);
 	}
 }

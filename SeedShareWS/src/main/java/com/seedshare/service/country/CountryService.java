@@ -6,7 +6,7 @@ import com.seedshare.entity.Country;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of Country
+ * Service interface of {@link com.seedshare.entity.Country}
  * 
  * @author joao.silva
  */

@@ -28,4 +28,6 @@ public interface OfferService extends BasicService<Offer, Long> {
 	ResponseEntity<?> addComment(Long id, String text);
 
 	ResponseEntity<?> deleteComment(Long id);
+	
+	ResponseEntity<?> findAllByCurrentUser();
 }

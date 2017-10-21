@@ -12,7 +12,7 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.ClimateRepository;
 
 /**
- * Service class of Climate
+ * Implementation Service of {@link com.seedshare.service.climate.ClimateService}
  * 
  * @author joao.silva
  */

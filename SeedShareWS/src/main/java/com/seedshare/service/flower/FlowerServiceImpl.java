@@ -12,8 +12,9 @@ import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.FlowerRepository;
 
 /**
- * Service class of Flower
+ * Service implementation of {@link com.seedshare.service.flower.FlowerService}
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @Service
@@ -53,10 +54,19 @@ public class FlowerServiceImpl extends IsHelper implements FlowerService {
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Override
 	public ResponseEntity<?> findAll() {
 		Iterable<Flower> flowersDB = flowerRepository.findAll();
 		return new ResponseEntity<Iterable<Flower>>(flowersDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> findAllBySpecies(Long id) {
+		if (isNotNull(id)) {
+			Iterable<Flower> flowerListDB = flowerRepository.findAllBySpecies(id);
+			return new ResponseEntity<Iterable<Flower>>(flowerListDB, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 }

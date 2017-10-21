@@ -6,7 +6,7 @@ import com.seedshare.entity.Color;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of Color
+ * Service interface of {@link com.seedshare.entity.Color}
  * 
  * @author joao.silva
  */

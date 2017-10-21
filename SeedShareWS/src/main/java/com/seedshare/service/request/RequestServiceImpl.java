@@ -36,7 +36,6 @@ public class RequestServiceImpl extends IsHelper implements RequestService {
 			Request newRequest = new Request(request.getAmount(), request.getOffer(), getCurrentUser());
 			if (newRequest.isValid()) {
 				newRequest = requestRepository.save(newRequest);
-				newRequest.getUser().clearPrivateData();
 				return new ResponseEntity<Request>(newRequest, HttpStatus.OK);
 			}
 			return new ResponseEntity<List<String>>(newRequest.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -62,7 +61,6 @@ public class RequestServiceImpl extends IsHelper implements RequestService {
 		if (isNotNull(id)) {
 			Request requestDB = requestRepository.findOne(id);
 			if (isNotNull(requestDB)) {
-				requestDB.getUser().clearPrivateData();
 				return new ResponseEntity<Request>(requestDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Requisição não encontrada.", HttpStatus.NOT_FOUND);
@@ -76,7 +74,6 @@ public class RequestServiceImpl extends IsHelper implements RequestService {
 			Offer offerDB = offerRepository.findOne(id);
 			if(offerDB.getUser().getId() == getCurrentUserId()) {
 				Iterable<Request> requestListDB = requestRepository.findAllByOffer(id);
-				requestListDB.forEach(request -> request.getUser().clearPrivateData());
 				return new ResponseEntity<Iterable<Request>>(requestListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Oferta não pertence ao usuário logado.", HttpStatus.UNAUTHORIZED);
@@ -87,7 +84,6 @@ public class RequestServiceImpl extends IsHelper implements RequestService {
 	@Override
 	public ResponseEntity<?> findAllByCurrentUser() {
 		Iterable<Request> requestListDB = requestRepository.findAllByUser(getCurrentUser());
-		requestListDB.forEach(request -> request.getUser().clearPrivateData());
 		return new ResponseEntity<Iterable<Request>>(requestListDB, HttpStatus.OK);
 	}
 	
@@ -98,15 +94,14 @@ public class RequestServiceImpl extends IsHelper implements RequestService {
 			if (isNotNull(requestDB) && requestDB.getWasAccepted() == false) {
 				Offer offerDB = offerRepository.findOne(requestDB.getOffer().getId());
 				if(offerDB.getUser().getId() == getCurrentUserId()) {
-					if(offerDB.getAmount() >= requestDB.getAmount()) {
-						offerDB.setAmount(offerDB.getAmount() - requestDB.getAmount());
-						if(offerDB.getAmount() == 0) {
+					if(offerDB.getRemainingAmount() >= requestDB.getAmount()) {
+						offerDB.setRemainingAmount(offerDB.getRemainingAmount() - requestDB.getAmount());
+						if(offerDB.getRemainingAmount() == 0) {
 							offerDB.setOfferStatus(OfferStatus.Closed);
 						}
 						requestDB.setWasAccepted(true);
 						offerRepository.save(offerDB);
 						requestRepository.save(requestDB);
-						requestDB.getUser().clearPrivateData();		
 						return new ResponseEntity<Request>(requestDB, HttpStatus.OK);
 					}
 					return new ResponseEntity<String>("Oferta não possui quantidade suficiente de produtos.", HttpStatus.PRECONDITION_FAILED);

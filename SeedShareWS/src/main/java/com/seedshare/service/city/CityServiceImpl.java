@@ -14,7 +14,7 @@ import com.seedshare.repository.CountryRepository;
 import com.seedshare.repository.StateRepository;
 
 /**
- * Service Class for City
+ * Implementation Service of {@link com.seedshare.service.city.CityService}
  * 
  * @author joao.silva
  */

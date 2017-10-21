@@ -6,7 +6,7 @@ import com.seedshare.entity.Climate;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of Climate
+ * Service interface of {@link com.seedshare.entity.Climate}
  * 
  * @author joao.silva
  */

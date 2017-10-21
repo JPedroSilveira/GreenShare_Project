@@ -59,8 +59,6 @@ public class UserControllerTest {
 	
 	@Test
     public void createValidUser() throws Exception {
-		User returnUser = new User(this.validUser.getCpf(), this.validUser.getName(), this.validUser.getEmail(), this.validUser.getPassword(), this.validUser.getIsLegalPerson());
-		returnUser.clearPrivateData();
 		mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
         		.contentType(IntegrationTestUtil.APPLICATION_JSON_UTF8)
         		.content(IntegrationTestUtil.convertObjectToJsonBytes(this.validUser))

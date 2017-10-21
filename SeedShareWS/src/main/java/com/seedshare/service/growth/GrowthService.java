@@ -6,7 +6,7 @@ import com.seedshare.entity.Growth;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of Growth
+ * Service interface of {@link com.seedshare.entity.Growth}
  * 
  * @author joao.silva
  */

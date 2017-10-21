@@ -12,7 +12,8 @@ import com.seedshare.repository.AddressRepository;
 import com.seedshare.repository.UserRepository;
 
 /**
- * Implementation of Address Service interface
+ * Implementation Service of
+ * {@link com.seedshare.service.address.AddressService}
  * 
  * @author joao.silva
  */
@@ -28,11 +29,10 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 	@Override
 	public ResponseEntity<?> save(Address address) {
 		if (isNotNull(address)) {
-			Address newAddress = new Address(address.getLatitude(), address.getLongitude(), address.getCity(),
-					getCurrentUser());
+			Address newAddress = new Address(address.getCity(), getCurrentUser(), address.getNumero(),
+					address.getBairro(), address.getEndereco(), address.getComplemento(), address.getReferencia());
 			if (newAddress.isValid()) {
 				newAddress = addressRepository.save(newAddress);
-				newAddress.getUser().clearPrivateData();
 				return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
 			}
 		}
@@ -43,9 +43,9 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 	public ResponseEntity<?> delete(Long id) {
 		if (isNotNull(id)) {
 			Address address = addressRepository.findOne(id);
-			if(address.getUser().getId() == getCurrentUser().getId()) {
+			if (address.getUser().getId() == getCurrentUser().getId()) {
 				addressRepository.delete(id);
-				return new ResponseEntity<String>("Endereço deletado.", HttpStatus.OK);				
+				return new ResponseEntity<String>("Endereço deletado.", HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Endereço não pertence ao usuário atual.", HttpStatus.UNAUTHORIZED);
 		}
@@ -70,7 +70,6 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 		User userDB = getCurrentUser();
 		if (isNotNull(userDB)) {
 			Iterable<Address> addressListDB = addressRepository.findAllByUser(userDB);
-			addressListDB.forEach(address -> address.getUser().clearPrivateData());
 			return new ResponseEntity<Iterable<Address>>(addressListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Usuário logado inválido.", HttpStatus.BAD_REQUEST);

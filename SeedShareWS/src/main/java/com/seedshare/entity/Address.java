@@ -11,8 +11,8 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
-import java.math.BigDecimal;
 import java.util.List;
+
 /**
  * Persistence class for the table address
  * 
@@ -33,20 +33,34 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	private Long id;
 
 	@Basic(optional = false)
-	@NotNull(message = "Latitude não pode ser nula.")
-	@Column(name = "latitude")
-	private BigDecimal latitude;
+	@NotNull(message = "O número não pode ser nulo.")
+	@Size(min = 1, message = "O número deve conter no minimo 1 número.")
+	@Column(name = "numero")
+	private Integer numero;
 
 	@Basic(optional = false)
-	@NotNull(message = "Longitude não pode ser nula.")
-	@Column(name = "longitude")
-	private BigDecimal longitude;
+	@Size(min = 1, max = 200, message = "O bairro deve conter entre 1 e 200 caracteres.")
+	@NotNull(message = "O bairro não pode ser nulo.")
+	@Column(name = "bairro", length = 200)
+	private String bairro;
 
 	@Basic(optional = false)
-	@NotNull(message = "CEP não pode ser nulo.")
-	@Size(max = 8, min = 8, message = "O CEP deve conter oito dígitos.")
-	@Column(name = "cpd", length = 8)
-	private Integer cep;
+	@Size(min = 1, max = 200, message = "O endereço deve conter entre 1 e 200 caracteres.")
+	@NotNull(message = "O endereço não pode ser nulo.")
+	@Column(name = "endereco", length = 200)
+	private String endereco;
+
+	@Basic(optional = true)
+	@Size(min = 1, max = 200, message = "O complemento deve conter entre 1 e 200 caracteres.")
+	@NotNull(message = "O complemento não pode ser nulo.")
+	@Column(name = "complemento", length = 200)
+	private String complemento;
+
+	@Basic(optional = false)
+	@Size(min = 1, max = 200, message = "A referencia deve conter entre 1 e 200 caracteres.")
+	@NotNull(message = "A referencia não pode ser nulo.")
+	@Column(name = "referencia", length = 200)
+	private String referencia;
 
 	@JsonIgnore
 	@Basic(optional = true)
@@ -54,14 +68,14 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@Valid
 	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 	@Basic(optional = false)
 	@NotNull(message = "Cidade não poder ser nula.")
 	@ManyToOne
 	@Valid
 	@JoinColumn(name = "city_id")
 	private City city;
-	
+
 	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "address")
@@ -71,12 +85,15 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		super(false);
 	}
 
-	public Address(BigDecimal latitude, BigDecimal longitude, City city, User user) {
+	public Address(City city, User user, Integer numero, String bairro, String endereco, String complemento, String referencia) {
 		super(true);
 		this.user = user;
-		this.latitude = latitude;
-		this.longitude = longitude;
 		this.city = city;
+		this.numero = numero;
+		this.bairro = bairro;
+		this.endereco = endereco;
+		this.complemento = complemento;
+		this.referencia = referencia;
 	}
 
 	@Override
@@ -86,19 +103,28 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		if (isNotNull(this.user) && this.user.isNotValid()) {
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
-		if (isNull(this.latitude)) {
-			this.validationErrors.add("Latitude inválida.");
-		}
-		if (isNull(this.longitude)) {
-			this.validationErrors.add("Longitude inválida.");
-		}
 		if (isNull(this.city)) {
 			this.validationErrors.add("Cidade nula.");
 		} else if (this.city.isNotValid()) {
 			this.validationErrors.addAll(this.city.getValidationErrors());
 		}
-		if (is(this.cep).notEqual(8)) {
-			this.validationErrors.add("O CEP não contém oito dígitos.");
+		if(isNull(this.numero) || is(this.numero).smallerThan(1)) {
+			this.validationErrors.add("O número não pode ser nulo ou menor que um.");
+		}
+		if(isNull(this.bairro) || is(this.bairro).orSmallerThan(1).orBiggerThan(200)) {
+			this.validationErrors.add("O bairro não pode ser nulo e deve conter entre 1 e 200 caracteres.");
+		}
+		if(isNull(this.endereco) || is(this.endereco).orSmallerThan(1).orBiggerThan(200)) {
+			this.validationErrors.add("O endereço não pode ser nulo e deve conter entre 1 e 200 caracteres.");
+		}
+		if(isNull(this.complemento) || is(this.complemento).orSmallerThan(1).orBiggerThan(200)) {
+			this.validationErrors.add("O complemento não pode ser nulo e deve conter entre 1 e 200 caracteres.");
+		}
+		if(isNull(this.bairro) || is(this.bairro).orSmallerThan(1).orBiggerThan(200)) {
+			this.validationErrors.add("O bairro deve conter entre 1 e 200 caracteres.");
+		}
+		if(isNull(this.bairro) || is(this.bairro).orSmallerThan(1).orBiggerThan(200)) {
+			this.validationErrors.add("A referencia não pode ser nula e deve conter entre 1 e 200 caracteres");
 		}
 		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
@@ -107,22 +133,6 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@Override
 	public Long getId() {
 		return this.id;
-	}
-
-	public BigDecimal getLatitude() {
-		return this.latitude;
-	}
-
-	public void setLatitude(BigDecimal latitude) {
-		this.latitude = latitude;
-	}
-
-	public BigDecimal getLongitude() {
-		return this.longitude;
-	}
-
-	public void setLongitude(BigDecimal longitude) {
-		this.longitude = longitude;
 	}
 
 	public User getUser() {
@@ -140,12 +150,48 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	public void setCity(City city) {
 		this.city = city;
 	}
-	
-	public Integer getCep() {
-		return cep;
-	}
 
 	public List<Offer> getOffers() {
 		return offers;
+	}
+
+	public Integer getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Integer numero) {
+		this.numero = numero;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+	public String getComplemento() {
+		return complemento;
+	}
+
+	public void setComplemento(String complemento) {
+		this.complemento = complemento;
+	}
+
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
 	}
 }

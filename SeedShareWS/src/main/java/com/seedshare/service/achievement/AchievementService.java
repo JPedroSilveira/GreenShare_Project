@@ -6,7 +6,7 @@ import com.seedshare.entity.Achievement;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of Achievement
+ * Service interface of {@link com.seedshare.entity.Achievement}
  * 
  * @author joao.silva
  * @author gabriel.schneider

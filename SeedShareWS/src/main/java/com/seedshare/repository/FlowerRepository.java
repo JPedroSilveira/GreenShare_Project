@@ -11,4 +11,6 @@ import com.seedshare.entity.Flower;
  */
 public interface FlowerRepository extends PagingAndSortingRepository<Flower, Long> {
 
+	Iterable<Flower> findAllBySpecies(Long id);
+
 }
