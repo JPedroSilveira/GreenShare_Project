@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 /**
@@ -52,6 +53,7 @@ public class PostComment extends AbstractEntity<FlowerShop> implements Serializa
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@JsonIgnore
 	@ManyToOne
 	@Basic(optional = false)
 	@NotNull(message = "A postagem não pode ser nula.")

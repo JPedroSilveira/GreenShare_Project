@@ -46,7 +46,7 @@ public class Fruit extends AbstractPhotogenicEntity<Fruit> implements Serializab
 	private Boolean humanConsumption;
 
 	@ElementCollection(targetClass = Month.class)
-	@JoinTable(name = "Fruiting_Month", joinColumns = @JoinColumn(name = "fruit_id"))
+	@JoinTable(name = "fruiting_month", joinColumns = @JoinColumn(name = "fruit_id"))
 	@Column(name = "month", nullable = false)
 	@Enumerated(EnumType.ORDINAL)
 	private List<Month> fruitingMonths;

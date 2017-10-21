@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 /**
@@ -53,6 +54,7 @@ public class City extends AbstractEntity<City> implements Serializable {
 	@JoinColumn(name = "state_id")
 	private State state;
 	
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "city")
 	private List<Address> addresses;

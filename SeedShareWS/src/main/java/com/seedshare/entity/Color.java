@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 /**
@@ -46,6 +47,7 @@ public class Color extends AbstractEntity<Color> implements Serializable {
 	private String name;
 
 	@Valid
+	@JsonIgnore
 	@ManyToMany(mappedBy="colors")
 	private List<Flower> flowers;
 

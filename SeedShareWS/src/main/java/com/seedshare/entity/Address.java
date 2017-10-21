@@ -55,7 +55,6 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@JsonIgnore
 	@Basic(optional = false)
 	@NotNull(message = "Cidade não poder ser nula.")
 	@ManyToOne
@@ -63,6 +62,7 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@JoinColumn(name = "city_id")
 	private City city;
 	
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "address")
 	private List<Offer> offers;

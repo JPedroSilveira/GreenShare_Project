@@ -1,7 +1,5 @@
 package com.seedshare.entity.abstracts;
 
-import java.util.Date;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -33,12 +31,6 @@ public abstract class AbstractPhotogenicEntity<Entity> extends AbstractEntity<En
 
 	@Override
 	public void addAbstractAttributesValidation() {
-		if (this.insertionDate == null || this.insertionDate.after(new Date())) {
-			this.validationErrors.add("Data de inserção inválida.");
-		}
-		if (this.lastModificationDate == null || this.lastModificationDate.after(new Date())) {
-			this.validationErrors.add("Data de última modificação inválida.");
-		}
 		if (isNull(this.photoType)) {
 			this.validationErrors.add("Tipo de imagem de classe inválida.");
 		}

@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 /**
@@ -40,6 +41,7 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	@Column(name = "score")
 	private Long score;
 
+	@JsonIgnore
 	@Valid
 	@NotNull(message = "Usuário não pode ser nulo.")
 	@ManyToOne

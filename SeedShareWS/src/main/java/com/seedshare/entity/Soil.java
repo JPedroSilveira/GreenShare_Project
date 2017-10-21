@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class Soil extends AbstractEntity<Soil> implements Serializable {
 	private String name;
 
 	@ManyToMany
+	@JsonIgnore
 	@JoinTable(
 		name="species_soil"
 		, joinColumns={

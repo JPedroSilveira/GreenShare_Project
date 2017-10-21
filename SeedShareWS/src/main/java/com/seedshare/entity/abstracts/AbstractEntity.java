@@ -27,13 +27,6 @@ public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEn
 	@Column(name = "insertion_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date insertionDate;
-
-	@Basic(optional = false)
-	@Past
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Column(name = "last_modification_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	protected Date lastModificationDate;
 	
 	@JsonIgnore
 	@Transient
@@ -43,7 +36,6 @@ public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEn
 		this.validationErrors = new ArrayList<String>();
 		if (isNew) {
 			this.insertionDate = new Date();
-			this.lastModificationDate = new Date();
 		}
 	}
 
@@ -51,20 +43,9 @@ public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEn
 		return this.insertionDate;
 	}
 
-	public Date getLastModificationDate() {
-		return lastModificationDate;
-	}
-
-	public void setLastModificationDate(Date lastModificationDate) {
-		this.lastModificationDate = lastModificationDate;
-	}
-
 	public void addAbstractAttributesValidation() {
 		if (isNullOrFromTheFuture(this.insertionDate)) {
 			this.validationErrors.add("Data de inserção inválida");
-		}
-		if (isNullOrFromTheFuture(this.lastModificationDate)) {
-			this.validationErrors.add("Data de última modificação inválida");
 		}
 	}
 

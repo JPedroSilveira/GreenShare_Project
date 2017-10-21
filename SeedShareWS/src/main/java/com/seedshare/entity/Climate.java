@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class Climate extends AbstractEntity<Climate> implements Serializable {
 	private String name;
 
 	@Valid
+	@JsonIgnore
 	@ManyToMany(mappedBy = "climates")
 	private List<Species> species;
 

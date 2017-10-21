@@ -53,6 +53,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Column(name = "name", length = 100)
 	private String name;
 
+	@JsonIgnore
 	@Basic(optional = true)
 	@NotNull(message = "CPF não pode ser nulo.")
 	@Size(min = 11, max = 11, message = "CPF deve conter 11 digitos.")
@@ -66,6 +67,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Column(name = "email", length = 100, unique = true)
 	private String email;
 
+	@JsonIgnore
 	@Basic(optional = false)
 	@NotNull(message = "A senha não pode ser nula.")
 	@Size(min = 8, max = 250, message = "A senha deve conter no mínimo 8 caracteres e no máximo 250.")
@@ -81,41 +83,47 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Column(name = "approved")
 	private Boolean isApproved;
 
-	@JsonIgnore
 	@Valid
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Address> addresses;
 
-	@JsonIgnore
 	@Valid
 	@OneToOne
 	@JoinColumn(name = "flower_shop_id")
 	private FlowerShop flowerShop;
 
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "user")
 	private List<Offer> offers;
 
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "user")
 	private List<OfferComment> offerComments;
 
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "user")
 	private List<PostComment> postComments;
 
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "user")
 	private List<Post> posts;
 
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "user")
 	private List<Request> requests;
 
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "user")
 	private List<Suggestion> suggestions;
 
+	@JsonIgnore
 	@Valid
 	@ManyToMany
 	@JoinTable(name = "user_permission", joinColumns = { @JoinColumn(name = "id_user") }, inverseJoinColumns = {
@@ -315,12 +323,5 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Override
 	public Boolean getHasImage() {
 		return this.hasImage;
-	}
-
-	public void clearPrivateData() {
-		this.cpf = null;
-		this.password = null;
-		this.insertionDate = null;
-		this.lastModificationDate = null;
 	}
 }

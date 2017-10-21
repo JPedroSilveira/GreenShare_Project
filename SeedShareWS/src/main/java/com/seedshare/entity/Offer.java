@@ -45,10 +45,14 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private Float unitPrice;
 
 	@Basic(optional = false)
-	@NotNull(message = "Quantidade não pode ser nula")
+	@NotNull(message = "Quantidade restante não pode ser nula")
 	@Size(min = 1, max = 9999, message = "Quantidade deve estar entre 1 e 9999.")
-	@Column(name = "amount")
-	private Integer amount;
+	@Column(name = "remaining_amount")
+	private Integer remainingAmount;
+	
+	@Basic(optional = false)
+	@Column(name = "initial_amount")
+	private Integer initialAmount;
 
 	@Basic(optional = false)
 	@Column(name = "offer_status", columnDefinition = "TEXT")
@@ -89,6 +93,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	@JoinColumn(name = "address_id")
 	private Address address;
 
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "offer")
 	private List<Request> requests;
@@ -104,7 +109,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		this.validationErrors = new ArrayList<String>();
 	}
 
-	public Offer(Float unitPrice, Integer amount, User user, Species species, String description, FlowerShop flowerShop) {
+	public Offer(Float unitPrice, Integer remainingAmount, User user, Species species, String description, FlowerShop flowerShop) {
 		super(PHOTO_TYPE, true);
 		if (this.unitPrice == null || this.unitPrice == (float) 0) {
 			this.type = OfferType.Donation.getOfferType();
@@ -116,7 +121,8 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		if(user.getIsLegalPerson()) {
 			this.flowerShop = flowerShop;
 		}
-		this.amount = amount;
+		this.remainingAmount = remainingAmount;
+		this.initialAmount = remainingAmount;
 		this.species = species;
 		this.offerStatus = OfferStatus.Active.getOfferStatus();
 		this.description = description;
@@ -144,8 +150,11 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 				this.validationErrors.add("Preço unitário inválido.");
 			}
 		}
-		if (isNull(this.amount) || is(this.amount).smallerOrEqual(0)) {
-			this.validationErrors.add("Quantidade inválida.");
+		if (isNull(this.remainingAmount) || is(this.remainingAmount).smallerOrEqual(0)) {
+			this.validationErrors.add("Quantidade restante inválida.");
+		}
+		if (isNull(this.initialAmount) || is(this.initialAmount).smallerOrEqual(0)) {
+			this.validationErrors.add("Quantidade inicial inválida.");
 		}
 		if (isNull(this.user)) {
 			this.validationErrors.add("O usuário não pode ser nulo.");
@@ -172,12 +181,16 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		return this.unitPrice;
 	}
 
-	public Integer getAmount() {
-		return this.amount;
+	public Integer getRemainingAmount() {
+		return this.remainingAmount;
 	}
 
-	public void setAmount(Integer amount) {
-		this.amount = amount;
+	public void setRemainingAmount(Integer remainingAmount) {
+		this.remainingAmount = remainingAmount;
+	}
+	
+	public Integer getInitialAmount() {
+		return initialAmount;
 	}
 
 	public Integer getOfferStatus() {
@@ -200,16 +213,8 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		return this.user;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public Species getSpecies() {
 		return this.species;
-	}
-
-	public void setSpecies(Species species) {
-		this.species = species;
 	}
 
 	public List<Request> getRequests() {

@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractPhotogenicEntity;
 import com.seedshare.enumeration.PhotoType;
 
@@ -57,6 +58,7 @@ public class Achievement extends AbstractPhotogenicEntity<Achievement> implement
 	@Column(name = "required_score")
 	private Long requiredScore;
 
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "achievement")
 	private List<UserAchievement> userAchievements;

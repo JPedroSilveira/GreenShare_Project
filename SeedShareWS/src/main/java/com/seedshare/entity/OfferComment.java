@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
 
 /**
@@ -53,6 +54,7 @@ public class OfferComment extends AbstractEntity<FlowerShop> implements Serializ
 	private User user;
 
 	@ManyToOne
+	@JsonIgnore
 	@Basic(optional = false)
 	@NotNull(message = "A oferta não pode ser nula.")
 	@Valid

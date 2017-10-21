@@ -14,9 +14,9 @@ import com.seedshare.enumeration.PhotoType;
 
 import java.util.List;
 
-
 /**
  * Persistence class for the table species
+ * 
  * @author joao.silva
  */
 @Entity
@@ -25,13 +25,13 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "species_seq";
-	
+
 	private static final PhotoType PHOTO_TYPE = PhotoType.SPECIES;
-		
+
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
-    @Basic(optional = false)
+	@SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME)
+	@Basic(optional = false)
 	@Column(name = "species_id")
 	private Long id;
 
@@ -47,13 +47,13 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	@Basic(optional = false)
 	@NotNull(message = "A descrição não pode ser nula.")
 	@Size(min = 1, max = 2500, message = "A descrição deve conter entre 1 e 2500 caracteres.")
-	@Column(name = "description", columnDefinition="TEXT", length = 2500)
+	@Column(name = "description", columnDefinition = "TEXT", length = 2500)
 	private String description;
-	
+
 	@Basic(optional = false)
 	@NotNull(message = "O guia de cultivo não pode ser nulo.")
 	@Size(min = 1, max = 5000, message = "O guia de cultivo deve conter entre 1 e 5000 caracteres.")
-	@Column(name = "cultivation_guide", columnDefinition="TEXT", length = 5000)
+	@Column(name = "cultivation_guide", columnDefinition = "TEXT", length = 5000)
 	private String cultivationGuide;
 
 	@Basic(optional = false)
@@ -69,7 +69,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	@Basic(optional = false)
 	@NotNull(message = "É obrigatório informar o nome científico da espécie.")
 	@Size(min = 1, max = 100, message = "O nome científico deve conter entre 1 e 100 caracteres.")
-	@Column(name = "scientific_name", length = 100, unique=true)
+	@Column(name = "scientific_name", length = 100, unique = true)
 	private String scientificName;
 
 	@Basic(optional = false)
@@ -92,55 +92,48 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	@ManyToOne
 	@NotNull(message = "É obrigatório informar o crescimento da espécie.")
 	@Valid
-	@JoinColumn(name="growth_id")
+	@JoinColumn(name = "growth_id")
 	private Growth growth;
 
 	@ManyToMany
 	@Valid
-	@JoinTable(
-		name="species_climate"
-		, joinColumns={
-			@JoinColumn(name="species_id")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="climate_id")
-			}
-		)
+	@JoinTable(name = "species_climate", joinColumns = { @JoinColumn(name = "species_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "climate_id") })
 	private List<Climate> climates;
-	
-	@ManyToMany(mappedBy="species")
+
+	@ManyToMany(mappedBy = "species")
 	@Valid
 	private List<Soil> soils;
 
-	@OneToMany(mappedBy="species")
+	@OneToMany(mappedBy = "species")
 	@Valid
 	private List<Flower> flowers;
 
-	@OneToMany(mappedBy="species")
+	@OneToMany(mappedBy = "species")
 	@Valid
 	private List<Fruit> fruits;
 
 	@JsonIgnore
 	@Valid
-	@OneToMany(mappedBy="species")
+	@OneToMany(mappedBy = "species")
 	private List<Offer> offers;
 
 	@JsonIgnore
 	@Valid
-	@OneToMany(mappedBy="species")
+	@OneToMany(mappedBy = "species")
 	private List<Post> posts;
 
 	@JsonIgnore
 	@Valid
-	@OneToOne(mappedBy="species")
+	@OneToOne(mappedBy = "species")
 	private Suggestion suggestions;
 
 	protected Species() {
 		super(PHOTO_TYPE, false);
 	}
-	
-	public Species(Boolean attractBirds, String description, String cultivationGuide, Boolean isMedicinal, 
-			Boolean attractBees, String scientificName, String commonName, Boolean isOrnamental, Long averageHeight, 
+
+	public Species(Boolean attractBirds, String description, String cultivationGuide, Boolean isMedicinal,
+			Boolean attractBees, String scientificName, String commonName, Boolean isOrnamental, Long averageHeight,
 			Growth growth) {
 		super(PHOTO_TYPE, true);
 		this.isApproved = false;
@@ -159,40 +152,40 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	@Override
 	public boolean isValid() {
 		this.validationErrors.clear();
-		
-		if(isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)){
+
+		if (isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)) {
 			this.validationErrors.add("Descrição inválida.");
 		}
-		if(isNullOrEmpty(this.cultivationGuide) || is(this.cultivationGuide).orSmallerThan(1).orBiggerThan(5000)){
+		if (isNullOrEmpty(this.cultivationGuide) || is(this.cultivationGuide).orSmallerThan(1).orBiggerThan(5000)) {
 			this.validationErrors.add("Guia de cultivo inválido.");
 		}
-		if(isNull(this.isApproved)){
+		if (isNull(this.isApproved)) {
 			this.validationErrors.add("Definição de aprovação inválida.");
 		}
-		if(isNull(this.attractBees)){
+		if (isNull(this.attractBees)) {
 			this.validationErrors.add("Definição de atração de abelhas inválida.");
 		}
-		if(isNull(this.attractBirds)){
+		if (isNull(this.attractBirds)) {
 			this.validationErrors.add("Definição de atração de pássaros inválida.");
 		}
-		if(isNull(this.isMedicinal)){
+		if (isNull(this.isMedicinal)) {
 			this.validationErrors.add("Definição de planta medicinal inválida.");
 		}
-		if(isNull(this.isOrnamental)){
+		if (isNull(this.isOrnamental)) {
 			this.validationErrors.add("Definição de planta ornamental inválida.");
 		}
-		if(isNull(this.averageHeight) || is(this.averageHeight).orSmallerThan(1).orBiggerThan(50000)){
+		if (isNull(this.averageHeight) || is(this.averageHeight).orSmallerThan(1).orBiggerThan(50000)) {
 			this.validationErrors.add("Altura inválida.");
 		}
-		if(isNull(this.commonName) || is(this.commonName).orSmallerThan(1).orBiggerThan(100)){
+		if (isNull(this.commonName) || is(this.commonName).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome popular inválido.");
 		}
-		if(isNull(this.scientificName) || is(this.scientificName).orSmallerThan(1).orBiggerThan(100)){
+		if (isNull(this.scientificName) || is(this.scientificName).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome científico inválido.");
 		}
-		if(isNull(this.growth)){
+		if (isNull(this.growth)) {
 			this.validationErrors.add("Nível de crescimento não pode ser nulo.");
-		}else if(this.growth.isNotValid()) {
+		} else if (this.growth.isNotValid()) {
 			this.validationErrors.addAll(this.growth.getValidationErrors());
 		}
 		addAbstractAttributesValidation();
@@ -310,7 +303,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	public List<Offer> getOffers() {
 		return this.offers;
 	}
-	
+
 	public List<Post> getPosts() {
 		return this.posts;
 	}
