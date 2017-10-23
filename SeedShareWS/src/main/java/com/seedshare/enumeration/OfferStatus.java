@@ -10,7 +10,16 @@ public enum OfferStatus {
         this.offerStatus = offerStatus;
     }
 
-    public int getOfferStatus() { 
+    public int getValue() { 
         return this.offerStatus;
+    }
+    
+    public static boolean exists(int id) {
+        for(OfferStatus e : values()) {
+            if (e.getValue() == id) {
+                return true;
+            }
+        }
+        return false;
     }
 }

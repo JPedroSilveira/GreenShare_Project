@@ -2,10 +2,10 @@ package com.seedshare.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.seedshare.entity.Climate;
+import com.seedshare.entity.vegetable.Climate;
 
 /**
- * Repository Interface of {@link com.seedshare.entity.Climate}
+ * Repository Interface of {@link com.seedshare.entity.vegetable.Climate}
  * 
  * @author joao.silva
  */

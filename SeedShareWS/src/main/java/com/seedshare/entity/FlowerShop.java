@@ -12,11 +12,15 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractPhotogenicEntity;
+import com.seedshare.entity.address.Address;
+import com.seedshare.entity.offer.Offer;
+import com.seedshare.entity.user.User;
 import com.seedshare.enumeration.PhotoType;
 
 /**
  * Persistence class for the table flower_shop
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity
@@ -57,9 +61,10 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	@Column(name = "active")
 	private Boolean isActive;
 
-	@ManyToOne
-	@NotNull(message = "O endereço não pode ser nula.")
+	@Basic(optional = false)
+	@NotNull(message = "O endereço não pode ser nulo.")
 	@Valid
+	@OneToOne
 	@JoinColumn(name = "address_id")
 	private Address address;
 
@@ -108,7 +113,6 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 		if (isNull(this.cnpj) || is(this.cnpj).equal(14)) {
 			this.validationErrors.add("CNPJ inválido");
 		}
-		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
 	}
 
@@ -150,6 +154,20 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public List<Offer> getOffers() {
+		return offers;
+	}
+
+	@Override
+	public void update(FlowerShop e) {
+		this.address = e.getAddress();
+		this.description = e.getDescription();
 	}
 
 }

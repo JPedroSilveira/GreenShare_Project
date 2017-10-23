@@ -2,7 +2,7 @@ package com.seedshare.repository;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import com.seedshare.entity.Achievement;
+import com.seedshare.entity.achievement.Achievement;
 
 /**
  * Repository Interface for Achievement
@@ -11,7 +11,7 @@ import com.seedshare.entity.Achievement;
  */
 public interface AchievementRepository extends PagingAndSortingRepository<Achievement, Long> {
 
-	Iterable<Achievement> findAllByCategoryByOrderByRequiredScoreAsc(Short category);
+	Iterable<Achievement> findAllByCategoryOrderByRequiredScoreAsc(Short category);
 
 	Iterable<Achievement> findAllByOrderByRequiredScoreAsc();
 

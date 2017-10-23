@@ -47,13 +47,6 @@ public class IsHelper extends UserUtils {
 		return isNull(date) || date.after(new Date());
 	}
 	
-	protected boolean isFromTheFuture(Date date) {
-		if(isNull(date)) {
-			return false;
-		}
-		return date.after(new Date());
-	}
-	
 	protected boolean isPositive(Short number) {
 		return number>0;
 	}
@@ -68,7 +61,6 @@ public class IsHelper extends UserUtils {
 	
 	public class It
 	{
-
 		private String string;
 		private int integer;
 		private short shortV;

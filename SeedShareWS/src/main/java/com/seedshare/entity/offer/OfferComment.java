@@ -1,4 +1,4 @@
-package com.seedshare.entity;
+package com.seedshare.entity.offer;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
+import com.seedshare.entity.user.User;
 
 /**
  * Persistence class for the table offer_comment
@@ -27,7 +28,7 @@ import com.seedshare.entity.abstracts.AbstractEntity;
  */
 @Entity
 @Table(name = "offer_comment")
-public class OfferComment extends AbstractEntity<FlowerShop> implements Serializable {
+public class OfferComment extends AbstractEntity<OfferComment> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -95,7 +96,6 @@ public class OfferComment extends AbstractEntity<FlowerShop> implements Serializ
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
 
-		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
 	}
 
@@ -113,6 +113,11 @@ public class OfferComment extends AbstractEntity<FlowerShop> implements Serializ
 
 	public Offer getOffer() {
 		return offer;
+	}
+
+	@Override
+	public void update(OfferComment e) {
+		this.text = e.getText();	
 	}
 
 }

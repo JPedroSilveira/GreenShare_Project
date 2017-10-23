@@ -2,15 +2,17 @@ package com.seedshare.repository;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import com.seedshare.entity.Species;
+import com.seedshare.entity.vegetable.Species;
 
 /**
- * Repository Interface of {@link com.seedshare.entity.Species}
+ * Repository Interface of {@link com.seedshare.entity.vegetable.Species}
  * 
  * @author joao.silva
  */
 public interface SpeciesRepository extends PagingAndSortingRepository<Species, Long> {
-	Iterable<Species> findOneByCommonName(String commonName);
+	
+	Iterable<Species> findOneByCommonNameAndActiveTrue(String commonName);
 
-	Iterable<Species> findOneByScientificName(String scientificName);
+	Iterable<Species> findOneByScientificNameAndActiveTrue(String scientificName);
+	
 }

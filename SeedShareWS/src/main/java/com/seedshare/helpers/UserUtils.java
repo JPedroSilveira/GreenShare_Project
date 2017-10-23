@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.seedshare.entity.User;
+import com.seedshare.entity.user.User;
 import com.seedshare.service.user.UserServiceImpl;
 
 public abstract class UserUtils {

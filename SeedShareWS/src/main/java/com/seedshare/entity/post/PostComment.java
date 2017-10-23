@@ -1,4 +1,4 @@
-package com.seedshare.entity;
+package com.seedshare.entity.post;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
+import com.seedshare.entity.user.User;
 
 /**
  * Persistence class for the table post_comment
@@ -27,7 +28,7 @@ import com.seedshare.entity.abstracts.AbstractEntity;
  */
 @Entity
 @Table(name = "post_comment")
-public class PostComment extends AbstractEntity<FlowerShop> implements Serializable {
+public class PostComment extends AbstractEntity<PostComment> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -95,7 +96,6 @@ public class PostComment extends AbstractEntity<FlowerShop> implements Serializa
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
 
-		addAbstractAttributesValidation();
 		return this.validationErrors.isEmpty();
 	}
 
@@ -113,6 +113,11 @@ public class PostComment extends AbstractEntity<FlowerShop> implements Serializa
 
 	public Post getPost() {
 		return this.post;
+	}
+
+	@Override
+	public void update(PostComment e) {
+		this.text = e.getText();
 	}
 
 }

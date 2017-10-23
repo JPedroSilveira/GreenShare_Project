@@ -3,10 +3,10 @@ package com.seedshare.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.seedshare.entity.Soil;
+import com.seedshare.entity.vegetable.Soil;
 
 /**
- * Repository Interface of {@link com.seedshare.entity.Soil}
+ * Repository Interface of {@link com.seedshare.entity.vegetable.Soil}
  * 
  * @author joao.silva
  */

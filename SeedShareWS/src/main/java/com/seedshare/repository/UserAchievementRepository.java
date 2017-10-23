@@ -2,12 +2,12 @@ package com.seedshare.repository;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import com.seedshare.entity.Achievement;
-import com.seedshare.entity.User;
-import com.seedshare.entity.UserAchievement;
+import com.seedshare.entity.achievement.Achievement;
+import com.seedshare.entity.achievement.UserAchievement;
+import com.seedshare.entity.user.User;
 
 /**
- * Repository Interface of {@link com.seedshare.entity.UserAchievement}
+ * Repository Interface of {@link com.seedshare.entity.achievement.UserAchievement}
  * 
  * @author joao.silva
  */
