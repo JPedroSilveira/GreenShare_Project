@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.User;
+import com.seedshare.entity.address.Address;
+import com.seedshare.entity.user.User;
 import com.seedshare.helpers.IsHelper;
+import com.seedshare.repository.AddressRepository;
 import com.seedshare.repository.UserRepository;
 
 /**
@@ -23,25 +25,45 @@ public class UserServiceImpl extends IsHelper implements UserService {
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	AddressRepository addressRepository;
+
 	@Override
 	public ResponseEntity<?> create(User user) {
 		if (isNotNull(user)) {
+			if (isUniqueEmail(user.getEmail())) {
+				return new ResponseEntity<String>("Email já cadastrado.", HttpStatus.BAD_REQUEST);
+			}
+			if (isUniqueCPF(user.getCpf())) {
+				return new ResponseEntity<String>("CPF já cadastrado.", HttpStatus.BAD_REQUEST);
+			}
+			Address address = user.getAddress();
+			if (isNotNull(address)) {
+				if (isNotNull(address.getId())) {
+					address = addressRepository.findOne(address.getId());
+					if (isNull(address) || address.isInUse()) {
+						address = saveNewAddress(address);
+					}
+				} else {
+					address = saveNewAddress(address);
+				}
+			} else {
+				return new ResponseEntity<String>("Endereço não pode ser nulo.", HttpStatus.BAD_REQUEST);
+			}
 			User newUser = new User(user.getCpf(), user.getName(), user.getEmail(), user.getPassword(),
-					user.getIsLegalPerson());
-			if (newUser.isValid() && validUniqueKeys(newUser)) {
+					user.getIsLegalPerson(), address);
+			if (newUser.isValid()) {
 				User response = userRepository.save(newUser);
 				return new ResponseEntity<User>(response, HttpStatus.OK);
-			} else {
-				if (!isUniqueEmail(newUser.getEmail())) {
-					newUser.addValidationError("Email já cadastrado");
-				}
-				if (!isUniqueCPF(newUser.getCpf())) {
-					newUser.addValidationError("CPF já cadastrado");
-				}
 			}
 			return new ResponseEntity<List<String>>(newUser.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Usuário não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+
+	private Address saveNewAddress(Address address) {
+		address = new Address(address);
+		return addressRepository.save(address);
 	}
 
 	@Override
@@ -98,35 +120,24 @@ public class UserServiceImpl extends IsHelper implements UserService {
 
 	public User findOneUserByEmail(String email) {
 		if (isNotNull(email)) {
-			User userDB = userRepository.findOneByEmail(email);
-			if (isNotNull(userDB)) {
-				return userDB;
-			}
-			return null;
+			return userRepository.findOneByEmail(email);
 		}
 		return null;
 	}
 
 	private User findOneByCpf(String cpf) {
-		return userRepository.findOneByCpf(cpf);
-	}
-
-	private Boolean validUniqueKeys(User user) {
-		return this.isUniqueEmail(user.getEmail()) && this.isUniqueCPF(user.getCpf());
+		if (isNotNull(cpf)) {
+			return userRepository.findOneByCpf(cpf);
+		}
+		return null;
 	}
 
 	private Boolean isUniqueEmail(String email) {
-		if (isNotNull(email)) {
-			return this.findOneByEmail(email) == null;
-		}
-		return true;
+		return isNull(this.findOneByEmail(email));
 	}
 
 	private Boolean isUniqueCPF(String cpf) {
-		if (isNotNull(cpf)) {
-			return this.findOneByCpf(cpf) == null;
-		}
-		return true;
+		return isNull(this.findOneByCpf(cpf));
 	}
 
 }

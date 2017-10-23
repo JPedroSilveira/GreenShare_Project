@@ -10,10 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Species;
+import com.seedshare.entity.Month;
 import com.seedshare.entity.Suggestion;
-import com.seedshare.entity.User;
+import com.seedshare.entity.user.User;
+import com.seedshare.entity.vegetable.Flower;
+import com.seedshare.entity.vegetable.Fruit;
+import com.seedshare.entity.vegetable.Species;
 import com.seedshare.helpers.IsHelper;
+import com.seedshare.repository.FlowerRepository;
+import com.seedshare.repository.FruitRepository;
+import com.seedshare.repository.MonthRepository;
 import com.seedshare.repository.SpeciesRepository;
 import com.seedshare.repository.SuggestionRepository;
 
@@ -31,8 +37,17 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 
 	@Autowired
 	SpeciesRepository speciesRepository;
-	
-	private static final int MAX_PAGE_SIZE = 100; 
+
+	@Autowired
+	FruitRepository fruitRepository;
+
+	@Autowired
+	FlowerRepository flowerRepository;
+
+	@Autowired
+	MonthRepository monthRepository;
+
+	private static final int MAX_PAGE_SIZE = 100;
 
 	@Override
 	public ResponseEntity<?> delete(Long id) {
@@ -50,28 +65,51 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 
 	@Override
 	public ResponseEntity<?> save(Suggestion suggestion) {
-		if (isNotNull(suggestion)) {
-			Suggestion newSuggestion = new Suggestion(suggestion.getUser(), suggestion.getSpecies());
-			if (newSuggestion.isValid()) {
-				Species species = newSuggestion.getSpecies();
-				Species newSpecies = new Species(species.getAttractBirds(), species.getDescription(),
-						species.getCultivationGuide(), species.getIsMedicinal(), species.getAttractBees(),
-						species.getScientificName(), species.getCommonName(), species.getIsOrnamental(),
-						species.getAverageHeight(), species.getGrowth());
-				if (newSpecies.isValid()) {
+		if (isNotNull(suggestion) && isNotNull(suggestion.getSpecies())) {
+			Species newSpecies = suggestion.getSpecies();
+			Fruit newFruit = newSpecies.getFruit();
+			Flower newFlower = newSpecies.getFlower();
+			if (isNotNull(newFruit)) {
+				List<Month> MonthListDB = monthRepository.findAllByNumberIn(newFruit.getMonthNumbers());
+				newFruit = new Fruit(newFruit.getFaunaConsumption(), newFruit.getHumanConsumption(), MonthListDB,
+						newFruit.getDescription(), newFruit.getName());
+				if (newFruit.isValid()) {
+					newFruit = fruitRepository.save(newFruit);
+				} else {
+					return new ResponseEntity<List<String>>(newFruit.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+			}
+			if (isNotNull(newFlower)) {
+				List<Month> MonthListDB = monthRepository.findAllByNumberIn(newFlower.getMonthNumbers());
+				newFlower = new Flower(newFlower.getIsAromatic(), newFlower.getDescription(), newFlower.getName(),
+						newFlower.getSpecies(), newFlower.getColors(), MonthListDB);
+				if (newFlower.isValid()) {
+					newFlower = flowerRepository.save(newFlower);
+				} else {
+					return new ResponseEntity<List<String>>(newFlower.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+			}
+			newSpecies = new Species(newSpecies.getAttractBirds(), newSpecies.getDescription(),
+					newSpecies.getCultivationGuide(), newSpecies.getIsMedicinal(), newSpecies.getAttractBees(),
+					newSpecies.getScientificName(), newSpecies.getCommonName(), newSpecies.getIsOrnamental(),
+					newSpecies.getAverageHeight(), newSpecies.getGrowth(), newSpecies.getRootDepth(),
+					newSpecies.getClimates(), newSpecies.getSoils(), newFlower, newFruit);
+			if (newSpecies.isValid()) {
+				Suggestion newSuggestion = new Suggestion(getCurrentUser(), newSpecies);
+				if (newSuggestion.isValid()) {
+					newSuggestion = suggestionRepository.save(newSuggestion);
 					return new ResponseEntity<Suggestion>(newSuggestion, HttpStatus.OK);
 				}
-				return new ResponseEntity<List<String>>(newSpecies.getValidationErrors(), HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<List<String>>(newSuggestion.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<List<String>>(newSpecies.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Sugestão e/ou espécie não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
 	public ResponseEntity<?> findByCurrentUser() {
 		User currentUser = getCurrentUser();
-		if(isNotNull(currentUser)) {
+		if (isNotNull(currentUser)) {
 			Iterable<Suggestion> suggestionListDB = suggestionRepository.findByUser(getCurrentUser());
 			return new ResponseEntity<Iterable<Suggestion>>(suggestionListDB, HttpStatus.OK);
 		}
@@ -80,9 +118,9 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 
 	@Override
 	public ResponseEntity<?> findOne(Long id) {
-		if(isNotNull(id)) {
+		if (isNotNull(id)) {
 			Suggestion suggestionDB = suggestionRepository.findOne(id);
-			if(isNotNull(suggestionDB)) {
+			if (isNotNull(suggestionDB)) {
 				return new ResponseEntity<Suggestion>(suggestionDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Sugestão não encontrada.", HttpStatus.NOT_FOUND);
@@ -92,7 +130,7 @@ public class SuggestionServiceImpl extends IsHelper implements SuggestionService
 
 	@Override
 	public ResponseEntity<?> findAllByPage(Integer page, Integer size) {
-		if(isNotNull(page) && isNotNull(size) && is(size).smallerOrEqual(MAX_PAGE_SIZE)) {
+		if (isNotNull(page) && isNotNull(size) && is(size).smallerOrEqual(MAX_PAGE_SIZE)) {
 			Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "lastModificationDate"));
 			Iterable<Suggestion> suggestionListDB = suggestionRepository.findAll(pageable);
 			return new ResponseEntity<Iterable<Suggestion>>(suggestionListDB, HttpStatus.OK);

@@ -7,13 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Growth;
+import com.seedshare.entity.vegetable.Growth;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.GrowthRepository;
 
 /**
  * Service implementation of {@link com.seedshare.service.growth.GrowthService}
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @Service
@@ -57,6 +58,23 @@ public class GrowthServiceImpl extends IsHelper implements GrowthService {
 	public ResponseEntity<?> findAll() {
 		Iterable<Growth> growthListDB = growthRepository.findAll();
 		return new ResponseEntity<Iterable<Growth>>(growthListDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Growth growth) {
+		if (isNotNull(growth)) {
+			Growth growthDB = growthRepository.findOne(growth.getId());
+			if (isNotNull(growthDB)) {
+				growthDB.update(growth);
+				if (growthDB.isValid()) {
+					growthDB = growthRepository.save(growthDB);
+					return new ResponseEntity<Growth>(growthDB, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(growthDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("Nível de crescimento não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Nível de crescimento não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 }

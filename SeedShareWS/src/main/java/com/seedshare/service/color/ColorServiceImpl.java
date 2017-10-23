@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Color;
+import com.seedshare.entity.vegetable.Color;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.ColorRepository;
 
@@ -62,6 +62,23 @@ public class ColorServiceImpl extends IsHelper implements ColorService {
 	public ResponseEntity<?> findAll() {
 		Iterable<Color> colorsDB = colorRepository.findAll();
 		return new ResponseEntity<Iterable<Color>>(colorsDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Color color) {
+		if (isNotNull(color)) {
+			Color colorDB = colorRepository.findOne(color.getId());
+			if (isNotNull(colorDB)) {
+				colorDB.update(color);
+				if (colorDB.isValid()) {
+					colorDB = colorRepository.save(colorDB);
+					return new ResponseEntity<Color>(colorDB, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(colorDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("Cor não encontrada.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Cor não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
 
 }

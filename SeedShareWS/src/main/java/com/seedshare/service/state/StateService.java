@@ -2,8 +2,8 @@ package com.seedshare.service.state;
 
 import org.springframework.http.ResponseEntity;
 
-import com.seedshare.entity.Country;
-import com.seedshare.entity.State;
+import com.seedshare.entity.address.Country;
+import com.seedshare.entity.address.State;
 import com.seedshare.service.BasicService;
 
 /**

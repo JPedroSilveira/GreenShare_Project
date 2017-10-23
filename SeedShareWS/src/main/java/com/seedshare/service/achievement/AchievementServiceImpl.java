@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Achievement;
+import com.seedshare.entity.achievement.Achievement;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.AchievementRepository;
 
@@ -27,7 +27,7 @@ public class AchievementServiceImpl extends IsHelper implements AchievementServi
 	@Override
 	public ResponseEntity<?> save(Achievement achievement) {
 		Achievement newAchievement = new Achievement(achievement.getCategory(), achievement.getDescription(),
-				achievement.getName(), achievement.getRequiredScore());
+				achievement.getName(), achievement.getRequiredScore(), achievement.getScoreByAct());
 		return newAchievement.isValid()
 				? new ResponseEntity<Achievement>(achievementRepository.save(newAchievement), HttpStatus.OK)
 				: new ResponseEntity<List<String>>(newAchievement.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -55,14 +55,31 @@ public class AchievementServiceImpl extends IsHelper implements AchievementServi
 
 	@Override
 	public ResponseEntity<?> findAll() {
-		Iterable<Achievement> achievementsDB = achievementRepository.findAllByOrderByRequiredScoreAsc();
-		return new ResponseEntity<Iterable<Achievement>>(achievementsDB, HttpStatus.OK);
+		Iterable<Achievement> achievementListDB = achievementRepository.findAllByOrderByRequiredScoreAsc();
+		return new ResponseEntity<Iterable<Achievement>>(achievementListDB, HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<?> findAllByCategory(Short category) {
-		Iterable<Achievement> achievementsDB = achievementRepository.findAllByCategoryByOrderByRequiredScoreAsc(category);
-		return new ResponseEntity<Iterable<Achievement>>(achievementsDB, HttpStatus.OK);
+		Iterable<Achievement> achievementListDB = achievementRepository.findAllByCategoryOrderByRequiredScoreAsc(category);
+		return new ResponseEntity<Iterable<Achievement>>(achievementListDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Achievement achievement) {
+		if(isNotNull(achievement)) {
+			Achievement achievementDB = achievementRepository.findOne(achievement.getId());
+			if(isNotNull(achievementDB)) {
+				achievementDB.update(achievement);
+				if(achievementDB.isValid()) {
+					achievementDB = achievementRepository.save(achievementDB);
+					return new ResponseEntity<Achievement>(achievementDB, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(achievementDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("Conquista não encontrada.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Nova conquista não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
 
 }

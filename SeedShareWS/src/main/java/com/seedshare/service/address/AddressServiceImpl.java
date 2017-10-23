@@ -1,12 +1,14 @@
 package com.seedshare.service.address;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Address;
-import com.seedshare.entity.User;
+import com.seedshare.entity.address.Address;
+import com.seedshare.entity.user.User;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.AddressRepository;
 import com.seedshare.repository.UserRepository;
@@ -16,6 +18,7 @@ import com.seedshare.repository.UserRepository;
  * {@link com.seedshare.service.address.AddressService}
  * 
  * @author joao.silva
+ * @author gabriel.schneider
  */
 @Service
 public class AddressServiceImpl extends IsHelper implements AddressService {
@@ -29,8 +32,7 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 	@Override
 	public ResponseEntity<?> save(Address address) {
 		if (isNotNull(address)) {
-			Address newAddress = new Address(address.getCity(), getCurrentUser(), address.getNumero(),
-					address.getBairro(), address.getEndereco(), address.getComplemento(), address.getReferencia());
+			Address newAddress = new Address(address);
 			if (newAddress.isValid()) {
 				newAddress = addressRepository.save(newAddress);
 				return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
@@ -57,7 +59,6 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 		if (isNotNull(id)) {
 			Address addressDB = addressRepository.findOne(id);
 			if (isNotNull(addressDB)) {
-				addressDB.setUser(null);
 				return new ResponseEntity<Address>(addressDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Endereço não encontrado.", HttpStatus.NOT_FOUND);
@@ -73,5 +74,25 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 			return new ResponseEntity<Iterable<Address>>(addressListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Usuário logado inválido.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Address address) {
+		if(isNotNull(address)) {
+			Address addressDB = addressRepository.findOne(address.getId());
+			if(isNotNull(addressDB)) {
+				if(addressDB.getUser().getId() == getCurrentUserId()) {
+					addressDB.update(address);
+					if(addressDB.isValid()) {
+						addressDB = addressRepository.save(addressDB);
+						return new ResponseEntity<Address>(addressDB, HttpStatus.OK);
+					}
+					return new ResponseEntity<List<String>>(addressDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Endereço não pertence ao usuário atual.", HttpStatus.UNAUTHORIZED);
+			}
+			return new ResponseEntity<String>("Endereço não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Endereço atualizado não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 }

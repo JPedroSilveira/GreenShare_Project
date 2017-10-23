@@ -2,11 +2,11 @@ package com.seedshare.service.soil;
 
 import org.springframework.http.ResponseEntity;
 
-import com.seedshare.entity.Soil;
+import com.seedshare.entity.vegetable.Soil;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of {@link com.seedshare.entity.Soil}
+ * Service interface of {@link com.seedshare.entity.vegetable.Soil}
  * 
  * @author gabriel.schneider
  * @author joao.silva

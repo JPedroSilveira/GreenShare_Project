@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Post;
+import com.seedshare.entity.post.Post;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.PostRepository;
 
@@ -26,8 +26,8 @@ public class PostServiceImpl extends IsHelper implements PostService {
 
 	@Autowired
 	PostRepository postRepository;
-	
-	private static final int MAX_PAGE_SIZE = 100; 
+
+	private static final int MAX_PAGE_SIZE = 100;
 
 	@Override
 	public ResponseEntity<?> save(Post post) {
@@ -40,6 +40,26 @@ public class PostServiceImpl extends IsHelper implements PostService {
 			return new ResponseEntity<List<String>>(newPost.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Postagem não pode ser nula.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Post post) {
+		if (isNotNull(post)) {
+			Post postDB = postRepository.findOne(post.getId());
+			if (isNotNull(postDB)) {
+				if (postDB.getUser().getId() == getCurrentUserId()) {
+					postDB.update(post);
+					if (postDB.isValid()) {
+						postDB = postRepository.save(postDB);
+						return new ResponseEntity<Post>(postDB, HttpStatus.OK);
+					}
+					return new ResponseEntity<List<String>>(postDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Postagem não pertence ao usuário logado.", HttpStatus.UNAUTHORIZED);
+			}
+			return new ResponseEntity<String>("Postagem não encontrada.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Postagem atualizada não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
@@ -70,7 +90,7 @@ public class PostServiceImpl extends IsHelper implements PostService {
 	@Override
 	public ResponseEntity<?> findAllByPage(Integer page, Integer size) {
 		if (isValidPage(page, size)) {
-			Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "lastModificationDate"));
+			Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
 			Page<Post> postListDB = postRepository.findAll(pageable);
 			return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
 		}
@@ -81,7 +101,7 @@ public class PostServiceImpl extends IsHelper implements PostService {
 	public ResponseEntity<?> findAllByUser(Integer page, Integer size, Long id) {
 		if (isValidPage(page, size)) {
 			if (isNotNull(id)) {
-				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "lastModificationDate"));
+				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
 				Page<Post> postListDB = postRepository.findAllByUser(id, pageable);
 				return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
 			}
@@ -94,7 +114,7 @@ public class PostServiceImpl extends IsHelper implements PostService {
 	public ResponseEntity<?> findAllBySpecies(Integer page, Integer size, Long id) {
 		if (isValidPage(page, size)) {
 			if (isNotNull(id)) {
-				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "lastModificationDate"));
+				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
 				Page<Post> postListDB = postRepository.findAllBySpecies(id, pageable);
 				return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
 			}
@@ -108,5 +128,31 @@ public class PostServiceImpl extends IsHelper implements PostService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public ResponseEntity<?> findAllByState(Integer page, Integer size, Long id) {
+		if (isValidPage(page, size)) {
+			if (isNotNull(id)) {
+				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
+				Page<Post> postListDB = postRepository.findAllByUserAddressCityState(id, pageable);
+				return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<String>("Paginação inválida.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> findAllByCity(Integer page, Integer size, Long id) {
+		if (isValidPage(page, size)) {
+			if (isNotNull(id)) {
+				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
+				Page<Post> postListDB = postRepository.findAllByUserAddressCity(id, pageable);
+				return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<String>("Paginação inválida.", HttpStatus.BAD_REQUEST);
 	}
 }

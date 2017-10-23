@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Soil;
+import com.seedshare.entity.vegetable.Soil;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.SoilRepository;
 
@@ -58,6 +58,23 @@ public class SoilServiceImpl extends IsHelper implements SoilService {
 	public ResponseEntity<?> findAll() {
 		Iterable<Soil> soilListDB = soilRepository.findAll();
 		return new ResponseEntity<Iterable<Soil>>(soilListDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Soil soil) {
+		if (isNotNull(soil)) {
+			Soil soilDB = soilRepository.findOne(soil.getId());
+			if (isNotNull(soilDB)) {
+				soilDB.update(soil);
+				if (soilDB.isValid()) {
+					soilDB = soilRepository.save(soilDB);
+					return new ResponseEntity<Soil>(soilDB, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(soilDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("Solo não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Solo não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 }

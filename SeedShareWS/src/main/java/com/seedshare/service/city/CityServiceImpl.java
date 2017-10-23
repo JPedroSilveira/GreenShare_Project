@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.City;
+import com.seedshare.entity.address.City;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.CityRepository;
 import com.seedshare.repository.CountryRepository;
@@ -64,8 +64,8 @@ public class CityServiceImpl extends IsHelper implements CityService {
 	@Override
 	public ResponseEntity<?> findByState(Long id) {
 		if (isNotNull(id)) {
-			Iterable<City> citiesDB = cityRepository.findAllByState(id);
-			return new ResponseEntity<Iterable<City>>(citiesDB, HttpStatus.OK);
+			Iterable<City> cityListDB = cityRepository.findAllByState(id);
+			return new ResponseEntity<Iterable<City>>(cityListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
@@ -73,10 +73,26 @@ public class CityServiceImpl extends IsHelper implements CityService {
 	@Override
 	public ResponseEntity<?> findByCountry(Long id) {
 		if (isNotNull(id)) {
-			Iterable<City> citiesDB = cityRepository.findAllByCountry(id);
-			return new ResponseEntity<Iterable<City>>(citiesDB, HttpStatus.OK);
+			Iterable<City> cityListDB = cityRepository.findAllByStateCountry(id);
+			return new ResponseEntity<Iterable<City>>(cityListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
+	@Override
+	public ResponseEntity<?> update(City city) {
+		if(isNotNull(city)) {
+			City cityDB = cityRepository.findOne(city.getId());
+			if(isNotNull(cityDB)) {
+				cityDB.update(city);
+				if(cityDB.isValid()) {
+					cityDB = cityRepository.save(cityDB);
+					return new ResponseEntity<City>(cityDB, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(cityDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Cidade não pode ser nula.", HttpStatus.BAD_REQUEST);
+	}
 }

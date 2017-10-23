@@ -7,12 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.City;
 import com.seedshare.entity.FlowerShop;
-import com.seedshare.entity.Offer;
-import com.seedshare.entity.OfferComment;
-import com.seedshare.entity.Species;
-import com.seedshare.entity.State;
+import com.seedshare.entity.address.City;
+import com.seedshare.entity.address.State;
+import com.seedshare.entity.offer.Offer;
+import com.seedshare.entity.offer.OfferComment;
+import com.seedshare.entity.vegetable.Species;
 import com.seedshare.enumeration.OfferStatus;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.CityRepository;
@@ -43,28 +43,28 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	CityRepository cityRepository;
-	
+
 	@Autowired
 	StateRepository stateRepository;
-	
+
 	@Autowired
 	OfferCommentRepository offerCommentRepository;
 
 	@Override
 	public ResponseEntity<?> save(Offer offer) {
-		if(isNotNull(offer)) {
-			Offer newOffer = new Offer(offer.getUnitPrice(), offer.getRemainingAmount(), getCurrentUser(), offer.getSpecies(),
-					offer.getDescription(), getCurrentUser().getFlowerShop());
+		if (isNotNull(offer)) {
+			Offer newOffer = new Offer(offer.getUnitPrice(), offer.getRemainingAmount(), getCurrentUser(),
+					offer.getSpecies(), offer.getDescription(), getCurrentUser().getFlowerShop());
 			if (newOffer.isValid()) {
 				newOffer = offerRepository.save(offer);
 				return new ResponseEntity<Offer>(newOffer, HttpStatus.OK);
 			}
 			return new ResponseEntity<List<String>>(newOffer.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>("Oferta não pode ser nula.", HttpStatus.BAD_REQUEST);		
+		return new ResponseEntity<String>("Oferta não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 	@Override
 	public ResponseEntity<?> findAllByUser(Long id) {
 		if (isNotNull(id)) {
-			Iterable<Offer> offerListDB = offerRepository.findAllByUser(id);
+			Iterable<Offer> offerListDB = offerRepository.findAllByUserAndOfferStatus(id, 0);
 			if (isNotNull(offerListDB)) {
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
@@ -111,7 +111,8 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 		if (isNotNull(id)) {
 			FlowerShop flowerShopDB = flowerShopRepository.findOne(id);
 			if (isNotNull(flowerShopDB)) {
-				Iterable<Offer> offerListDB = offerRepository.findAllByFlowerShop(flowerShopDB.getId());
+				Iterable<Offer> offerListDB = offerRepository.findAllByFlowerShopAndOfferStatus(flowerShopDB.getId(),
+						OfferStatus.Active.getValue());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Floricultura não encontrada.", HttpStatus.NOT_FOUND);
@@ -124,47 +125,50 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 		if (isNotNull(id)) {
 			Species speciesDB = speciesRepository.findOne(id);
 			if (isNotNull(speciesDB)) {
-				Iterable<Offer> offerListDB = offerRepository.findAllBySpecies(speciesDB.getId());
+				Iterable<Offer> offerListDB = offerRepository.findAllBySpeciesAndOfferStatus(speciesDB.getId(),
+						OfferStatus.Active.getValue());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Espécie não encontrada.", HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Override
 	public ResponseEntity<?> findAllByState(Long id) {
 		if (isNotNull(id)) {
 			State stateDB = stateRepository.findOne(id);
 			if (isNotNull(stateDB)) {
-				Iterable<Offer> offerListDB = offerRepository.findAllByState(stateDB.getId());
+				Iterable<Offer> offerListDB = offerRepository.findAllByAddressCityStateAndOfferStatus(stateDB.getId(),
+						OfferStatus.Active.getValue());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Estado não encontrado.", HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Override
 	public ResponseEntity<?> findAllByCity(Long id) {
 		if (isNotNull(id)) {
 			City cityDB = cityRepository.findOne(id);
 			if (isNotNull(cityDB)) {
-				Iterable<Offer> offerListDB = offerRepository.findAllByCity(cityDB.getId());
+				Iterable<Offer> offerListDB = offerRepository.findAllByAddressCityAndOfferStatus(cityDB.getId(),
+						OfferStatus.Active.getValue());
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Override
 	public ResponseEntity<?> addComment(Long id, String text) {
 		if (isNotNull(id) && isNotNull(text)) {
 			Offer offerDB = offerRepository.findOne(id);
 			if (isNotNull(offerDB)) {
 				OfferComment newOfferComment = new OfferComment(text, getCurrentUser(), offerDB);
-				if(newOfferComment.isValid()) {
+				if (newOfferComment.isValid()) {
 					newOfferComment = offerCommentRepository.save(newOfferComment);
 					return new ResponseEntity<OfferComment>(newOfferComment, HttpStatus.OK);
 				}
@@ -174,12 +178,12 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Override
 	public ResponseEntity<?> deleteComment(Long id) {
 		if (isNotNull(id)) {
-			OfferComment offerCommentDB  = offerCommentRepository.findOne(id);
-			if(offerCommentDB.getUser().getId() == getCurrentUser().getId()) {
+			OfferComment offerCommentDB = offerCommentRepository.findOne(id);
+			if (offerCommentDB.getUser().getId() == getCurrentUser().getId()) {
 				offerCommentRepository.delete(id);
 				return new ResponseEntity<String>("Comentário deletado", HttpStatus.OK);
 			}
@@ -191,10 +195,30 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 	@Override
 	public ResponseEntity<?> findAllByCurrentUser() {
 		Long currentUserID = getCurrentUserId();
-		if(isNotNull(currentUserID)) {
-			Iterable<Offer> offerListDB = offerRepository.findAllByCurrentUser(currentUserID);
+		if (isNotNull(currentUserID)) {
+			Iterable<Offer> offerListDB = offerRepository.findAllByUser(currentUserID);
 			return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Nenhum usuário logado.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Offer offer) {
+		if (isNotNull(offer)) {
+			Offer offerDB = offerRepository.findOne(offer.getId());
+			if (isNotNull(offerDB) && offerDB.getOfferStatus() == OfferStatus.Active.getValue()) {
+				if (offerDB.getUser().getId() == getCurrentUserId()) {
+					offerDB.update(offer);
+					if (offerDB.isValid()) {
+						offerDB = offerRepository.save(offerDB);
+						return new ResponseEntity<Offer>(offerDB, HttpStatus.OK);
+					}
+					return new ResponseEntity<List<String>>(offerDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Oferta não pertence ao usuário logado.", HttpStatus.UNAUTHORIZED);
+			}
+			return new ResponseEntity<String>("Oferta não encontrada ou inativa.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Oferta não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
 }

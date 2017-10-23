@@ -2,11 +2,11 @@ package com.seedshare.service.offer;
 
 import org.springframework.http.ResponseEntity;
 
-import com.seedshare.entity.Offer;
+import com.seedshare.entity.offer.Offer;
 import com.seedshare.service.BasicService;
 
 /**
- * Service interface of {@link com.seedshare.entity.Offer}
+ * Service interface of {@link com.seedshare.entity.offer.Offer}
  * 
  * @author gabriel.schneider
  * @author joao.silva

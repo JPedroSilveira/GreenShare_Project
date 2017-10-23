@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.seedshare.entity.FlowerShop;
-import com.seedshare.entity.User;
+import com.seedshare.entity.user.User;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.FlowerShopRepository;
 import com.seedshare.repository.UserRepository;
@@ -46,9 +46,9 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 							HttpStatus.BAD_REQUEST);
 				}
 			}
-			return new ResponseEntity<String>("Floricultura já cadastrada para o usuário.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Floricultura ativa já cadastrada para o usuário.", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>("Para cadastrar uma floricultura é necessário ser pessoa física.",
+		return new ResponseEntity<String>("Para cadastrar uma floricultura é necessário ser pessoa jurídica.",
 				HttpStatus.BAD_REQUEST);
 	}
 
@@ -138,7 +138,7 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	@Override
 	public ResponseEntity<?> findAllByState(Long id) {
 		if (isNotNull(id)) {
-			Iterable<FlowerShop> flowersDB = flowerShopRepository.findAllByState(id);
+			Iterable<FlowerShop> flowersDB = flowerShopRepository.findAllByAddressCityStateAndIsActiveTrue(id);
 			return new ResponseEntity<Iterable<FlowerShop>>(flowersDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
@@ -147,7 +147,7 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	@Override
 	public ResponseEntity<?> findAllByCity(Long id) {
 		if (isNotNull(id)) {
-			Iterable<FlowerShop> flowersDB = flowerShopRepository.findAllByCity(id);
+			Iterable<FlowerShop> flowersDB = flowerShopRepository.findAllByAddressCityAndIsActiveTrue(id);
 			return new ResponseEntity<Iterable<FlowerShop>>(flowersDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);

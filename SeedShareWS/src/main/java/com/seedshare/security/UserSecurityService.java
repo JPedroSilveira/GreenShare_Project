@@ -27,7 +27,7 @@ public class UserSecurityService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         List<GrantedAuthority> grants = new ArrayList<>();
-        com.seedshare.entity.User user = userService.findOneUserByEmail(email);
+        com.seedshare.entity.user.User user = userService.findOneUserByEmail(email);
         return new User(user.getEmail(),user.getPassword(),grants);
     }
 }

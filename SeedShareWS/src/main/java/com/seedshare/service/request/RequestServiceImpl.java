@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Offer;
-import com.seedshare.entity.Request;
+import com.seedshare.entity.offer.Offer;
+import com.seedshare.entity.offer.Request;
 import com.seedshare.enumeration.OfferStatus;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.OfferRepository;
@@ -91,7 +91,7 @@ public class RequestServiceImpl extends IsHelper implements RequestService {
 	public ResponseEntity<?> acceptRequest(Long id) {
 		if (isNotNull(id)) {
 			Request requestDB = requestRepository.findOne(id);
-			if (isNotNull(requestDB) && requestDB.getWasAccepted() == false) {
+			if (isNotNull(requestDB) && !requestDB.getWasAccepted()) {
 				Offer offerDB = offerRepository.findOne(requestDB.getOffer().getId());
 				if(offerDB.getUser().getId() == getCurrentUserId()) {
 					if(offerDB.getRemainingAmount() >= requestDB.getAmount()) {
@@ -111,6 +111,29 @@ public class RequestServiceImpl extends IsHelper implements RequestService {
 			return new ResponseEntity<String>("Requisição não encontrada ou já aceita.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("ID da requisição não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Request request) {
+		if (isNotNull(request)) {
+			Request requestDB = requestRepository.findOne(request.getId());
+			if (isNotNull(requestDB)) {
+				if (requestDB.getUser().getId() == getCurrentUserId()) {
+					if(!requestDB.getWasAccepted()) {
+						requestDB.update(request);
+						if (requestDB.isValid()) {
+							requestDB = requestRepository.save(requestDB);
+							return new ResponseEntity<Request>(requestDB, HttpStatus.OK);
+						}
+						return new ResponseEntity<List<String>>(requestDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+					}
+					return new ResponseEntity<String>("Requisição já foi aceita e não pode ser alterada.", HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Requisição não pertence ao usuário logado.", HttpStatus.UNAUTHORIZED);
+			}
+			return new ResponseEntity<String>("Requisição não encontrada.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Requisição não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
 
 }

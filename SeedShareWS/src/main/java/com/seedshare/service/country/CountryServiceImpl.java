@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Country;
+import com.seedshare.entity.address.Country;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.CountryRepository;
 
@@ -63,6 +63,23 @@ public class CountryServiceImpl extends IsHelper implements CountryService {
 	public ResponseEntity<?> findAll() {
 		Iterable<Country> countriesDB = countryRepository.findAll();
 		return new ResponseEntity<Iterable<Country>>(countriesDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Country country) {
+		if (isNotNull(country)) {
+			Country countryDB = countryRepository.findOne(country.getId());
+			if (isNotNull(countryDB)) {
+				countryDB.update(country);
+				if (countryDB.isValid()) {
+					countryDB = countryRepository.save(countryDB);
+					return new ResponseEntity<Country>(countryDB, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(countryDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("País não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("País não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 }

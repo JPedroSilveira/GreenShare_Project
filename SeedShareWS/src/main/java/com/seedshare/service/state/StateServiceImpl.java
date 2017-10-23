@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Country;
-import com.seedshare.entity.State;
+import com.seedshare.entity.address.Country;
+import com.seedshare.entity.address.State;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.StateRepository;
 
@@ -70,6 +70,12 @@ public class StateServiceImpl extends IsHelper implements StateService {
 	public ResponseEntity<?> findAllByCountry(Country country) {
 		Iterable<State> stateListDB = stateRepository.findAllByCountry(country);
 		return new ResponseEntity<Iterable<State>>(stateListDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> update(State state) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

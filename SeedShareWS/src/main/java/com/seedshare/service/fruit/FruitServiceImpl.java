@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Fruit;
+import com.seedshare.entity.Month;
+import com.seedshare.entity.vegetable.Fruit;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.FruitRepository;
+import com.seedshare.repository.MonthRepository;
 
 /**
  * Service implementation of {@link com.seedshare.service.fruit.FruitService}
@@ -22,12 +24,16 @@ public class FruitServiceImpl extends IsHelper implements FruitService {
 
 	@Autowired
 	FruitRepository fruitRepository;
+	
+	@Autowired
+	MonthRepository monthRepository;
 
 	@Override
 	public ResponseEntity<?> save(Fruit fruit) {
 		if (isNotNull(fruit)) {
-			Fruit newFruit = new Fruit(fruit.getFaunaConsumption(), fruit.getHumanConsumption(), fruit.getDescription(),
-					fruit.getName(), fruit.getSpecies());
+			List<Month> MonthListDB = monthRepository.findAllByNumberIn(fruit.getMonthNumbers());
+			Fruit newFruit = new Fruit(fruit.getFaunaConsumption(), fruit.getHumanConsumption(), MonthListDB, fruit.getDescription(),
+					fruit.getName());
 			return newFruit.isValid() ? new ResponseEntity<Fruit>(fruitRepository.save(newFruit), HttpStatus.OK)
 					: new ResponseEntity<List<String>>(newFruit.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
@@ -59,6 +65,32 @@ public class FruitServiceImpl extends IsHelper implements FruitService {
 	public ResponseEntity<?> findAll() {
 		Iterable<Fruit> fruitListDB = fruitRepository.findAll();
 		return new ResponseEntity<Iterable<Fruit>>(fruitListDB, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> findOneBySpecies(Long id) {
+		if (isNotNull(id)) {
+			Fruit fruitDB = fruitRepository.findOneBySpecies(id);
+			return new ResponseEntity<Fruit>(fruitDB, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Fruit fruit) {
+		if (isNotNull(fruit)) {
+			Fruit fruitDB = fruitRepository.findOne(fruit.getId());
+			if (isNotNull(fruitDB)) {
+				fruitDB.update(fruit);
+				if (fruitDB.isValid()) {
+					fruitDB = fruitRepository.save(fruitDB);
+					return new ResponseEntity<Fruit>(fruitDB, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(fruitDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("País não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("País não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 
 }

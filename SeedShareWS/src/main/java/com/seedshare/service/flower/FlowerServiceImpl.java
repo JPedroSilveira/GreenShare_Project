@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seedshare.entity.Flower;
+import com.seedshare.entity.Month;
+import com.seedshare.entity.vegetable.Flower;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.FlowerRepository;
+import com.seedshare.repository.MonthRepository;
 
 /**
  * Service implementation of {@link com.seedshare.service.flower.FlowerService}
@@ -22,12 +24,16 @@ public class FlowerServiceImpl extends IsHelper implements FlowerService {
 
 	@Autowired
 	FlowerRepository flowerRepository;
+	
+	@Autowired
+	MonthRepository monthRepository;
 
 	@Override
 	public ResponseEntity<?> save(Flower flower) {
 		if (isNotNull(flower)) {
+			List<Month> MonthListDB = monthRepository.findAllByNumberIn(flower.getMonthNumbers());
 			Flower newFlower = new Flower(flower.getIsAromatic(), flower.getDescription(), flower.getName(),
-					flower.getSpecies());
+					flower.getSpecies(), flower.getColors(), MonthListDB);
 			return newFlower.isValid() ? new ResponseEntity<Flower>(flowerRepository.save(newFlower), HttpStatus.OK)
 					: new ResponseEntity<List<String>>(newFlower.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
@@ -62,11 +68,28 @@ public class FlowerServiceImpl extends IsHelper implements FlowerService {
 	}
 
 	@Override
-	public ResponseEntity<?> findAllBySpecies(Long id) {
+	public ResponseEntity<?> findOneBySpecies(Long id) {
 		if (isNotNull(id)) {
-			Iterable<Flower> flowerListDB = flowerRepository.findAllBySpecies(id);
-			return new ResponseEntity<Iterable<Flower>>(flowerListDB, HttpStatus.OK);
+			Flower flowerDB = flowerRepository.findOneBySpecies(id);
+			return new ResponseEntity<Flower>(flowerDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> update(Flower flower) {
+		if (isNotNull(flower)) {
+			Flower flowerDB = flowerRepository.findOne(flower.getId());
+			if (isNotNull(flowerDB)) {
+				flowerDB.update(flower);
+				if (flowerDB.isValid()) {
+					flowerDB = flowerRepository.save(flowerDB);
+					return new ResponseEntity<Flower>(flowerDB, HttpStatus.OK);
+				}
+				return new ResponseEntity<List<String>>(flowerDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("País não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("País não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
 }

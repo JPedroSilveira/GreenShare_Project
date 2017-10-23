@@ -13,4 +13,6 @@ public interface BasicService<Entity, ID> {
     ResponseEntity<?> delete(ID id);
 
     ResponseEntity<?> findOne(ID id);
+    
+    ResponseEntity<?> update(Entity e);
 }

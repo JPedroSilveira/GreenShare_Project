@@ -2,7 +2,7 @@ package com.seedshare.service.permission;
 
 import org.springframework.http.ResponseEntity;
 
-import com.seedshare.entity.Permission;
+import com.seedshare.entity.user.Permission;
 import com.seedshare.service.BasicService;
 
 /**
