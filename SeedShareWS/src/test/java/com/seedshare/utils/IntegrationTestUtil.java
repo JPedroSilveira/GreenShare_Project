@@ -14,7 +14,7 @@ public class IntegrationTestUtil{
  
     public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.setPropertyInclusion(JsonInclude.Value.construct(Include.NON_NULL, Include.ALWAYS));
+        mapper.setPropertyInclusion(JsonInclude.Value.construct(Include.ALWAYS, Include.ALWAYS));
         try {
             byte[] response = mapper.writeValueAsBytes(object);
             return response;
