@@ -11,6 +11,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.interfaces.PhotogenicEntity;
 import com.seedshare.enumeration.PhotoType;
 
+/**
+ * Abstract class for entities with images to upload
+ * 
+ * @author joao.silva
+ */
 @MappedSuperclass
 public abstract class AbstractPhotogenicEntity<Entity> extends AbstractEntity<Entity> implements PhotogenicEntity {
 
@@ -27,16 +32,6 @@ public abstract class AbstractPhotogenicEntity<Entity> extends AbstractEntity<En
 		super(isNew);
 		this.hasImage = false;
 		this.photoType = photoType;
-	}
-
-	@Override
-	public void addAbstractAttributesValidation() {
-		if (isNull(this.photoType)) {
-			this.validationErrors.add("Tipo de imagem de classe inválida.");
-		}
-		if (this.hasImage == null) {
-			this.validationErrors.add("Atributo HasImage inválido.");
-		}
 	}
 
 	@Override

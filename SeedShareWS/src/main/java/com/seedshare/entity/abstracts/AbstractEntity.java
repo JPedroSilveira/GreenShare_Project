@@ -43,12 +43,6 @@ public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEn
 		return this.insertionDate;
 	}
 
-	public void addAbstractAttributesValidation() {
-		if (isNullOrFromTheFuture(this.insertionDate)) {
-			this.validationErrors.add("Data de inserção inválida");
-		}
-	}
-
 	public List<String> getValidationErrors() {
 		return this.validationErrors;
 	}
