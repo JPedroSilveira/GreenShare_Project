@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seedshare.entity.FlowerShop;
-import com.seedshare.entity.Offer;
-import com.seedshare.entity.Species;
-import com.seedshare.entity.User;
+import com.seedshare.entity.offer.Offer;
+import com.seedshare.entity.user.User;
+import com.seedshare.entity.vegetable.Species;
 import com.seedshare.service.offer.OfferServiceImpl;
 
 /**
@@ -28,7 +28,7 @@ public class OfferControllerImpl implements OfferController {
 
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(Offer offer) {
+	public ResponseEntity<?> save(@RequestBody Offer offer) {
 		return offerService.save(offer);
 	}
 
@@ -36,12 +36,6 @@ public class OfferControllerImpl implements OfferController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		return offerService.delete(id);
-	}
-
-	@Override
-	@DeleteMapping("/")
-	public ResponseEntity<?> delete(@RequestBody Offer offer) {
-		return offerService.delete(offer.getId());
 	}
 
 	@Override

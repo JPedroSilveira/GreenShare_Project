@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * Controller implementation for upload images using {@link com.seedshare.service.image.ImageService}
+ * 
  * @author joao.silva
  */
 public interface ImageUploadController{

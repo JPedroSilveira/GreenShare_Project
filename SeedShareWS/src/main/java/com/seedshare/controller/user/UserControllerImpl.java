@@ -1,7 +1,5 @@
 package com.seedshare.controller.user;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.entity.User;
+import com.seedshare.entity.user.User;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.user.UserServiceImpl;
 
@@ -39,7 +37,7 @@ public class UserControllerImpl extends IsHelper implements UserController{
 	
 	@Override
     @PostMapping(value = "/register/")
-    public ResponseEntity<?> create(@RequestBody @Valid User user) {
+    public ResponseEntity<?> create(@RequestBody User user) {
     	return userService.create(user); 
     }
 }

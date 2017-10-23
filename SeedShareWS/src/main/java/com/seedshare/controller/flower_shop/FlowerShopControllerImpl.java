@@ -1,7 +1,5 @@
 package com.seedshare.controller.flower_shop;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +26,7 @@ public class FlowerShopControllerImpl extends IsHelper implements FlowerShopCont
 	
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(@RequestBody @Valid FlowerShop flowerShop) {
+	public ResponseEntity<?> save(@RequestBody FlowerShop flowerShop) {
 		return flowerShopService.save(flowerShop);
     }
 
@@ -52,7 +50,7 @@ public class FlowerShopControllerImpl extends IsHelper implements FlowerShopCont
 
 	@Override
 	@PutMapping("/")
-	public ResponseEntity<?> update(@RequestBody @Valid FlowerShop flowerShop) {
+	public ResponseEntity<?> update(@RequestBody FlowerShop flowerShop) {
 		return flowerShopService.update(flowerShop);
 	}
 

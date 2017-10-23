@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.seedshare.entity.Achievement;
-import com.seedshare.entity.Flower;
 import com.seedshare.entity.FlowerShop;
-import com.seedshare.entity.Fruit;
-import com.seedshare.entity.Offer;
-import com.seedshare.entity.Post;
-import com.seedshare.entity.Species;
-import com.seedshare.entity.User;
+import com.seedshare.entity.achievement.Achievement;
 import com.seedshare.entity.interfaces.PhotogenicEntity;
+import com.seedshare.entity.offer.Offer;
+import com.seedshare.entity.post.Post;
+import com.seedshare.entity.user.User;
+import com.seedshare.entity.vegetable.Flower;
+import com.seedshare.entity.vegetable.Fruit;
+import com.seedshare.entity.vegetable.Species;
 import com.seedshare.exception.DirectoryException;
 import com.seedshare.helpers.ImageHelper;
 import com.seedshare.helpers.IsHelper;
@@ -33,16 +33,18 @@ import com.seedshare.repository.OfferRepository;
 import com.seedshare.repository.PostRepository;
 import com.seedshare.repository.SpeciesRepository;
 import com.seedshare.repository.UserRepository;
-import com.seedshare.service.photo.PhotogenicServiceImpl;
+import com.seedshare.service.image.ImageServiceImpl;
 
 /**
+ * Controller implementation of {@link com.seedshare.controller.image.ImageUploadController}
+ * 
  * @author joao.silva
  */
 @RestController
 public class ImageUploadControllerImpl extends IsHelper implements ImageUploadController{
 
 	@Autowired
-    PhotogenicServiceImpl photogenicService;
+	ImageServiceImpl imageService;
 	
 	@Autowired
     PostRepository postRepository;
@@ -202,12 +204,12 @@ public class ImageUploadControllerImpl extends IsHelper implements ImageUploadCo
     @GetMapping("/flower_shop/")
 	public ResponseEntity<?> getFlowerShopImage() {
     	User currentUser = getCurrentUser();
-    	if(isNotNull(currentUser) && currentUser.getIsApproved()) {
+    	if(isNotNull(currentUser)) {
         	FlowerShop flowerShop = currentUser.getFlowerShop();
-        	if(isNotNull(flowerShop)) {
+        	if(isNotNull(flowerShop) && flowerShop.getIsActive()) {
             	return getImage(flowerShop);
         	}
-        	return new ResponseEntity<String>("Usuário atual não possui floricultura.", HttpStatus.NOT_FOUND);
+        	return new ResponseEntity<String>("Usuário atual não possui floricultura ou ela esta inativa.", HttpStatus.NOT_FOUND);
     	}
     	return new ResponseEntity<String>("Usuário inválido.", HttpStatus.UNAUTHORIZED);
 	}
@@ -283,7 +285,7 @@ public class ImageUploadControllerImpl extends IsHelper implements ImageUploadCo
     		if(imageHelper.save(multiPartFile)) {
     			if(!photogenicEntity.getHasImage()){
         			photogenicEntity.setHasImage(true);
-        			if(isNull(photogenicService.save(photogenicEntity))) {
+        			if(isNull(imageService.save(photogenicEntity))) {
         				return new ResponseEntity<String>("Erro ao salvar dados no banco.", HttpStatus.INTERNAL_SERVER_ERROR);
         			}
         		}

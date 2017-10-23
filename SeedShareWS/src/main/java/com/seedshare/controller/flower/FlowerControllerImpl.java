@@ -1,7 +1,5 @@
 package com.seedshare.controller.flower;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.entity.Flower;
+import com.seedshare.entity.vegetable.Flower;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.flower.FlowerService;
 
@@ -29,7 +27,7 @@ public class FlowerControllerImpl extends IsHelper implements FlowerController {
 
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(@RequestBody @Valid Flower flower) {
+	public ResponseEntity<?> save(@RequestBody Flower flower) {
 		return flowerService.save(flower);
 	}
 

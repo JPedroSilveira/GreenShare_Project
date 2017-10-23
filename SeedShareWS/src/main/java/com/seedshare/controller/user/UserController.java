@@ -2,10 +2,10 @@ package com.seedshare.controller.user;
 
 import org.springframework.http.ResponseEntity;
 
-import com.seedshare.entity.User;
+import com.seedshare.entity.user.User;
 
 /**
- * Controller interface of {@link com.seedshare.entity.User}
+ * Controller interface of {@link com.seedshare.entity.user.User}
  * 
  * @author joao.silva
  */

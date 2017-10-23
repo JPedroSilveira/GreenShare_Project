@@ -1,7 +1,5 @@
 package com.seedshare.controller.suggestion;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +34,7 @@ public class SuggestionControllerImpl extends IsHelper implements SuggestionCont
 
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(@RequestBody @Valid Suggestion suggestion) {
+	public ResponseEntity<?> save(@RequestBody Suggestion suggestion) {
 		return suggestionService.save(suggestion);
 	}
 
