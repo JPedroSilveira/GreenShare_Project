@@ -1,7 +1,5 @@
 package com.seedshare.controller.country;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.entity.Country;
+import com.seedshare.entity.address.Country;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.country.CountryService;
 
@@ -30,7 +28,7 @@ public class CountryControllerImpl extends IsHelper implements CountryService {
 
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(@RequestBody @Valid Country country) {
+	public ResponseEntity<?> save(@RequestBody Country country) {
 		return countryService.save(country);
 	}
 
@@ -50,6 +48,12 @@ public class CountryControllerImpl extends IsHelper implements CountryService {
 	@GetMapping("/")
 	public ResponseEntity<?> findAll() {
 		return countryService.findAll();
+	}
+
+	@Override
+	public ResponseEntity<?> update(Country country) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

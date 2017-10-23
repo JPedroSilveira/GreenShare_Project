@@ -1,7 +1,5 @@
 package com.seedshare.controller.achievement;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.entity.Achievement;
+import com.seedshare.entity.achievement.Achievement;
 import com.seedshare.service.achievement.AchievementService;
 
 /**
@@ -29,7 +27,7 @@ public class AchievementControllerImpl implements AchievementController {
 
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(@RequestBody @Valid Achievement achievement) {
+	public ResponseEntity<?> save(@RequestBody Achievement achievement) {
 		return achievementService.save(achievement);
 	}
 

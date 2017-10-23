@@ -3,7 +3,7 @@ package com.seedshare.controller.color;
 import org.springframework.http.ResponseEntity;
 
 import com.seedshare.controller.BasicController;
-import com.seedshare.entity.Color;
+import com.seedshare.entity.vegetable.Color;
 
 /**
  * Controller interface for Color

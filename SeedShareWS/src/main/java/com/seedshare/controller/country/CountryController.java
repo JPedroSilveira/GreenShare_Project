@@ -3,7 +3,7 @@ package com.seedshare.controller.country;
 import org.springframework.http.ResponseEntity;
 
 import com.seedshare.controller.BasicController;
-import com.seedshare.entity.Country;
+import com.seedshare.entity.address.Country;
 
 /**
  * Controller interface for Color

@@ -1,7 +1,5 @@
 package com.seedshare.controller.color;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.entity.Color;
+import com.seedshare.entity.vegetable.Color;
 import com.seedshare.service.color.ColorService;
 
 /**
@@ -29,7 +27,7 @@ public class ColorControllerImpl implements ColorController{
 	
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(@RequestBody @Valid Color color) {
+	public ResponseEntity<?> save(@RequestBody Color color) {
 		return colorService.save(color);
 	}
 

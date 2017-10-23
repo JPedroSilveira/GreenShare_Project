@@ -1,7 +1,5 @@
 package com.seedshare.controller.climate;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.entity.Climate;
+import com.seedshare.entity.vegetable.Climate;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.climate.ClimateService;
 
@@ -30,7 +28,7 @@ public class ClimateControllerImpl extends IsHelper implements ClimateController
 
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(@RequestBody @Valid Climate climate) {
+	public ResponseEntity<?> save(@RequestBody Climate climate) {
 		return climateService.save(climate);
 	}
 

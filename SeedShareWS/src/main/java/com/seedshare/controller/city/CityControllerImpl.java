@@ -1,7 +1,5 @@
 package com.seedshare.controller.city;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.entity.City;
+import com.seedshare.entity.address.City;
 import com.seedshare.service.city.CityServiceImpl;
 
 /**
@@ -29,7 +27,7 @@ public class CityControllerImpl implements CityController {
 
 	@Override
 	@PostMapping("/")
-	public ResponseEntity<?> save(@RequestBody @Valid City city) {
+	public ResponseEntity<?> save(@RequestBody City city) {
 		return cityService.save(city);
 	}
 
@@ -47,13 +45,13 @@ public class CityControllerImpl implements CityController {
 
 	@Override
 	@GetMapping("/state/{id}")
-	public ResponseEntity<?> findByState(Long id) {
+	public ResponseEntity<?> findByState(@PathVariable Long id) {
 		return cityService.findByState(id);
 	}
 
 	@Override
 	@GetMapping("/country/{id}")
-	public ResponseEntity<?> findByCountry(Long id) {
+	public ResponseEntity<?> findByCountry(@PathVariable Long id) {
 		return cityService.findByCountry(id);
 	}
 

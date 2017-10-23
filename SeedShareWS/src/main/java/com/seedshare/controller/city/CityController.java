@@ -3,7 +3,7 @@ package com.seedshare.controller.city;
 import org.springframework.http.ResponseEntity;
 
 import com.seedshare.controller.BasicController;
-import com.seedshare.entity.City;
+import com.seedshare.entity.address.City;
 
 /**
  * Controller Interface for City

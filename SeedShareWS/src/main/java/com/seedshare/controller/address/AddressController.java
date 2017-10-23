@@ -2,18 +2,19 @@ package com.seedshare.controller.address;
 
 import org.springframework.http.ResponseEntity;
 
-import com.seedshare.entity.Address;
+import com.seedshare.entity.address.Address;
 
 /**
  * @author joao.silva
  */
-public interface AddressController{
+public interface AddressController {
 
 	ResponseEntity<?> save(Address address);
-	
-	ResponseEntity<?> deleteAddress(Long id);
-	
-	ResponseEntity<?> getAddressById(Long id);
+
+	ResponseEntity<?> delete(Long id);
+
+	ResponseEntity<?> findOneById(Long id);
 
 	ResponseEntity<?> findAllByCurrentUser();
+
 }

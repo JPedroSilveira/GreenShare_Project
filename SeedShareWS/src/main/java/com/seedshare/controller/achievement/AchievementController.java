@@ -3,7 +3,7 @@ package com.seedshare.controller.achievement;
 import org.springframework.http.ResponseEntity;
 
 import com.seedshare.controller.BasicController;
-import com.seedshare.entity.Achievement;
+import com.seedshare.entity.achievement.Achievement;
 
 /**
  * Controller interface for Achievement

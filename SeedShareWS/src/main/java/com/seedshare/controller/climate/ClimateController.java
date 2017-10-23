@@ -3,7 +3,7 @@ package com.seedshare.controller.climate;
 import org.springframework.http.ResponseEntity;
 
 import com.seedshare.controller.BasicController;
-import com.seedshare.entity.Climate;
+import com.seedshare.entity.vegetable.Climate;
 
 /**
  * Controller Interface for City
