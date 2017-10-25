@@ -32,13 +32,21 @@ public class PostCommentServiceImpl extends IsHelper implements PostCommentServi
 	@Override
 	public ResponseEntity<?> save(PostComment postComment) {
 		if (isNotNull(postComment)) {
-			PostComment newPostComment = new PostComment(postComment.getText(), getCurrentUser(),
-					postComment.getPost());
-			if (newPostComment.isValid()) {
-				newPostComment = postCommentRepository.save(newPostComment);
-				return new ResponseEntity<PostComment>(newPostComment, HttpStatus.OK);
+			Post post = postComment.getPost();
+			if(isNotNull(post)) {
+				post = postRepository.findOne(post.getId());
+				if(isNotNull(post)) {
+					PostComment newPostComment = new PostComment(postComment.getText(), getCurrentUser(),
+							post);
+					if (newPostComment.isValid()) {
+						newPostComment = postCommentRepository.save(newPostComment);
+						return new ResponseEntity<PostComment>(newPostComment, HttpStatus.OK);
+					}
+					return new ResponseEntity<List<String>>(newPostComment.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Postagem não encontrada.", HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<List<String>>(newPostComment.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("A postagem não pode ser nula.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("O comentário da oferta não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}

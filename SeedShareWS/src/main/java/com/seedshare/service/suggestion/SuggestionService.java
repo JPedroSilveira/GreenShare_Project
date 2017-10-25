@@ -19,4 +19,6 @@ public interface SuggestionService {
 	ResponseEntity<?> findByCurrentUser();
 
 	ResponseEntity<?> findAllByPage(Integer page, Integer size);
+
+	ResponseEntity<?> enable(Long id);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.seedshare.entity.address.Country;
 import com.seedshare.entity.address.State;
 import com.seedshare.helpers.IsHelper;
+import com.seedshare.repository.CountryRepository;
 import com.seedshare.repository.StateRepository;
 
 /**
@@ -23,18 +24,25 @@ public class StateServiceImpl extends IsHelper implements StateService {
 
 	@Autowired
 	StateRepository stateRepository;
+	
+	@Autowired
+	CountryRepository countryRepository;
 
 	@Override
 	public ResponseEntity<?> save(State state) {
-		if (isNotNull(state)) {
-			State stateDB = stateRepository.findOneByCountryAndNameContainsIgnoreCase(state.getCountry(),
-					state.getName());
-			if (isNull(stateDB)) {
-				State newState = new State(state.getName(), state.getCountry());
-				return newState.isValid() ? new ResponseEntity<State>(stateRepository.save(newState), HttpStatus.OK)
-						: new ResponseEntity<List<String>>(newState.getValidationErrors(), HttpStatus.BAD_REQUEST);
+		if (isNotNull(state) && isNotNull(state.getCountry())) {
+			Country countryDB = countryRepository.findOne(state.getCountry().getId());
+			if(isNotNull(countryDB)) {
+				State stateDB = stateRepository.findOneByCountryAndNameIgnoreCase(countryDB.getId(),
+						state.getName());
+				if (isNull(stateDB)) {
+					State newState = new State(state.getName(), state.getCountry());
+					return newState.isValid() ? new ResponseEntity<State>(stateRepository.save(newState), HttpStatus.OK)
+							: new ResponseEntity<List<String>>(newState.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Nome de estado já cadastrado para este pais.", HttpStatus.CONFLICT);	
 			}
-			return new ResponseEntity<String>("Nome de estado já cadastrado para este pais.", HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("País do estado não encontrado.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Estado não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}
@@ -67,8 +75,8 @@ public class StateServiceImpl extends IsHelper implements StateService {
 	}
 
 	@Override
-	public ResponseEntity<?> findAllByCountry(Country country) {
-		Iterable<State> stateListDB = stateRepository.findAllByCountry(country);
+	public ResponseEntity<?> findAllByCountry(Long id) {
+		Iterable<State> stateListDB = stateRepository.findAllByCountry(id);
 		return new ResponseEntity<Iterable<State>>(stateListDB, HttpStatus.OK);
 	}
 

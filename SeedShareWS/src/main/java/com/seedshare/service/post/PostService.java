@@ -9,19 +9,18 @@ import com.seedshare.service.BasicService;
  * Service interface of {@link com.seedshare.entity.post.Post} entity
  * 
  * @author joao.silva
+ * @author gabriel.schneider
  */
 public interface PostService extends BasicService<Post,Long>{
 
 	ResponseEntity<?> findAllByPage(Integer page, Integer size);
 
-	ResponseEntity<?> findAllByUser(Integer page, Integer size, Long id);
+	ResponseEntity<?> findAllByUser(Long id, Integer page, Integer size);
 
-	ResponseEntity<?> findAllBySpecies(Integer page, Integer size, Long id);
+	ResponseEntity<?> findAllBySpecies(Long id, Integer page, Integer size);
 	
-	ResponseEntity<?> findAllByState(Integer page, Integer size, Long id);
+	ResponseEntity<?> findAllByState(Long id, Integer page, Integer size);
 	
-	ResponseEntity<?> findAllByCity(Integer page, Integer size, Long id);
-
-	ResponseEntity<?> update(Post post);
+	ResponseEntity<?> findAllByCity(Long id, Integer page, Integer size);
 	
 }

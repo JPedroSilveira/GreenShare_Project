@@ -14,5 +14,7 @@ public interface CityRepository extends CrudRepository<City, Long> {
 	Iterable<City> findAllByState(Long id);
 
 	Iterable<City> findAllByStateCountry(Long id);
-
+	
+	City findOneByStateAndNameIgnoreCase(Long id, String name);
+	
 }

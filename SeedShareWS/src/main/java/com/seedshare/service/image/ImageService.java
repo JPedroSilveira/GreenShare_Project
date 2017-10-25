@@ -8,5 +8,7 @@ import com.seedshare.entity.interfaces.PhotogenicEntity;
  * @author joao.silva
  */
 public interface ImageService {
+	
 	PhotogenicEntity save(PhotogenicEntity photogenicEntity);
+	
 }

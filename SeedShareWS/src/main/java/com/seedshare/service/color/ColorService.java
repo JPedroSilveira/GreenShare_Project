@@ -9,6 +9,7 @@ import com.seedshare.service.BasicService;
  * Service interface of {@link com.seedshare.entity.vegetable.Color}
  * 
  * @author joao.silva
+ * @author gabriel.schneider
  */
 public interface ColorService extends BasicService<Color, Long> {
 	

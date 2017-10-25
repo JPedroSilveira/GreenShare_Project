@@ -8,8 +8,8 @@ import com.seedshare.service.BasicService;
 /**
  * Service interface of {@link com.seedshare.entity.offer.Offer}
  * 
- * @author gabriel.schneider
  * @author joao.silva
+ * @author gabriel.schneider
  */
 public interface OfferService extends BasicService<Offer, Long> {
 
@@ -24,10 +24,7 @@ public interface OfferService extends BasicService<Offer, Long> {
 	ResponseEntity<?> findAllByState(Long id);
 
 	ResponseEntity<?> findAllByCity(Long id);
-
-	ResponseEntity<?> addComment(Long id, String text);
-
-	ResponseEntity<?> deleteComment(Long id);
 	
 	ResponseEntity<?> findAllByCurrentUser();
+	
 }

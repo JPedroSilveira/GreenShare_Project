@@ -7,6 +7,7 @@ import com.seedshare.entity.vegetable.Color;
 /**
  * Repository Interface of {@link com.seedshare.entity.vegetable.Color}
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 public interface ColorRepository extends CrudRepository<Color, Long> {

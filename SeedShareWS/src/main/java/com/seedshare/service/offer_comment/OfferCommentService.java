@@ -10,5 +10,5 @@ import com.seedshare.service.BasicService;
  * @author joao.silva
  */
 public interface OfferCommentService extends BasicService<OfferComment, Long>{
-
+	
 }

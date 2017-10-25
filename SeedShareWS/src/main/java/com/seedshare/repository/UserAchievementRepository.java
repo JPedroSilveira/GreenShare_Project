@@ -15,4 +15,6 @@ public interface UserAchievementRepository extends PagingAndSortingRepository<Us
 	
 	Iterable<UserAchievement> findAllByUserAndAchievement(User user, Achievement achievement);
 
+	Iterable<UserAchievement> findAllByUser(Long id);
+
 }

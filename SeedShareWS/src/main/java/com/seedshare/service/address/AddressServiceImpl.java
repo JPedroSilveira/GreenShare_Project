@@ -8,9 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.seedshare.entity.address.Address;
+import com.seedshare.entity.address.City;
 import com.seedshare.entity.user.User;
+import com.seedshare.enumeration.AddressType;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.AddressRepository;
+import com.seedshare.repository.CityRepository;
 import com.seedshare.repository.UserRepository;
 
 /**
@@ -28,15 +31,29 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	CityRepository cityRepository;
 
 	@Override
 	public ResponseEntity<?> save(Address address) {
 		if (isNotNull(address)) {
-			Address newAddress = new Address(address);
-			if (newAddress.isValid()) {
-				newAddress = addressRepository.save(newAddress);
-				return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
+			City city = address.getCity();
+			if(isNotNull(city) && isNotNull(city.getId())) {
+				city = cityRepository.findOne(city.getId());
+				if(isNotNull(city)) {
+					Address newAddress = new Address(city, address.getNumber(), address.getNeighborhood(), address.getReference(),address.getAddressName(),address.getComplement(),address.getType());
+					if(AddressType.exists(address.getType())) {
+						if (newAddress.isValid()) {
+							newAddress = addressRepository.save(newAddress);
+							return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
+						}
+					}
+					return new ResponseEntity<String>("Tipo de endereço inválido.", HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.BAD_REQUEST);
 			}
+			return new ResponseEntity<String>("Cidade não pode ser nula ou ter id nulo.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Endereço inválido.", HttpStatus.BAD_REQUEST);
 	}

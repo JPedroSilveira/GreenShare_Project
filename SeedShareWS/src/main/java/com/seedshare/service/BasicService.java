@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
  * @param <ID>
  */
 public interface BasicService<Entity, ID> {
+	
 	ResponseEntity<?> save(Entity e);
     
     ResponseEntity<?> delete(ID id);
@@ -15,4 +16,5 @@ public interface BasicService<Entity, ID> {
     ResponseEntity<?> findOne(ID id);
     
     ResponseEntity<?> update(Entity e);
+    
 }

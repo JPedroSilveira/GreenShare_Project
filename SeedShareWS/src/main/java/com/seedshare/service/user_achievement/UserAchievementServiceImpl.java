@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.seedshare.entity.achievement.Achievement;
 import com.seedshare.entity.achievement.UserAchievement;
 import com.seedshare.entity.user.User;
 import com.seedshare.helpers.IsHelper;
+import com.seedshare.repository.AchievementRepository;
 import com.seedshare.repository.UserAchievementRepository;
 
 /**
@@ -26,21 +28,28 @@ public class UserAchievementServiceImpl extends IsHelper implements UserAchievem
 	@Autowired
 	UserAchievementRepository userAchievementRepository;
 
+	@Autowired
+	AchievementRepository achievementRepository;
+
 	@Override
 	public ResponseEntity<?> save(UserAchievement userAchievement) {
 		if (isNotNull(userAchievement)) {
 			User userDB = getCurrentUser();
-			Iterable<UserAchievement> userAchievementListDB = userAchievementRepository
-					.findAllByUserAndAchievement(userDB, userAchievement.getAchievement());
-			if (isNull(userAchievementListDB)) {
-				UserAchievement newUserAchievement = new UserAchievement(userDB, userAchievement.getAchievement());
-				return newUserAchievement.isValid()
-						? new ResponseEntity<UserAchievement>(userAchievementRepository.save(newUserAchievement),
-								HttpStatus.OK)
-						: new ResponseEntity<List<String>>(newUserAchievement.getValidationErrors(),
-								HttpStatus.BAD_REQUEST);
+			Achievement achievement = achievementRepository.findOne(userAchievement.getAchievement().getId());
+			if (isNotNull(achievement)) {
+				Iterable<UserAchievement> userAchievementListDB = userAchievementRepository
+						.findAllByUserAndAchievement(userDB, achievement);
+				if (isNull(userAchievementListDB)) {
+					UserAchievement newUserAchievement = new UserAchievement(userDB, achievement);
+					return newUserAchievement.isValid()
+							? new ResponseEntity<UserAchievement>(userAchievementRepository.save(newUserAchievement),
+									HttpStatus.OK)
+							: new ResponseEntity<List<String>>(newUserAchievement.getValidationErrors(),
+									HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Conquista já adicionada ao usuário.", HttpStatus.CONFLICT);
 			}
-			return new ResponseEntity<String>("Conquista já adicionada ao usuário.", HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("Conquista não encontrada.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Relação conquista usuário não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
@@ -67,6 +76,15 @@ public class UserAchievementServiceImpl extends IsHelper implements UserAchievem
 				return new ResponseEntity<UserAchievement>(userAchievementDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Relação conquista usuário não encontrada.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> findAllByUser(Long id) {
+		if (isNotNull(id)) {
+			Iterable<UserAchievement> userAchievementListDB = userAchievementRepository.findAllByUser(id);
+			return new ResponseEntity<Iterable<UserAchievement>>(userAchievementListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}

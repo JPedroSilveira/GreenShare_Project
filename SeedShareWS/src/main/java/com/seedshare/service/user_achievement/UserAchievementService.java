@@ -18,4 +18,6 @@ public interface UserAchievementService {
 
 	ResponseEntity<?> findOne(Long id);
 
+	ResponseEntity<?> findAllByUser(Long id);
+
 }

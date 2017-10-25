@@ -39,19 +39,12 @@ public class UserServiceImpl extends IsHelper implements UserService {
 			}
 			Address address = user.getAddress();
 			if (isNotNull(address)) {
-				if (isNotNull(address.getId())) {
-					address = addressRepository.findOne(address.getId());
-					if (isNull(address) || address.isInUse()) {
-						address = saveNewAddress(address);
-					}
-				} else {
+				if(address.isValid()) {
 					address = saveNewAddress(address);
 				}
-			} else {
-				return new ResponseEntity<String>("Endereço não pode ser nulo.", HttpStatus.BAD_REQUEST);
 			}
 			User newUser = new User(user.getCpf(), user.getName(), user.getEmail(), user.getPassword(),
-					user.getIsLegalPerson(), address);
+					user.getIsLegalPerson(), address, user.getPhoneNumber());
 			if (newUser.isValid()) {
 				User response = userRepository.save(newUser);
 				return new ResponseEntity<User>(response, HttpStatus.OK);

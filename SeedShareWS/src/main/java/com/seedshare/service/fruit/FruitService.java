@@ -16,7 +16,5 @@ public interface FruitService extends BasicService<Fruit, Long> {
 	ResponseEntity<?> findAll();
 	
 	ResponseEntity<?> findOneBySpecies(Long id);
-
-	ResponseEntity<?> update(Fruit fruit);
 	
 }

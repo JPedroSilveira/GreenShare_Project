@@ -82,7 +82,7 @@ public class UserControllerTest {
 		this.state = new State("Teste", this.country);
 		this.city = new City("Teste", this.state);
 		this.address = new Address(this.city, 985, "Rio Branco", "Rua Maricás", null, null, 1);
-		this.validUser = new User("04303145076", "João Pedro", "jpedross1999@gmail.com", "12345678", false, this.address);
+		this.validUser = new User("04303145076", "João Pedro", "jpedross1999@gmail.com", "12345678", false, this.address, 984401159L);
 		given(this.userRepository.save(any(User.class))).willReturn(this.validUser);
 		given(this.addressRepository.save(any(Address.class))).willReturn(this.address);
 		given(this.cityRepository.save(any(City.class))).willReturn(this.city);
@@ -99,7 +99,7 @@ public class UserControllerTest {
 	
 	@Test
     public void createInvalidUserWithoutName() throws Exception {
-		User invalidUserWithName = new User("04303145076", null, "jpedross1999@gmail.com", "12345678", false, this.address);
+		User invalidUserWithName = new User("04303145076", null, "jpedross1999@gmail.com", "12345678", false, this.address,984401159L);
 		mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
         		.contentType(IntegrationTestUtil.APPLICATION_JSON_UTF8)
         		.content(IntegrationTestUtil.convertObjectToJsonBytes(invalidUserWithName))
@@ -110,7 +110,7 @@ public class UserControllerTest {
 	
 	@Test
     public void createInvalidUserWithNothingExceptName() throws Exception {
-		User invalidUserWithNothing = new User(null,"Eduardo Barbosa Viegas", null,null,null, this.address);
+		User invalidUserWithNothing = new User(null,"Eduardo Barbosa Viegas", null,null,null, this.address,984401159L);
 		mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
         		.contentType(IntegrationTestUtil.APPLICATION_JSON_UTF8)
         		.content(IntegrationTestUtil.convertObjectToJsonBytes(invalidUserWithNothing))
@@ -121,7 +121,7 @@ public class UserControllerTest {
 	
 	@Test
     public void createInvalidUserWithInvalidCPF() throws Exception {
-		User userWithInvalidCPF = new User("04103145076", "João Pedro", "jpedross1999@gmail.com", "12345678", false, this.address);
+		User userWithInvalidCPF = new User("04103145076", "João Pedro", "jpedross1999@gmail.com", "12345678", false, this.address,984401159L);
 		mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
         		.contentType(IntegrationTestUtil.APPLICATION_JSON_UTF8)
         		.content(IntegrationTestUtil.convertObjectToJsonBytes(userWithInvalidCPF))
@@ -132,7 +132,7 @@ public class UserControllerTest {
 	
 	@Test
     public void createInvalidUserWithInvalidEmail() throws Exception {
-		User userWithInvalidEmail = new User("04303145076", "Eduardo Barbosa Viegas", "eduardo@", "12345678", false, this.address);
+		User userWithInvalidEmail = new User("04303145076", "Eduardo Barbosa Viegas", "eduardo@", "12345678", false, this.address,984401159L);
 		mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
         		.contentType(IntegrationTestUtil.APPLICATION_JSON_UTF8)
         		.content(IntegrationTestUtil.convertObjectToJsonBytes(userWithInvalidEmail))
@@ -143,7 +143,7 @@ public class UserControllerTest {
 	
 	@Test
     public void createInvalidUserWithInvalidPassword() throws Exception {
-		User userWithInvalidPassword = new User("04303145076", "João Pedro", "jpedross1999@gmail.com", "123", false, this.address);
+		User userWithInvalidPassword = new User("04303145076", "João Pedro", "jpedross1999@gmail.com", "123", false, this.address,984401159L);
 		mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
         		.contentType(IntegrationTestUtil.APPLICATION_JSON_UTF8)
         		.content(IntegrationTestUtil.convertObjectToJsonBytes(userWithInvalidPassword))
@@ -154,7 +154,7 @@ public class UserControllerTest {
 	
 	@Test
     public void createInvalidUserWithoutAddress() throws Exception {
-		User userWithInvalidPassword = new User("04303145076", "João Pedro", "jpedross1999@gmail.com", "123", false, null);
+		User userWithInvalidPassword = new User("04303145076", "João Pedro", "jpedross1999@gmail.com", "123", false, null,984401159L);
 		mockMvc.perform(post("/user/register/").with(user("user").password("123456789"))
         		.contentType(IntegrationTestUtil.APPLICATION_JSON_UTF8)
         		.content(IntegrationTestUtil.convertObjectToJsonBytes(userWithInvalidPassword))

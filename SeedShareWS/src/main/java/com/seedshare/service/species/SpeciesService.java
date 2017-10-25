@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import com.seedshare.entity.vegetable.Species;
 
 /**
- * Service interface of Species
+ * Service interface of {@link com.seedshare.entity.vegetable.Species}
+ * 
  * @author joao.silva
+ * @author gabriel.schneider
  */
-public interface SpeciesService{
+public interface SpeciesService {
 
 	ResponseEntity<?> findOneByCommonName(String commonName);
 
@@ -16,8 +18,12 @@ public interface SpeciesService{
 
 	ResponseEntity<?> findOneByScientificName(String scientificName);
 
-	ResponseEntity<?> activeSpecies(Long id);
-	
+	ResponseEntity<?> enable(Long id);
+
 	ResponseEntity<?> update(Species species);
-	
+
+	ResponseEntity<?> save(Species species);
+
+	ResponseEntity<?> delete(Long id);
+
 }

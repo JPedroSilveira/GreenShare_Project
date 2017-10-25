@@ -2,7 +2,6 @@ package com.seedshare.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.seedshare.entity.address.Country;
 import com.seedshare.entity.address.State;
 
 /**
@@ -12,8 +11,8 @@ import com.seedshare.entity.address.State;
  */
 public interface StateRepository extends CrudRepository<State, Long> {
 
-	State findOneByCountryAndNameContainsIgnoreCase(Country country, String name);
+	State findOneByCountryAndNameIgnoreCase(Long id, String name);
 
-	Iterable<State> findAllByCountry(Country country);
+	Iterable<State> findAllByCountry(Long id);
 
 }

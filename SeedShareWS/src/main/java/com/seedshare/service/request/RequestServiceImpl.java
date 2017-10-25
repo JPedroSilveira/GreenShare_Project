@@ -33,12 +33,20 @@ public class RequestServiceImpl extends IsHelper implements RequestService {
 	@Override
 	public ResponseEntity<?> save(Request request) {
 		if (isNotNull(request)) {
-			Request newRequest = new Request(request.getAmount(), request.getOffer(), getCurrentUser());
-			if (newRequest.isValid()) {
-				newRequest = requestRepository.save(newRequest);
-				return new ResponseEntity<Request>(newRequest, HttpStatus.OK);
+			Offer offer = request.getOffer();
+			if(isNotNull(offer)) {
+				offer = offerRepository.findOne(offer.getId());
+				if(isNotNull(offer)) {
+					Request newRequest = new Request(request.getAmount(), request.getOffer(), getCurrentUser());
+					if (newRequest.isValid()) {
+						newRequest = requestRepository.save(newRequest);
+						return new ResponseEntity<Request>(newRequest, HttpStatus.OK);
+					}
+					return new ResponseEntity<List<String>>(newRequest.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Oferta não encontrada.", HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<List<String>>(newRequest.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Oferta não pode ser nula.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Requisição não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}

@@ -11,7 +11,6 @@ import com.seedshare.entity.FlowerShop;
 import com.seedshare.entity.address.City;
 import com.seedshare.entity.address.State;
 import com.seedshare.entity.offer.Offer;
-import com.seedshare.entity.offer.OfferComment;
 import com.seedshare.entity.vegetable.Species;
 import com.seedshare.enumeration.OfferStatus;
 import com.seedshare.helpers.IsHelper;
@@ -56,13 +55,21 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 	@Override
 	public ResponseEntity<?> save(Offer offer) {
 		if (isNotNull(offer)) {
-			Offer newOffer = new Offer(offer.getUnitPrice(), offer.getRemainingAmount(), getCurrentUser(),
-					offer.getSpecies(), offer.getDescription(), getCurrentUser().getFlowerShop());
-			if (newOffer.isValid()) {
-				newOffer = offerRepository.save(offer);
-				return new ResponseEntity<Offer>(newOffer, HttpStatus.OK);
+			Species species = offer.getSpecies();
+			if(isNotNull(species) && isNotNull(species.getId())) {
+				species = speciesRepository.findOne(species.getId());
+				if(isNotNull(species)) {
+					Offer newOffer = new Offer(offer.getUnitPrice(), offer.getRemainingAmount(), getCurrentUser(),
+							species, offer.getDescription(), getCurrentUser().getFlowerShop());
+					if (newOffer.isValid()) {
+						newOffer = offerRepository.save(offer);
+						return new ResponseEntity<Offer>(newOffer, HttpStatus.OK);
+					}
+					return new ResponseEntity<List<String>>(newOffer.getValidationErrors(), HttpStatus.BAD_REQUEST);
+				}
+				return new ResponseEntity<String>("Espécie não encontrada.", HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<List<String>>(newOffer.getValidationErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Espécie não pode ser nula.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Oferta não pode ser nula.", HttpStatus.BAD_REQUEST);
 	}
@@ -158,36 +165,6 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
-	}
-
-	@Override
-	public ResponseEntity<?> addComment(Long id, String text) {
-		if (isNotNull(id) && isNotNull(text)) {
-			Offer offerDB = offerRepository.findOne(id);
-			if (isNotNull(offerDB)) {
-				OfferComment newOfferComment = new OfferComment(text, getCurrentUser(), offerDB);
-				if (newOfferComment.isValid()) {
-					newOfferComment = offerCommentRepository.save(newOfferComment);
-					return new ResponseEntity<OfferComment>(newOfferComment, HttpStatus.OK);
-				}
-				return new ResponseEntity<List<String>>(offerDB.getValidationErrors(), HttpStatus.BAD_REQUEST);
-			}
-			return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
-	}
-
-	@Override
-	public ResponseEntity<?> deleteComment(Long id) {
-		if (isNotNull(id)) {
-			OfferComment offerCommentDB = offerCommentRepository.findOne(id);
-			if (offerCommentDB.getUser().getId() == getCurrentUser().getId()) {
-				offerCommentRepository.delete(id);
-				return new ResponseEntity<String>("Comentário deletado", HttpStatus.OK);
-			}
-			return new ResponseEntity<String>("Comentário não pertence ao usuário atual.", HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 	}

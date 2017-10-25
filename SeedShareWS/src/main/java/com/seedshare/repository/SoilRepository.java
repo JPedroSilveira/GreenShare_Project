@@ -1,5 +1,7 @@
 package com.seedshare.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +15,6 @@ import com.seedshare.entity.vegetable.Soil;
 @Repository
 public interface SoilRepository extends CrudRepository<Soil, Long> {
 
+	List<Soil> findAllById(List<Long> id);
+	
 }

@@ -17,8 +17,6 @@ public interface FlowerShopService extends BasicService<FlowerShop, Long> {
 	ResponseEntity<?> findOneByUser(Long id);
 
 	ResponseEntity<?> findOneByCurrentUser();
-
-	ResponseEntity<?> update(FlowerShop flowerShop);
 	
 	ResponseEntity<?> findAllByState(Long id);
 

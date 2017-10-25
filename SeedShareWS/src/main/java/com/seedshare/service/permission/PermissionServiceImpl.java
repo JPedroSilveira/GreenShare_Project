@@ -25,12 +25,6 @@ public class PermissionServiceImpl implements PermissionService{
 	}
 
 	@Override
-	public ResponseEntity<?> findAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ResponseEntity<?> update(Permission e) {
 		// TODO Auto-generated method stub
 		return null;

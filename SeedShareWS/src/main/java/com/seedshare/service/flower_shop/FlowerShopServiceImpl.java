@@ -35,7 +35,7 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 			FlowerShop flowerShopDB = flowerShopRepository.findOneByUser(currentUser);
 			if (isNull(flowerShopDB)) {
 				flowerShopDB = flowerShopRepository.findOneByCnpj(flowerShop.getCnpj());
-				if (isNull(flowerShopDB) || !flowerShopDB.getIsActive()) {
+				if (isNull(flowerShopDB) || !flowerShopDB.getEnabled()) {
 					FlowerShop newFlowerShop = new FlowerShop(flowerShop.getCnpj(), flowerShop.getDescription(),
 							currentUser);
 					if (newFlowerShop.isValid()) {
@@ -56,7 +56,7 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	public ResponseEntity<?> update(FlowerShop flowerShop) {
 		User currentUser = getCurrentUser();
 		FlowerShop flowerShopDB = flowerShopRepository.findOneByUser(currentUser);
-		if (isNotNull(flowerShopDB) && flowerShopDB.getIsActive()) {
+		if (isNotNull(flowerShopDB) && flowerShopDB.getEnabled()) {
 			flowerShopDB.setDescription(flowerShop.getDescription());
 			flowerShopDB.setName(flowerShop.getName());
 			if (flowerShopDB.isValid()) {
@@ -73,7 +73,7 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 		if (isNotNull(id)) {
 			FlowerShop flowerShop = flowerShopRepository.findOneByUser(getCurrentUser());
 			if (flowerShop.getId() == id) {
-				flowerShop.setIsActive(false);
+				flowerShop.disable();
 				flowerShopRepository.save(flowerShop);
 				return new ResponseEntity<String>("Floricultura removida com sucesso.", HttpStatus.OK);
 			}

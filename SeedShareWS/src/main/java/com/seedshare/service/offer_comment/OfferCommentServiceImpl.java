@@ -42,9 +42,9 @@ public class OfferCommentServiceImpl extends IsHelper implements OfferCommentSer
 				}
 				return new ResponseEntity<List<String>>(newOfferComment.getValidationErrors(), HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<String>("Oferta do comentário não encontrada.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Oferta do comentário não encontrada.", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<String>("O comentário da oferta não pode ser nulo.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("O comentário e a oferta não podem ser nulos.", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override

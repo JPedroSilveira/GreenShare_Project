@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.seedshare.entity.post.Post;
+import com.seedshare.entity.vegetable.Species;
 import com.seedshare.helpers.IsHelper;
 import com.seedshare.repository.PostRepository;
+import com.seedshare.repository.SpeciesRepository;
 
 /**
  * Implementation of {@link com.seedshare.service.post.PostService} interface
@@ -26,13 +28,23 @@ public class PostServiceImpl extends IsHelper implements PostService {
 
 	@Autowired
 	PostRepository postRepository;
+	
+	@Autowired
+	SpeciesRepository speciesRepository;
 
 	private static final int MAX_PAGE_SIZE = 100;
 
 	@Override
 	public ResponseEntity<?> save(Post post) {
 		if (isNotNull(post)) {
-			Post newPost = new Post(getCurrentUser(), post.getSpecies(), post.getText());
+			Species species = post.getSpecies();
+			if(isNotNull(species)) {
+				species = speciesRepository.findOne(species.getId());
+				if(isNull(species)) {
+					return new ResponseEntity<String>("Espécie não encontrada.", HttpStatus.BAD_REQUEST);
+				}
+			}
+			Post newPost = new Post(getCurrentUser(), species, post.getText());
 			if (newPost.isValid()) {
 				newPost = postRepository.save(newPost);
 				return new ResponseEntity<Post>(newPost, HttpStatus.OK);
@@ -98,7 +110,7 @@ public class PostServiceImpl extends IsHelper implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<?> findAllByUser(Integer page, Integer size, Long id) {
+	public ResponseEntity<?> findAllByUser(Long id, Integer page, Integer size) {
 		if (isValidPage(page, size)) {
 			if (isNotNull(id)) {
 				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
@@ -111,7 +123,7 @@ public class PostServiceImpl extends IsHelper implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<?> findAllBySpecies(Integer page, Integer size, Long id) {
+	public ResponseEntity<?> findAllBySpecies(Long id, Integer page, Integer size) {
 		if (isValidPage(page, size)) {
 			if (isNotNull(id)) {
 				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
@@ -131,7 +143,7 @@ public class PostServiceImpl extends IsHelper implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<?> findAllByState(Integer page, Integer size, Long id) {
+	public ResponseEntity<?> findAllByState(Long id, Integer page, Integer size) {
 		if (isValidPage(page, size)) {
 			if (isNotNull(id)) {
 				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
@@ -144,7 +156,7 @@ public class PostServiceImpl extends IsHelper implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<?> findAllByCity(Integer page, Integer size, Long id) {
+	public ResponseEntity<?> findAllByCity(Long id, Integer page, Integer size) {
 		if (isValidPage(page, size)) {
 			if (isNotNull(id)) {
 				Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));

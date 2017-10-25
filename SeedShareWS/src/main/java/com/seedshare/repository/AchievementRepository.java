@@ -5,7 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.seedshare.entity.achievement.Achievement;
 
 /**
- * Repository Interface for Achievement
+ * Repository Interface for {@link com.seedshare.entity.achievement.Achievement}
  * 
  * @author joao.silva
  */

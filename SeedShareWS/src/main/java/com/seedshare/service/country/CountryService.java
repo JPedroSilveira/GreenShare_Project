@@ -9,6 +9,7 @@ import com.seedshare.service.BasicService;
  * Service interface of {@link com.seedshare.entity.address.Country}
  * 
  * @author joao.silva
+ * @author gabriel.schneider
  */
 public interface CountryService extends BasicService<Country, Long> {
 	
