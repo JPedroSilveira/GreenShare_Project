@@ -12,13 +12,16 @@ import com.seedshare.entity.Suggestion;
  */
 public interface SuggestionController {
 
-	ResponseEntity<?> delete(Long id);
-
 	ResponseEntity<?> save(Suggestion suggestion);
-
-	ResponseEntity<?> findByUser();
-
+	
 	ResponseEntity<?> findOne(Long id);
 
+	ResponseEntity<?> delete(Long id);
+
+	ResponseEntity<?> findByCurrentUser();
+
 	ResponseEntity<?> findAllByPage(Integer page, Integer size);
+
+	ResponseEntity<?> enable(Long id);
+	
 }

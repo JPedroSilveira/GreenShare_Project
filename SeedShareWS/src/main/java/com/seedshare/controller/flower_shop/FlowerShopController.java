@@ -2,14 +2,16 @@ package com.seedshare.controller.flower_shop;
 
 import org.springframework.http.ResponseEntity;
 
+import com.seedshare.controller.BasicController;
 import com.seedshare.entity.FlowerShop;
 
 /**
- * FlowerShop interface Controller
+ * Controller interface of {@link com.seedshare.entity.FlowerShop}
  * 
  * @author joao.silva
+ * @author gabriel.schneider
  */
-public interface FlowerShopController {
+public interface FlowerShopController extends BasicController<FlowerShop, Long> {
 
 	ResponseEntity<?> save(FlowerShop flowerShop);
 
@@ -19,9 +21,8 @@ public interface FlowerShopController {
 
 	ResponseEntity<?> findOneByCnpj(String cnpj);
 
-	ResponseEntity<?> update(FlowerShop flowerShop);
-
 	ResponseEntity<?> findAllByState(Long id);
 
 	ResponseEntity<?> findAllByCity(Long id);
+
 }

@@ -108,7 +108,7 @@ public class ImageUploadControllerImpl extends IsHelper implements ImageUploadCo
         	if(isNotNull(currentUser) && currentUser.getIsLegalPerson()) {
         		FlowerShop flowerShop = currentUser.getFlowerShop();
         		if(isNotNull(flowerShop)) {
-        			if(flowerShop.getIsActive()) {
+        			if(flowerShop.getEnabled()) {
                     	return saveImage(multipartFile, flowerShop);
         			}
                 	return new ResponseEntity<String>("Floricultura inativa, contate um administrador.", HttpStatus.UNAUTHORIZED);
@@ -206,7 +206,7 @@ public class ImageUploadControllerImpl extends IsHelper implements ImageUploadCo
     	User currentUser = getCurrentUser();
     	if(isNotNull(currentUser)) {
         	FlowerShop flowerShop = currentUser.getFlowerShop();
-        	if(isNotNull(flowerShop) && flowerShop.getIsActive()) {
+        	if(isNotNull(flowerShop) && flowerShop.getEnabled()) {
             	return getImage(flowerShop);
         	}
         	return new ResponseEntity<String>("Usuário atual não possui floricultura ou ela esta inativa.", HttpStatus.NOT_FOUND);

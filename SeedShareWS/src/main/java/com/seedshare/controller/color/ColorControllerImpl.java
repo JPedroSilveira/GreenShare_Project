@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,31 +15,32 @@ import com.seedshare.entity.vegetable.Color;
 import com.seedshare.service.color.ColorService;
 
 /**
- * Controller interface for Color
+ * Controller interface of {@link com.seedshare.entity.vegetable.Color}
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController
-@RequestMapping("/color")
+@RequestMapping("/color/")
 public class ColorControllerImpl implements ColorController{
 
 	@Autowired
 	ColorService colorService;
 	
 	@Override
-	@PostMapping("/")
+	@PostMapping("")
 	public ResponseEntity<?> save(@RequestBody Color color) {
 		return colorService.save(color);
 	}
 
 	@Override
-	@DeleteMapping("/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		return colorService.delete(id);
 	}
 
 	@Override
-	@GetMapping("/{id}")
+	@GetMapping("{id}")
 	public ResponseEntity<?> findOne(@PathVariable Long id) {
 		return colorService.findOne(id);
 	}
@@ -47,6 +49,12 @@ public class ColorControllerImpl implements ColorController{
 	@GetMapping("")
 	public ResponseEntity<?> findAll() {
 		return colorService.findAll();
+	}
+
+	@Override
+	@PutMapping("")
+	public ResponseEntity<?> update(@RequestBody Color color) {
+		return colorService.update(color);
 	}
 
 }

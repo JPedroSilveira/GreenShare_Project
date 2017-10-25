@@ -10,9 +10,13 @@ import com.seedshare.entity.user.User;
  * @author joao.silva
  */
 public interface UserController{
+	
 	ResponseEntity<?> changePassword(User user);
 
 	ResponseEntity<?> changeName(User user);
 
 	ResponseEntity<?> create(User user);
+	
+	ResponseEntity<?> findOne(Long id);
+	
 }

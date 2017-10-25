@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import com.seedshare.entity.address.Address;
 
 /**
+ * Controller interface of {@link com.seedshare.entity.address.Address}
+ * 
  * @author joao.silva
  */
 public interface AddressController {
@@ -16,5 +18,7 @@ public interface AddressController {
 	ResponseEntity<?> findOneById(Long id);
 
 	ResponseEntity<?> findAllByCurrentUser();
+
+	ResponseEntity<?> update(Address address);
 
 }

@@ -13,23 +13,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seedshare.helpers.IsHelper;
 import com.seedshare.service.user.UserServiceImpl;
 
 /**
- * Controller class for Login
+ * Controller class for login of {@link com.seedshare.entity.user.User}
  * 
+ * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController
-@RequestMapping("/auth")
-public class LoginControllerImpl extends IsHelper implements LoginController{
+@RequestMapping("/auth/")
+public class LoginControllerImpl implements LoginController{
 
     @Autowired
     UserServiceImpl userService;
     
     @Override
-    @GetMapping("/login")
+    @GetMapping("login")
     public ResponseEntity<?> getUserDetails() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
