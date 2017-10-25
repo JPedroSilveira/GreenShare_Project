@@ -25,6 +25,7 @@ import java.util.List;
 @Entity
 @Table(name = "species")
 public class Species extends AbstractPhotogenicEntity<Species> implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "species_seq";
@@ -39,8 +40,8 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	private Long id;
 
 	@Basic(optional = false)
-	@Column(name = "approved")
-	private Boolean active;
+	@Column(name = "enabled")
+	private Boolean enabled;
 
 	@Basic(optional = false)
 	@NotNull(message = "É obrigatório informar se a espécie atrai passáros.")
@@ -151,7 +152,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 			Boolean attractBees, String scientificName, String commonName, Boolean isOrnamental, Integer averageHeight,
 			Growth growth, Integer rootDepth, List<Climate> climates, List<Soil> soils, Flower flower, Fruit fruit) {
 		super(PHOTO_TYPE, true);
-		this.active = false;
+		this.enabled = false;
 		this.attractBirds = attractBirds;
 		this.description = description;
 		this.cultivationGuide = cultivationGuide;
@@ -179,7 +180,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 		if (isNullOrEmpty(this.cultivationGuide) || is(this.cultivationGuide).orSmallerThan(1).orBiggerThan(5000)) {
 			this.validationErrors.add("Guia de cultivo inválido.");
 		}
-		if (isNull(this.active)) {
+		if (isNull(this.enabled)) {
 			this.validationErrors.add("Definição de aprovação inválida.");
 		}
 		if (isNull(this.attractBees)) {
@@ -231,9 +232,9 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	public Long getId() {
 		return this.id;
 	}
-
-	public Boolean getActive() {
-		return this.active;
+	
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
 	public Boolean getAttractBirds() {
@@ -308,13 +309,17 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 		return rootDepth;
 	}
 
-	public void activate() {
-		this.active = true;
+	public void enable() {
+		this.enabled = true;
+	}
+	
+	public void disable() {
+		this.enabled = false;
 	}
 
 	@Override
 	public void update(Species e) {
-		this.active = e.getActive();
+		this.enabled = e.getEnabled();
 		this.attractBees = e.getAttractBees();
 		this.attractBirds = e.getAttractBirds();
 		this.averageHeight = e.getAverageHeight();

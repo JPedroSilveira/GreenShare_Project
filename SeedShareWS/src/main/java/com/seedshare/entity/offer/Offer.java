@@ -5,6 +5,8 @@ import static javax.persistence.GenerationType.SEQUENCE;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -44,18 +46,21 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 
 	@Basic(optional = false)
 	@NotNull(message = "O preço unitário não pode ser nulo.")
-	@Size(min = 0, message = "Preço unitário deve ser no mínimo zero.")
+	@Min(0)
 	@Column(name = "unit_price")
 	private Float unitPrice;
 
 	@Basic(optional = false)
 	@NotNull(message = "Quantidade restante não pode ser nula")
-	@Size(min = 1, max = 9999, message = "Quantidade deve estar entre 1 e 9999.")
+	@Min(0)
+	@Max(9999)
 	@Column(name = "remaining_amount")
 	private Integer remainingAmount;
 
 	@Basic(optional = false)
 	@Column(name = "initial_amount")
+	@Min(1)
+	@Max(9999)
 	private Integer initialAmount;
 
 	@Basic(optional = false)
@@ -158,10 +163,10 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 				this.validationErrors.add("Preço unitário inválido.");
 			}
 		}
-		if (isNull(this.remainingAmount) || is(this.remainingAmount).smallerOrEqual(0)) {
+		if (isNull(this.remainingAmount) || is(this.remainingAmount).orSmallerThan(0).orBiggerThan(9999)) {
 			this.validationErrors.add("Quantidade restante inválida.");
 		}
-		if (isNull(this.initialAmount) || is(this.initialAmount).smallerOrEqual(0)) {
+		if (isNull(this.initialAmount) || is(this.initialAmount).orSmallerThan(1).orBiggerThan(9999)) {
 			this.validationErrors.add("Quantidade inicial inválida.");
 		}
 		if (isNull(this.user)) {
@@ -181,6 +186,11 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 			this.validationErrors.add("O endereço não pode ser nulo.");
 		} else if (this.address.isNotValid()) {
 			this.validationErrors.addAll(this.address.getValidationErrors());
+		}
+		if(isNull(this.offerStatus)) {
+			this.validationErrors.add("Status da oferta não pode ser nulo.");
+		}else if(OfferStatus.exists(this.offerStatus)){
+			this.validationErrors.add("Status de oferta inexistente.");
 		}
 		return this.validationErrors.isEmpty();
 	}

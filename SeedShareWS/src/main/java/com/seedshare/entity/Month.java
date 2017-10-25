@@ -51,7 +51,6 @@ public class Month extends AbstractEntity<Month> implements Serializable {
 
 	@Basic(optional = false)
 	@NotNull(message = "Número não pode ser nulo.")
-	@Size(min = 1, max = 12, message = "Número deve ser igual ou maior a um e menor ou igual a doze.")
 	@Column(name = "number")
 	private Short number;
 	
@@ -82,7 +81,7 @@ public class Month extends AbstractEntity<Month> implements Serializable {
 			this.validationErrors.add("O nome não pode ser nulo e deve conter entre 1 e 50 caracteres.");
 		}
 		if (isNull(this.number) || is(this.number).orSmallerThan(1).orBiggerThan(12)) {
-			this.validationErrors.add("O número não pode ser nulo e deve ser maior que zero.");
+			this.validationErrors.add("O número não pode ser nulo e deve estar entre 1 e 12.");
 		}
 
 		return this.validationErrors.isEmpty();

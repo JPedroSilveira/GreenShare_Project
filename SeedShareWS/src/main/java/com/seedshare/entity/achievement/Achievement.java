@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -37,7 +38,6 @@ public class Achievement extends AbstractPhotogenicEntity<Achievement> implement
 
 	@Basic(optional = false)
 	@NotNull(message = "Categoria não pode ser nula.")
-	@Size(min = 0, message = "Categoria deve ser um número positivo.")
 	@Column(name = "category")
 	private Short category;
 
@@ -55,13 +55,13 @@ public class Achievement extends AbstractPhotogenicEntity<Achievement> implement
 
 	@Basic(optional = false)
 	@NotNull(message = "Pontuação necessária não pode ser nula.")
-	@Size(min = 1, message = "Pontuação necessária deve ser maior ou igual a um.")
+	@Min(1)
 	@Column(name = "required_score")
 	private Long requiredScore;
 	
 	@Basic(optional = false)
 	@NotNull(message = "Pontuação por ato não pode ser nula.")
-	@Size(min = 1, message = "Pontuação por ato deve ser maior ou igual a um.")
+	@Min(1)
 	@Column(name = "score_by_act")
 	private Long scoreByAct;
 

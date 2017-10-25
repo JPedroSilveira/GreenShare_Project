@@ -54,6 +54,7 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	private User user;
 
 	@ManyToOne
+	@Basic(optional = true)
 	@NotNull(message = "A especie não pode ser nula.")
 	@Valid
 	@JoinColumn(name = "species_id")
@@ -97,9 +98,7 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 		} else if (this.user.isNotValid()) {
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
-		if (isNull(this.species)) {
-			this.validationErrors.add("A espécie nao pode ser nula.");
-		} else if (this.species.isNotValid()) {
+		if (isNotNull(this.species) && this.species.isNotValid()) {
 			this.validationErrors.addAll(this.species.getValidationErrors());
 		}
 		return this.validationErrors.isEmpty();

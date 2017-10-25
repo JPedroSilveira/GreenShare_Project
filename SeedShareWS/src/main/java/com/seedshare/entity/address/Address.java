@@ -24,13 +24,6 @@ import com.seedshare.enumeration.AddressType;
 @Entity
 @Table(name = "address")
 public class Address extends AbstractEntity<Address> implements Serializable {
-	public Offer getOffer() {
-		return offer;
-	}
-
-	public FlowerShop getFlowerShop() {
-		return flowerShop;
-	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -45,16 +38,14 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 
 	@Basic(optional = false)
 	@NotNull(message = "O número não pode ser nulo.")
-	@Size(min = 1, message = "O número deve ser no mínimo um.")
 	@Column(name = "number")
 	private Integer number;
 
 	@Basic(optional = false)
 	@NotNull(message = "O tipo de endereço não pode ser nulo.")
-	@Size(min = 1, message = "O tipo deve conter no mínimo um.")
 	@Column(name = "type")
 	private Integer type;
-	
+
 	@Basic(optional = false)
 	@Size(min = 1, max = 200, message = "O bairro deve conter entre 1 e 200 caracteres.")
 	@NotNull(message = "O bairro não pode ser nulo.")
@@ -81,7 +72,7 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@Valid
 	@JoinColumn(name = "city_id")
 	private City city;
-	
+
 	@JsonIgnore
 	@Basic(optional = true)
 	@OneToOne(mappedBy = "address")
@@ -93,7 +84,7 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@Valid
 	@OneToOne(mappedBy = "address")
 	private Offer offer;
-	
+
 	@JsonIgnore
 	@Basic(optional = true)
 	@Valid
@@ -104,26 +95,24 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		super(false);
 	}
 
-	public Address(City city, Integer number, String neighborhood, String addressName, String complement, String reference, Integer type) {
+	public Address(City city, Integer number, String neighborhood, String addressName, String complement,
+			String reference, Integer type) {
 		super(true);
 		this.city = city;
 		this.number = number;
 		this.neighborhood = neighborhood;
 		this.addressName = addressName;
-		this.complement = complement;
-		this.reference = reference;
+		if (isNotNull(complement) && complement.isEmpty()) {
+			this.complement = null;
+		} else {
+			this.complement = complement;
+		}
+		if (isNotNull(reference) && reference.isEmpty()) {
+			this.reference = null;
+		} else {
+			this.reference = reference;
+		}
 		this.type = type;
-	}
-	
-	public Address(Address address) {
-		super(true);
-		this.city = address.getCity();
-		this.number = address.getNumber();
-		this.neighborhood = address.getNeighborhood();
-		this.addressName = address.getAddressName();
-		this.complement = address.getComplement();
-		this.reference = address.getReference();
-		this.type = address.getType();
 	}
 
 	@Override
@@ -135,22 +124,22 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		} else if (this.city.isNotValid()) {
 			this.validationErrors.addAll(this.city.getValidationErrors());
 		}
-		if(isNull(this.number) || is(this.number).smallerThan(1)) {
+		if (isNull(this.number) || is(this.number).smallerThan(1)) {
 			this.validationErrors.add("O número não pode ser nulo ou menor que um.");
 		}
-		if(isNull(this.neighborhood) || is(this.neighborhood).orSmallerThan(1).orBiggerThan(200)) {
+		if (isNull(this.neighborhood) || is(this.neighborhood).orSmallerThan(1).orBiggerThan(200)) {
 			this.validationErrors.add("O bairro não pode ser nulo e deve conter entre 1 e 200 caracteres.");
 		}
-		if(isNull(this.addressName) || is(this.addressName).orSmallerThan(1).orBiggerThan(200)) {
+		if (isNull(this.addressName) || is(this.addressName).orSmallerThan(1).orBiggerThan(200)) {
 			this.validationErrors.add("O endereço não pode ser nulo e deve conter entre 1 e 200 caracteres.");
 		}
-		if(isNull(this.complement) || is(this.complement).orSmallerThan(1).orBiggerThan(200)) {
+		if (isNull(this.complement) || is(this.complement).orSmallerThan(1).orBiggerThan(200)) {
 			this.validationErrors.add("O complemento não pode ser nulo e deve conter entre 1 e 200 caracteres.");
 		}
-		if(isNull(this.reference) || is(this.reference).orSmallerThan(1).orBiggerThan(200)) {
+		if (isNull(this.reference) || is(this.reference).orSmallerThan(1).orBiggerThan(200)) {
 			this.validationErrors.add("A referencia não pode ser nula e deve conter entre 1 e 200 caracteres");
 		}
-		if(isNull(this.type) || AddressType.exists(this.type)) {
+		if (isNull(this.type) || AddressType.exists(this.type)) {
 			this.validationErrors.add("O tipo de endereço é inválido.");
 		}
 		return this.validationErrors.isEmpty();
@@ -192,6 +181,14 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	public String getReference() {
 		return reference;
 	}
+	
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public FlowerShop getFlowerShop() {
+		return flowerShop;
+	}
 
 	@Override
 	public void update(Address address) {
@@ -205,6 +202,6 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	}
 
 	public boolean isInUse() {
-		return isNull(this.flowerShop) && isNull(this.user); 
+		return isNull(this.flowerShop) && isNull(this.user);
 	}
 }

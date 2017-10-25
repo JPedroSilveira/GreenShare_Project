@@ -21,6 +21,7 @@ import com.seedshare.entity.vegetable.Species;
 @Entity
 @Table(name = "suggestion")
 public class Suggestion extends AbstractEntity<Suggestion> implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "suggestion_seq";
@@ -32,17 +33,15 @@ public class Suggestion extends AbstractEntity<Suggestion> implements Serializab
 	@Column(name = "suggestion_id")
 	private Long id;
 
-	@Basic(optional = false)
-	@Column(name = "active")
-	private Boolean isActive;
-
 	@ManyToOne
+	@Basic(optional = false)
 	@NotNull(message = "O usuário não pode ser nulo.")
 	@Valid
 	@JoinColumn(name = "user_id")
 	private User user;
 
 	@OneToOne
+	@Basic(optional = false)
 	@NotNull(message = "A espécie não pode ser nula.")
 	@Valid
 	@JoinColumn(name = "species_id")
@@ -56,16 +55,12 @@ public class Suggestion extends AbstractEntity<Suggestion> implements Serializab
 		super(true);
 		this.user = user;
 		this.species = species;
-		this.isActive = true;
 	}
 
 	@Override
 	public boolean isValid() {
 		this.validationErrors.clear();
 
-		if (isNull(this.isActive)) {
-			this.validationErrors.add("O atributo isActive não pode ser nulo.");
-		}
 		if (isNull(this.user)) {
 			this.validationErrors.add("Usuário não pode ser nulo.");
 		} else if (this.user.isNotValid()) {
@@ -89,14 +84,6 @@ public class Suggestion extends AbstractEntity<Suggestion> implements Serializab
 
 	public Species getSpecies() {
 		return this.species;
-	}
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
 	}
 
 	@Override

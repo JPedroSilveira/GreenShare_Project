@@ -49,6 +49,7 @@ public class State extends AbstractEntity<State> implements Serializable {
 	private String name;
 
 	@ManyToOne
+	@Basic(optional = false)
 	@NotNull(message = "O pais não pode ser nulo.")
 	@Valid
 	@JoinColumn(name = "country_id")

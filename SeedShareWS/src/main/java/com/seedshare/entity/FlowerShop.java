@@ -26,6 +26,7 @@ import com.seedshare.enumeration.PhotoType;
 @Entity
 @Table(name = "flower_shop")
 public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "flower_shop_seq";
@@ -58,8 +59,8 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	private String name;
 
 	@Basic(optional = false)
-	@Column(name = "active")
-	private Boolean isActive;
+	@Column(name = "enabled")
+	private Boolean enabled;
 
 	@Basic(optional = false)
 	@NotNull(message = "O endereço não pode ser nulo.")
@@ -71,9 +72,12 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	@JsonIgnore
 	@Valid
 	@OneToOne
+	@Basic(optional = false)
+	@NotNull(message = "Usuário não pode ser nulo.")
 	@JoinColumn(name = "user_id", unique = true)
 	private User user;
 	
+	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy="user")
 	private List<Offer> offers;
@@ -148,12 +152,8 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 		this.user = user;
 	}
 
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
 	public Address getAddress() {
@@ -162,6 +162,14 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 
 	public List<Offer> getOffers() {
 		return offers;
+	}
+	
+	public void enable() {
+		this.enabled = true;
+	}
+	
+	public void disable() {
+		this.enabled = false;
 	}
 
 	@Override

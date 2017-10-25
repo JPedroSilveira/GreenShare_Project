@@ -49,6 +49,7 @@ public class City extends AbstractEntity<City> implements Serializable {
 	private String name;
 
 	@ManyToOne
+	@Basic(optional = false)
 	@NotNull(message = "O estado não pode ser nulo.")
 	@Valid
 	@JoinColumn(name = "state_id")

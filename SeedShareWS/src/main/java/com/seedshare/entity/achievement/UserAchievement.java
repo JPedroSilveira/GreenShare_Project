@@ -7,9 +7,9 @@ import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.abstracts.AbstractEntity;
@@ -38,7 +38,7 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 
 	@Basic(optional = false)
 	@NotNull(message = "Pontuação não pode ser nula.")
-	@Size(min = 0, message = "Pontuação deve ser igual ou maior que zero.")
+	@Min(0)
 	@Column(name = "score")
 	private Long score;
 	
@@ -47,6 +47,7 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	private Boolean conquered;
 
 	@JsonIgnore
+	@Basic(optional = false)
 	@Valid
 	@NotNull(message = "Usuário não pode ser nulo.")
 	@ManyToOne
@@ -54,6 +55,7 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	private User user;
 
 	@Valid
+	@Basic(optional = false)
 	@NotNull(message = "A conquista não pode ser nula.")
 	@ManyToOne
 	@JoinColumn(name = "achievement_id")
@@ -120,14 +122,10 @@ public class UserAchievement extends AbstractEntity<UserAchievement> implements 
 	public Date getConquestDate() {
 		return this.conquestDate;
 	}
-
-	public void setConquestDate(Date conquestDate) {
-		this.conquestDate = conquestDate;
-	}
 	
 	public void incrementScore() {
 		this.score =+ achievement.getScoreByAct();
-		if(this.score >= achievement.getRequiredScore()) {
+		if(this.achievement.getRequiredScore() <= this.score) {
 			this.conquestDate = new Date();
 			this.conquered = true;
 		}

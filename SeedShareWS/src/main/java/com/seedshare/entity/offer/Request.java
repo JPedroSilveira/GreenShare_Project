@@ -5,8 +5,9 @@ import static javax.persistence.GenerationType.SEQUENCE;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.seedshare.entity.abstracts.AbstractEntity;
 import com.seedshare.entity.user.User;
@@ -33,7 +34,8 @@ public class Request extends AbstractEntity<Request> implements Serializable {
 
 	@Basic(optional = false)
 	@NotNull(message = "A quantidade não pode ser nula.")
-	@Size(min = 1, max = 9999, message = "A quantidade deve estar entre 1 e 9999.")
+	@Min(1)
+	@Max(9999)
 	@Column(name = "amount")
 	private Integer amount;
 
@@ -43,12 +45,14 @@ public class Request extends AbstractEntity<Request> implements Serializable {
 	private Boolean wasAccepted;
 
 	@ManyToOne
+	@Basic(optional = false)
 	@NotNull(message = "A oferta não pode ser nula.")
 	@Valid
 	@JoinColumn(name = "offer_id")
 	private Offer offer;
 
 	@ManyToOne
+	@Basic(optional = false)
 	@NotNull(message = "O usuário não pode ser nulo.")
 	@Valid
 	@JoinColumn(name = "user_id")
