@@ -124,7 +124,7 @@ public class SpeciesServiceImpl extends IsHelper implements SpeciesService{
 	@Override
 	public ResponseEntity<?> findOneByCommonName(String commonName) {
 		if(isNotNull(commonName)) {
-			Iterable<Species> speciesListDB = speciesRepository.findOneByCommonNameAndActiveTrue(commonName);
+			Iterable<Species> speciesListDB = speciesRepository.findOneByCommonNameAndEnabledTrue(commonName);
 			return new ResponseEntity<Iterable<Species>>(speciesListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Nome da espécie não pode ser nulo.", HttpStatus.BAD_REQUEST);
@@ -133,7 +133,7 @@ public class SpeciesServiceImpl extends IsHelper implements SpeciesService{
 	@Override
 	public ResponseEntity<?> findOneByScientificName(String scientificName) {
 		if(isNotNull(scientificName)) {
-			Iterable<Species> speciesListDB = speciesRepository.findOneByScientificNameAndActiveTrue(scientificName);
+			Iterable<Species> speciesListDB = speciesRepository.findOneByScientificNameAndEnabledTrue(scientificName);
 			return new ResponseEntity<Iterable<Species>>(speciesListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Nome científico da espécie não pode ser nulo.", HttpStatus.BAD_REQUEST);

@@ -11,8 +11,8 @@ import com.seedshare.entity.vegetable.Species;
  */
 public interface SpeciesRepository extends PagingAndSortingRepository<Species, Long> {
 	
-	Iterable<Species> findOneByCommonNameAndActiveTrue(String commonName);
+	Iterable<Species> findOneByCommonNameAndEnabledTrue(String commonName);
 
-	Iterable<Species> findOneByScientificNameAndActiveTrue(String scientificName);
+	Iterable<Species> findOneByScientificNameAndEnabledTrue(String scientificName);
 	
 }

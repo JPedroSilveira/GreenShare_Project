@@ -23,6 +23,7 @@ public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEn
 
 	@Basic(optional = false)
 	@Past
+	@JsonIgnore
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "insertion_date")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -47,6 +48,7 @@ public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEn
 		return this.validationErrors;
 	}
 
+	@JsonIgnore
 	public boolean isNotValid() {
 		return !isValid();
 	}

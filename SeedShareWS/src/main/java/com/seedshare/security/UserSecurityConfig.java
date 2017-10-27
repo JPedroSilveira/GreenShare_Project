@@ -26,6 +26,9 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${social.security.public:/user/register/}") 
     private String[] securityPublicUserRegister;
     
+    @Value("${social.security.public:/user/entity_example/}")
+    private String[] securityPublicUserExemple;
+    
 	@Autowired
 	private UserSecurityService userDetailsService;
     
@@ -43,7 +46,8 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity webSecurity) throws Exception {
 	   webSecurity.ignoring()
-	           .antMatchers(securityPublicUserRegister);
+	           .antMatchers(securityPublicUserRegister)
+	           .antMatchers(securityPublicUserExemple);
 	}
 	
 	@Bean

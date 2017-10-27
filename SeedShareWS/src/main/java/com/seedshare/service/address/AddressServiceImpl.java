@@ -38,22 +38,22 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 	@Override
 	public ResponseEntity<?> save(Address address) {
 		if (isNotNull(address)) {
-			City city = address.getCity();
-			if(isNotNull(city) && isNotNull(city.getId())) {
-				city = cityRepository.findOne(city.getId());
-				if(isNotNull(city)) {
-					Address newAddress = new Address(city, address.getNumber(), address.getNeighborhood(), address.getReference(),address.getAddressName(),address.getComplement(),address.getType());
-					if(AddressType.exists(address.getType())) {
-						if (newAddress.isValid()) {
-							newAddress = addressRepository.save(newAddress);
-							return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
-						}
+			if(isNotNull(address.getType()) && AddressType.exists(address.getType())) {
+				City city = address.getCity();
+				if(isNotNull(city) && isNotNull(city.getId())) {
+					city = cityRepository.findOne(city.getId());
+					if(isNotNull(city)) {
+						Address newAddress = new Address(city, address.getNumber(), address.getNeighborhood(), address.getReference(),address.getAddressName(),address.getComplement(),address.getType());
+							if (newAddress.isValid()) {
+								newAddress = addressRepository.save(newAddress);
+								return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
+							}
 					}
-					return new ResponseEntity<String>("Tipo de endereço inválido.", HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.BAD_REQUEST);
 				}
-				return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Cidade não pode ser nula ou ter id nulo.", HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<String>("Cidade não pode ser nula ou ter id nulo.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Tipo de endereço inválido.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Endereço inválido.", HttpStatus.BAD_REQUEST);
 	}

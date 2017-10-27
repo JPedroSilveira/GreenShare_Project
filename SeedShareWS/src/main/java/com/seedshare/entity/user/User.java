@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seedshare.entity.FlowerShop;
@@ -75,18 +76,16 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Column(name = "email", length = 100, unique = true)
 	private String email;
 
-	@JsonIgnore
 	@Basic(optional = false)
 	@NotNull(message = "A senha não pode ser nula.")
 	@Size(min = 8, max = 250, message = "A senha deve conter no mínimo 8 caracteres e no máximo 250.")
 	@Column(name = "password", length = 250)
 	private String password;
 	
-	@JsonIgnore
 	@Basic(optional = false)
 	@NotNull(message = "O telefone não pode ser nulo.")
 	@Column(name = "phone_number", length = 20)
-	private Long phoneNumber;
+	private String phoneNumber;
 
 	@Basic(optional = false)
 	@NotNull(message = "Obrigatório informar se o usuário é uma pessoa jurídica.")
@@ -150,7 +149,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		super(PHOTO_TYPE, false);
 	}
 
-	public User(String cpf, String name, String email, String password, Boolean isLegalPerson, Address address, Long phoneNumber) {
+	public User(String cpf, String name, String email, String password, Boolean isLegalPerson, Address address, String phoneNumber) {
 		super(PHOTO_TYPE, true);
 		this.email = email;
 		this.name = name;
@@ -173,13 +172,13 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		if (isNullOrEmpty(this.email) || is(this.email).orSmallerThan(1).orBiggerThan(100) || isNotValidEmail()) {
 			this.validationErrors.add("Email inválido");
 		}
-		if (isNull(this.phoneNumber) || is(this.phoneNumber).orSmallerThan(1).orBiggerThan(20)) {
+		if (isNull(this.phoneNumber) || is(this.phoneNumber).orSmallerThan(1).orBiggerThan(20) || !StringUtils.isNumeric(this.phoneNumber)) {
 			this.validationErrors.add("Número de telefone inválido.");
 		}
 		if (hasInvalidPassword()) {
 			this.validationErrors.add("Senha inválida");
 		}
-		if (!this.isLegalPerson && (isNullOrEmpty(this.cpf) || CPFHelper.isNotCPF(this.cpf))) {
+		if (!this.isLegalPerson && (isNullOrEmpty(this.cpf) || !StringUtils.isNumeric(this.cpf) || CPFHelper.isNotCPF(this.cpf))) {
 			this.validationErrors.add("CPF inválido");
 		}
 		if(!this.isLegalPerson && isNotNull(this.flowerShop)) {
@@ -306,10 +305,12 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		this.validationErrors.add(message);
 	}
 
+	@JsonIgnore
 	public Boolean isValidEmail() {
 		return PATTERN.matcher(this.email).matches();
 	}
 
+	@JsonIgnore
 	public Boolean isNotValidEmail() {
 		return !isValidEmail();
 	}
@@ -337,8 +338,8 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		return this.hasImage;
 	}
 
-	public Long getPhoneNumber() {
-		return phoneNumber;
+	public String getPhoneNumber() {
+		return this.phoneNumber;
 	}
 	
 	@Override
@@ -351,5 +352,6 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		this.email = null;
 		this.address = null;
 		this.phoneNumber = null;
+		this.password = null;
 	}
 }

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import com.seedshare.entity.address.Address;
 import com.seedshare.entity.user.User;
 import com.seedshare.helpers.IsHelper;
-import com.seedshare.repository.AddressRepository;
 import com.seedshare.repository.UserRepository;
+import com.seedshare.service.address.AddressServiceImpl;
 
 /**
  * Implementation of {@link com.seedshare.service.user.UserService} interface
@@ -24,39 +24,39 @@ public class UserServiceImpl extends IsHelper implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
-
-	@Autowired
-	AddressRepository addressRepository;
+	
+	AddressServiceImpl addressService;
 
 	@Override
 	public ResponseEntity<?> create(User user) {
 		if (isNotNull(user)) {
-			if (isUniqueEmail(user.getEmail())) {
+			if (!isUniqueEmail(user.getEmail())) {
 				return new ResponseEntity<String>("Email já cadastrado.", HttpStatus.BAD_REQUEST);
 			}
-			if (isUniqueCPF(user.getCpf())) {
+			if (!isUniqueCPF(user.getCpf())) {
 				return new ResponseEntity<String>("CPF já cadastrado.", HttpStatus.BAD_REQUEST);
 			}
 			Address address = user.getAddress();
-			if (isNotNull(address)) {
-				if(address.isValid()) {
-					address = saveNewAddress(address);
+			if(isNotNull(address)) {
+				ResponseEntity<?> response = addressService.save(address);
+				if(response.getStatusCode() != HttpStatus.OK) {
+					return response;
+				}
+				try {
+					address = (Address) response.getBody();
+				}catch(Exception ex) {
+					return new ResponseEntity<String>("Falha ao converter endereço", HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
 			User newUser = new User(user.getCpf(), user.getName(), user.getEmail(), user.getPassword(),
 					user.getIsLegalPerson(), address, user.getPhoneNumber());
 			if (newUser.isValid()) {
-				User response = userRepository.save(newUser);
-				return new ResponseEntity<User>(response, HttpStatus.OK);
+				newUser = userRepository.save(newUser);
+				return new ResponseEntity<User>(newUser, HttpStatus.OK);
 			}
 			return new ResponseEntity<List<String>>(newUser.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Usuário não pode ser nulo.", HttpStatus.BAD_REQUEST);
-	}
-
-	private Address saveNewAddress(Address address) {
-		address = new Address(address);
-		return addressRepository.save(address);
 	}
 
 	@Override
@@ -93,6 +93,7 @@ public class UserServiceImpl extends IsHelper implements UserService {
 		if (isNotNull(id)) {
 			User userDB = userRepository.findOne(id);
 			if (isNotNull(userDB)) {
+				userDB.clearPrivateData();
 				return new ResponseEntity<User>(userDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
@@ -118,19 +119,26 @@ public class UserServiceImpl extends IsHelper implements UserService {
 		return null;
 	}
 
-	private User findOneByCpf(String cpf) {
+	private User _findOneByCpf(String cpf) {
 		if (isNotNull(cpf)) {
 			return userRepository.findOneByCpf(cpf);
 		}
 		return null;
 	}
+	
+	private User _findOneByEmail(String email) {
+		if (isNotNull(email)) {
+			return userRepository.findOneByEmail(email);
+		}
+		return null;
+	}
 
 	private Boolean isUniqueEmail(String email) {
-		return isNull(this.findOneByEmail(email));
+		return isNull(this._findOneByEmail(email));
 	}
 
 	private Boolean isUniqueCPF(String cpf) {
-		return isNull(this.findOneByCpf(cpf));
+		return isNull(this._findOneByCpf(cpf));
 	}
 
 }

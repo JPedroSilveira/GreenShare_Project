@@ -142,6 +142,9 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		if (isNull(this.type) || AddressType.exists(this.type)) {
 			this.validationErrors.add("O tipo de endereço é inválido.");
 		}
+		if (isNull(this.user) && isNull(this.flowerShop)) {
+			this.validationErrors.add("O endereço deve conter um usuário ou uma floricultura.");
+		}
 		return this.validationErrors.isEmpty();
 	}
 
@@ -201,6 +204,7 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		this.type = address.getType();
 	}
 
+	@JsonIgnore
 	public boolean isInUse() {
 		return isNull(this.flowerShop) && isNull(this.user);
 	}

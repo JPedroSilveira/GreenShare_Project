@@ -64,8 +64,8 @@ public class Month extends AbstractEntity<Month> implements Serializable {
 	@Valid
 	private List<Flower> flowers;
 
-	protected Month(Boolean isNew) {
-		super(isNew);
+	protected Month() {
+		super(false);
 	}
 
 	@Override

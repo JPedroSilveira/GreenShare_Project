@@ -138,7 +138,7 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	@Override
 	public ResponseEntity<?> findAllByState(Long id) {
 		if (isNotNull(id)) {
-			Iterable<FlowerShop> flowersDB = flowerShopRepository.findAllByAddressCityStateAndIsActiveTrue(id);
+			Iterable<FlowerShop> flowersDB = flowerShopRepository.findAllByAddressCityStateAndEnabledTrue(id);
 			return new ResponseEntity<Iterable<FlowerShop>>(flowersDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
@@ -147,7 +147,7 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 	@Override
 	public ResponseEntity<?> findAllByCity(Long id) {
 		if (isNotNull(id)) {
-			Iterable<FlowerShop> flowersDB = flowerShopRepository.findAllByAddressCityAndIsActiveTrue(id);
+			Iterable<FlowerShop> flowersDB = flowerShopRepository.findAllByAddressCityAndEnabledTrue(id);
 			return new ResponseEntity<Iterable<FlowerShop>>(flowersDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);

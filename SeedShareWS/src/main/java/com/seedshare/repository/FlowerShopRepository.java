@@ -16,8 +16,8 @@ public interface FlowerShopRepository extends PagingAndSortingRepository<FlowerS
 
 	FlowerShop findOneByCnpj(String cnpj);
 
-	Iterable<FlowerShop> findAllByAddressCityStateAndIsActiveTrue(Long id);
+	Iterable<FlowerShop> findAllByAddressCityStateAndEnabledTrue(Long id);
 
-	Iterable<FlowerShop> findAllByAddressCityAndIsActiveTrue(Long id);
+	Iterable<FlowerShop> findAllByAddressCityAndEnabledTrue(Long id);
 
 }
