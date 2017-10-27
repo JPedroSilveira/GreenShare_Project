@@ -41,7 +41,7 @@ public class SuggestionControllerImpl extends IsHelper implements SuggestionCont
 
 	@Override
 	@GetMapping("{id}")
-	public ResponseEntity<?> findOne(Long id) {
+	public ResponseEntity<?> findOne(@PathVariable Long id) {
 		return suggestionService.findOne(id);
 	}
 
@@ -58,8 +58,8 @@ public class SuggestionControllerImpl extends IsHelper implements SuggestionCont
 	}
 
 	@Override
-	@PutMapping("")
-	public ResponseEntity<?> enable(Long id) {
+	@PutMapping("{id}")
+	public ResponseEntity<?> enable(@PathVariable Long id) {
 		return suggestionService.enable(id);
 	}
 

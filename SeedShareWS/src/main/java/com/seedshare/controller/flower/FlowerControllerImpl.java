@@ -58,7 +58,7 @@ public class FlowerControllerImpl implements FlowerController {
 	}
 
 	@Override
-	@GetMapping("species/")
+	@GetMapping("species/{id}")
 	public ResponseEntity<?> findOneBySpecies(@PathVariable Long id) {
 		return flowerService.findOneBySpecies(id);
 	}

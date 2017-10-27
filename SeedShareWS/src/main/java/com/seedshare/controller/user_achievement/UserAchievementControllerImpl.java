@@ -44,7 +44,7 @@ public class UserAchievementControllerImpl implements UserAchievementController{
 	}
 
 	@Override
-	@GetMapping("{id}")
+	@GetMapping("user/{id}")
 	public ResponseEntity<?> findAllByUser(@PathVariable Long id) {
 		return userAchievementService.findAllByUser(id);
 	}

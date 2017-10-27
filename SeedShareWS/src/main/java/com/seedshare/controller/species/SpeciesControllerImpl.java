@@ -46,7 +46,7 @@ public class SpeciesControllerImpl implements SpeciesController{
 	}
 
 	@Override
-	@PutMapping("enable/")
+	@PutMapping("enable/{id}")
 	public ResponseEntity<?> enable(@PathVariable Long id) {
 		return speciesService.enable(id);
 	}

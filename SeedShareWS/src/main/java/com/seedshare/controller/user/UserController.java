@@ -13,10 +13,10 @@ public interface UserController{
 	
 	ResponseEntity<?> changePassword(User user);
 
-	ResponseEntity<?> changeName(User user);
-
 	ResponseEntity<?> create(User user);
 	
 	ResponseEntity<?> findOne(Long id);
+
+	ResponseEntity<?> changeName(String name);
 	
 }
