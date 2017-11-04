@@ -110,7 +110,8 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 
 	@Basic(optional = true)
 	@Valid
-	@OneToOne(mappedBy = "user")
+	@OneToOne
+	@JoinColumn(name = "flower_shop_id")
 	private FlowerShop flowerShop;
 
 	@JsonIgnore
@@ -165,9 +166,9 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		this.name = name;
 		this.password = password;
 		this.isLegalPerson = isNull(isLegalPerson) ? false : isLegalPerson;
-		this.cpf = this.isLegalPerson ? null : cpf.replace(" ", "");
+		this.cpf = this.isLegalPerson ? null : cpf;
 		this.validationErrors = new ArrayList<String>();
-		this.phoneNumber = phoneNumber.replace(" ", ""); 
+		this.phoneNumber = phoneNumber;
 		this.hasImage = false;
 		if (isNotNull(this.password) && this.password.length() >= 8) {
 			this.encodePassword();
@@ -266,7 +267,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	}
 
 	public Boolean getIsLegalPerson() {
-		return this.isLegalPerson;
+		return isLegalPerson;
 	}
 
 	public void setIsLegalPerson(Boolean isLegalPerson) {
@@ -340,7 +341,6 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	}
 
 	@Override
-	@JsonIgnore
 	public PhotoType getPhotoType() {
 		return User.PHOTO_TYPE;
 	}
@@ -363,34 +363,6 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	public void update(User e) {
 		this.name = e.getName();
 		this.nickname = e.getNickname();
-	}
-	
-	public boolean hasFlowerShop() {
-		return isNotNull(this.flowerShop) && this.isLegalPerson;
-	}
-	
-	@JsonIgnore
-	public Address getAddressForOffer() {
-		if(hasAddress()) {
-			if(hasFlowerShopAddress() && hasEnabledFlowerShop()) {
-				return this.flowerShop.getAddress();
-			}
-			return this.address;	
-		}
-		return null;
-	}
-	
-	public boolean hasAddress() {
-		return isNotNull(this.address) || isNotNull(this.flowerShop.getAddress()); 
-	}
-	
-	@JsonIgnore
-	public boolean hasFlowerShopAddress() {
-		return hasFlowerShop() && isNotNull(this.flowerShop.getAddress()); 
-	}
-	
-	public boolean hasEnabledFlowerShop() {
-		return this.flowerShop.getEnabled();
 	}
 	
 	public void clearPrivateData() {

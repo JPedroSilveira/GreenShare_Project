@@ -31,7 +31,6 @@ import java.util.List;
 @Entity
 @Table(name = "offer")
 public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "offer_seq";
@@ -65,17 +64,12 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private Integer initialAmount;
 
 	@Basic(optional = false)
-	@Column(name = "offer_status")
+	@Column(name = "offer_status", columnDefinition = "TEXT")
 	private Integer offerStatus;
 
 	@Basic(optional = false)
 	@Column(name = "type")
 	private Integer type;
-	
-	@Basic(optional = false)
-	@NotNull(message = "Idade da muda não pode ser nula.")
-	@Column(name = "product_age")
-	private Integer productAge;
 
 	@ManyToOne
 	@Basic(optional = false)
@@ -125,7 +119,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	}
 
 	public Offer(Float unitPrice, Integer remainingAmount, User user, Species species, String description,
-			FlowerShop flowerShop, Address address, Integer productAge) {
+			FlowerShop flowerShop) {
 		super(PHOTO_TYPE, true);
 		if (this.unitPrice == null || this.unitPrice == (float) 0) {
 			this.type = OfferType.Donation.getOfferType();
@@ -136,9 +130,10 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		}
 		if (user.getIsLegalPerson()) {
 			this.flowerShop = flowerShop;
+			this.address = flowerShop.getAddress();
+		} else {
+			this.address = user.getAddress();
 		}
-		this.productAge = productAge;
-		this.address = address;
 		this.remainingAmount = remainingAmount;
 		this.initialAmount = remainingAmount;
 		this.species = species;
@@ -152,9 +147,6 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 
 		if (isNullOrEmpty(this.description) || is(this.description).orSmallerThan(1).orBiggerThan(2500)) {
 			this.validationErrors.add("Descrição inválida.");
-		}
-		if(isNull(this.productAge) || is(this.productAge).smallerThan(0)) {
-			this.validationErrors.add("Idade da muda inválida.");
 		}
 		if (isNotNull(this.type) && isNotNull(this.unitPrice)) {
 			if (this.type == OfferType.Sale.getOfferType() && is(this.unitPrice).smallerOrEqual(0)) {
@@ -220,7 +212,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	}
 
 	public Integer getInitialAmount() {
-		return this.initialAmount;
+		return initialAmount;
 	}
 
 	public Integer getOfferStatus() {
@@ -252,7 +244,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	}
 
 	public String getDescription() {
-		return this.description;
+		return description;
 	}
 
 	public void setDescription(String description) {
@@ -260,23 +252,19 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	}
 
 	public List<OfferComment> getOfferComments() {
-		return this.offerComments;
+		return offerComments;
 	}
 
 	public FlowerShop getFlowerShop() {
-		return this.flowerShop;
+		return flowerShop;
 	}
 
 	public Address getAddress() {
-		return this.address;
+		return address;
 	}
 
 	public void setAddress(Address address) {
 		this.address = address;
-	}
-	
-	public Integer getProductAge() {
-		return this.productAge;
 	}
 
 	@Override

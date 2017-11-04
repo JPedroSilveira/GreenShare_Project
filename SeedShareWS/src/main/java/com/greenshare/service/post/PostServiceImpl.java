@@ -44,7 +44,7 @@ public class PostServiceImpl extends IsHelper implements PostService {
 					return new ResponseEntity<String>("Espécie não encontrada.", HttpStatus.BAD_REQUEST);
 				}
 			}
-			Post newPost = new Post(getCurrentUser(), species, post.getText(), post.getProductAge());
+			Post newPost = new Post(getCurrentUser(), species, post.getText());
 			if (newPost.isValid()) {
 				newPost = postRepository.save(newPost);
 				return new ResponseEntity<Post>(newPost, HttpStatus.OK);

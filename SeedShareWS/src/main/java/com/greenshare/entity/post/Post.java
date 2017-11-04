@@ -34,7 +34,6 @@ import com.greenshare.enumeration.PhotoType;
 @Entity
 @Table(name = "post")
 public class Post extends AbstractPhotogenicEntity<Post> implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "post_seq";
@@ -66,11 +65,6 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	@Size(min = 1, max = 500, message = "O texto deve conter entre 1 e 500 caracteres.")
 	@Column(name = "text", columnDefinition = "TEXT", length = 500)
 	private String text;
-	
-	@Basic(optional = false)
-	@NotNull(message = "Idade da muda não pode ser nula.")
-	@Column(name = "product_age")
-	private Integer productAge;
 
 	@Valid
 	@OneToMany(mappedBy = "post")
@@ -81,12 +75,11 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 		this.validationErrors = new ArrayList<String>();
 	}
 
-	public Post(User user, Species species, String text, Integer productAge) {
+	public Post(User user, Species species, String text) {
 		super(PHOTO_TYPE, true);
 		this.user = user;
 		this.species = species;
 		this.text = text;
-		this.productAge = productAge;
 		this.hasImage = false;
 	}
 
@@ -96,9 +89,6 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 
 		if (isNullOrEmpty(this.text) || is(this.text).orSmallerThan(1).orBiggerThan(500)) {
 			this.validationErrors.add("Texto inválido.");
-		}
-		if(isNull(this.productAge) || is(this.productAge).smallerThan(0)) {
-			this.validationErrors.add("Idade da muda inválida.");
 		}
 		if (isNull(this.hasImage)) {
 			this.validationErrors.add("Definição inválida para imagem.");
@@ -140,10 +130,6 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 
 	public List<PostComment> getPostComments() {
 		return postComments;
-	}
-	
-	public Integer getProductAge() {
-		return productAge;
 	}
 
 	public void update(Post post) {
