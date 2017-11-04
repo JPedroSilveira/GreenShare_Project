@@ -31,23 +31,25 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	CityRepository cityRepository;
 
 	@Override
 	public ResponseEntity<?> save(Address address) {
 		if (isNotNull(address)) {
-			if(isNotNull(address.getType()) && AddressType.exists(address.getType())) {
+			if (isNotNull(address.getType()) && AddressType.exists(address.getType())) {
 				City city = address.getCity();
-				if(isNotNull(city) && isNotNull(city.getId())) {
+				if (isNotNull(city) && isNotNull(city.getId())) {
 					city = cityRepository.findOne(city.getId());
-					if(isNotNull(city)) {
-						Address newAddress = new Address(city, address.getNumber(), address.getNeighborhood(), address.getReference(),address.getAddressName(),address.getComplement(),address.getType());
-							if (newAddress.isValid()) {
-								newAddress = addressRepository.save(newAddress);
-								return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
-							}
+					if (isNotNull(city)) {
+						Address newAddress = new Address(city, address.getNumber(), address.getNeighborhood(),
+								address.getReference(), address.getAddressName(), address.getComplement(),
+								address.getType());
+						if (newAddress.isValid()) {
+							newAddress = addressRepository.save(newAddress);
+							return new ResponseEntity<Address>(newAddress, HttpStatus.OK);
+						}
 					}
 					return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.BAD_REQUEST);
 				}
@@ -56,6 +58,22 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 			return new ResponseEntity<String>("Tipo de endereço inválido.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Endereço inválido.", HttpStatus.BAD_REQUEST);
+	}
+
+	public Address createAddress(Address address) {
+		if (isNotNull(address) && isNotNull(address.getType()) && AddressType.exists(address.getType())) {
+			City city = address.getCity();
+			if (isNotNull(city) && isNotNull(city.getId())) {
+				city = cityRepository.findOne(city.getId());
+				if (isNotNull(city)) {
+					Address newAddress = new Address(city, address.getNumber(), address.getNeighborhood(),
+							address.getReference(), address.getAddressName(), address.getComplement(),
+							address.getType());
+					return newAddress;
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -95,12 +113,12 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 
 	@Override
 	public ResponseEntity<?> update(Address address) {
-		if(isNotNull(address)) {
+		if (isNotNull(address)) {
 			Address addressDB = addressRepository.findOne(address.getId());
-			if(isNotNull(addressDB)) {
-				if(addressDB.getUser().getId() == getCurrentUserId()) {
+			if (isNotNull(addressDB)) {
+				if (addressDB.getUser().getId() == getCurrentUserId()) {
 					addressDB.update(address);
-					if(addressDB.isValid()) {
+					if (addressDB.isValid()) {
 						addressDB = addressRepository.save(addressDB);
 						return new ResponseEntity<Address>(addressDB, HttpStatus.OK);
 					}

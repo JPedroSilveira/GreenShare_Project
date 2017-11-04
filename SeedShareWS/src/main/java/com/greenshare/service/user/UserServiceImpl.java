@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.greenshare.entity.address.Address;
 import com.greenshare.entity.user.User;
 import com.greenshare.helpers.IsHelper;
+import com.greenshare.repository.AddressRepository;
 import com.greenshare.repository.UserRepository;
 import com.greenshare.service.address.AddressServiceImpl;
 
@@ -25,6 +26,9 @@ public class UserServiceImpl extends IsHelper implements UserService {
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	AddressRepository addressRepository;
+
 	AddressServiceImpl addressService;
 
 	@Override
@@ -38,14 +42,14 @@ public class UserServiceImpl extends IsHelper implements UserService {
 			}
 			Address address = user.getAddress();
 			if (isNotNull(address)) {
-				ResponseEntity<?> response = addressService.save(address);
-				if (response.getStatusCode() != HttpStatus.OK) {
-					return response;
+				address = addressService.createAddress(address);
+				if (isNull(address)) {
+					return new ResponseEntity<String>("Falha ao salvar endereço.", HttpStatus.BAD_REQUEST);
 				}
-				try {
-					address = (Address) response.getBody();
-				} catch (Exception ex) {
-					return new ResponseEntity<String>("Falha ao converter endereço", HttpStatus.INTERNAL_SERVER_ERROR);
+				if (address.isValid()) {
+					address = addressRepository.save(address);
+				} else {
+					return new ResponseEntity<List<String>>(address.getValidationErrors(), HttpStatus.BAD_REQUEST);
 				}
 			}
 			User newUser = new User(user.getCpf(), user.getNickname(), user.getName(), user.getEmail(),

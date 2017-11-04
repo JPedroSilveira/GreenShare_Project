@@ -1,6 +1,959 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.2.1" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true">  
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="com.greenshare.entity.vegetable.Color" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/vegetable/Color.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="138" width="187" x="2280" y="1997"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="com.greenshare.entity.Month" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/Month.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="158" width="186" x="2057" y="1743"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="com.greenshare.entity.post.Post" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/post/Post.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="158" width="266" x="1888" y="1190"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="com.greenshare.entity.user.User" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/user/User.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="299" width="388" x="2283" y="666"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="com.greenshare.entity.vegetable.Flower" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/vegetable/Flower.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="193" width="190" x="2411" y="1746"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="com.greenshare.entity.FlowerShop" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/FlowerShop.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="209" width="205" x="1543" y="516"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="com.greenshare.entity.vegetable.Climate" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/vegetable/Climate.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="155" width="187" x="2781" y="1349"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="com.greenshare.entity.vegetable.Fruit" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/vegetable/Fruit.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="212" width="213" x="1884" y="1426"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="com.greenshare.entity.achievement.Achievement" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/achievement/Achievement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="230" width="204" x="1365" y="941"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.greenshare.entity.address.Country" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/address/Country.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="142" width="180" x="3351" y="627"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.greenshare.entity.offer.Offer" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/offer/Offer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="245" width="186" x="3092" y="542"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="com.greenshare.entity.address.City" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/address/City.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="137" width="180" x="3334" y="197"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="com.greenshare.entity.vegetable.Species" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/vegetable/Species.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="337" width="216" x="2395" y="1286"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="com.greenshare.entity.offer.OfferComment" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/offer/OfferComment.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="137" width="158" x="2799" y="724"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="com.greenshare.entity.post.PostComment" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/post/PostComment.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="138" width="212" x="1796" y="1013"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="com.greenshare.entity.address.Address" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/address/Address.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="229" width="194" x="2380" y="271"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="com.greenshare.entity.address.State" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/address/State.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="138" width="180" x="3332" y="399"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="com.greenshare.entity.achievement.UserAchievement" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/achievement/UserAchievement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="176" width="209" x="1694" y="766"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.greenshare.entity.offer.Request" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/offer/Request.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="156" width="158" x="2803" y="878"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.greenshare.entity.user.Permission" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/user/Permission.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="136" width="186" x="2716" y="1065"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="com.greenshare.entity.Suggestion" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/Suggestion.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="119" width="161" x="2223" y="1073"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="com.greenshare.entity.vegetable.Soil" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/vegetable/Soil.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="156" width="187" x="2669" y="1754"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="com.greenshare.entity.vegetable.Growth" project="SeedShareWS" 
+    file="/SeedShareWS/src/main/java/com/greenshare/entity/vegetable/Growth.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="157" width="187" x="2890" y="1605"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="24">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="25" name="permissions">        
+        <position height="20" width="78" x="2703" y="1012"/>      
+      </attribute>      
+      <multiplicity id="26" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="27">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="28" name="address">        
+        <position height="20" width="54" x="2580" y="474"/>      
+      </attribute>      
+      <multiplicity id="29" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2584" y="455"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <bendpoint x="2327" y="1247"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="31" name="suggestions"/>      
+      <multiplicity id="32" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="33">    
+    <bendpoint x="2383" y="1035"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="34" name="suggestions">        
+        <position height="20" width="78" x="2374" y="1053"/>      
+      </attribute>      
+      <multiplicity id="35" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2390" y="1036"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="36">    
+    <bendpoint x="2546" y="574"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="37" name="address">        
+        <position height="20" width="54" x="2535" y="524"/>      
+      </attribute>      
+      <multiplicity id="38" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2532" y="509"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="39">    
+    <bendpoint x="2427" y="565"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="40" name="user"/>      
+      <multiplicity id="41" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="42">    
+    <bendpoint x="2759" y="1565"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="43" name="growth">        
+        <position height="20" width="46" x="2844" y="1563"/>      
+      </attribute>      
+      <multiplicity id="44" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2855" y="1589"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="45">    
+    <bendpoint x="2151" y="985"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="46" name="postComments">        
+        <position height="20" width="96" x="2012" y="1043"/>      
+      </attribute>      
+      <multiplicity id="47" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2021" y="1061"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="48">    
+    <bendpoint x="1767" y="1235"/>    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="49" name="post">        
+        <position height="20" width="33" x="1806" y="1252"/>      
+      </attribute>      
+      <multiplicity id="50" minimum="0" maximum="1">        
+        <position height="18" width="27" x="1848" y="1256"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="51">    
+    <bendpoint x="2931" y="279"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="52" name="addresses">        
+        <position height="20" width="68" x="2582" y="318"/>      
+      </attribute>      
+      <multiplicity id="53" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2590" y="301"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="54">    
+    <bendpoint x="2739" y="422"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="55" name="offer">        
+        <position height="20" width="32" x="3052" y="545"/>      
+      </attribute>      
+      <multiplicity id="56" minimum="0" maximum="1">        
+        <position height="18" width="27" x="3054" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="57">    
+    <bendpoint x="1956" y="399"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="58" name="flowerShop">        
+        <position height="20" width="71" x="1585" y="481"/>      
+      </attribute>      
+      <multiplicity id="59" minimum="0" maximum="1">        
+        <position height="18" width="27" x="1630" y="459"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="60">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="61" name="floweringMonths">        
+        <position height="20" width="101" x="2297" y="1873"/>      
+      </attribute>      
+      <multiplicity id="62" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2369" y="1895"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="63">    
+    <bendpoint x="3036" y="800"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="64" name="offerComments">        
+        <position height="20" width="95" x="2957" y="805"/>      
+      </attribute>      
+      <multiplicity id="65" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2963" y="823"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="66">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="67" name="users">        
+        <position height="20" width="40" x="2589" y="1004"/>      
+      </attribute>      
+      <multiplicity id="68" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2621" y="1027"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="69">    
+    <bendpoint x="2967" y="776"/>    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="70" name="offer">        
+        <position height="20" width="32" x="3062" y="715"/>      
+      </attribute>      
+      <multiplicity id="71" minimum="0" maximum="1">        
+        <position height="18" width="27" x="3064" y="736"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="72">    
+    <bendpoint x="2149" y="1030"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="73" name="user">        
+        <position height="20" width="33" x="2227" y="982"/>      
+      </attribute>      
+      <multiplicity id="74" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2253" y="965"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="75">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="76" name="colors"/>      
+      <multiplicity id="77" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2367" y="1952"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="78">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="79" name="species">        
+        <position height="20" width="53" x="2298" y="1351"/>      
+      </attribute>      
+      <multiplicity id="80" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2351" y="1371"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="81">    
+    <bendpoint x="2534" y="1686"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="82" name="flower">        
+        <position height="20" width="41" x="2537" y="1697"/>      
+      </attribute>      
+      <multiplicity id="83" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="84">    
+    <bendpoint x="2036" y="492"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="85" name="address">        
+        <position height="20" width="54" x="2308" y="447"/>      
+      </attribute>      
+      <multiplicity id="86" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2329" y="426"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="87">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="88" name="userAchievements">        
+        <position height="20" width="114" x="1780" y="969"/>      
+      </attribute>      
+      <multiplicity id="89" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="1783" y="993"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="90">    
+    <bendpoint x="2642" y="1705"/>    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="91" name="species">        
+        <position height="20" width="53" x="2618" y="1653"/>      
+      </attribute>      
+      <multiplicity id="92" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2614" y="1638"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="93">    
+    <bendpoint x="1841" y="1205"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="94" name="postComments">        
+        <position height="20" width="96" x="1891" y="1156"/>      
+      </attribute>      
+      <multiplicity id="95" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="1864" y="1160"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="96">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="97" name="achievement">        
+        <position height="20" width="80" x="1383" y="908"/>      
+      </attribute>      
+      <multiplicity id="98" minimum="0" maximum="1">        
+        <position height="18" width="27" x="1429" y="887"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="99">    
+    <bendpoint x="2048" y="1688"/>    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="100" name="fruitingMonths">        
+        <position height="20" width="89" x="1980" y="1715"/>      
+      </attribute>      
+      <multiplicity id="101" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2026" y="1694"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="102">    
+    <bendpoint x="2149" y="1673"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="103" name="fruits"/>      
+      <multiplicity id="104" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2135" y="1635"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="105">    
+    <bendpoint x="2711" y="1358"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="106" name="climates">        
+        <position height="20" width="57" x="2725" y="1344"/>      
+      </attribute>      
+      <multiplicity id="107" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="108">    
+    <bendpoint x="2216" y="1448"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="109" name="fruit">        
+        <position height="20" width="29" x="2104" y="1456"/>      
+      </attribute>      
+      <multiplicity id="110" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="111">    
+    <bendpoint x="2736" y="977"/>    
+    <end type="SOURCE" refId="19" navigable="false">      
+      <attribute id="112" name="user">        
+        <position height="20" width="33" x="2683" y="931"/>      
+      </attribute>      
+      <multiplicity id="113" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2673" y="951"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="114">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="115" name="flowers">        
+        <position height="20" width="48" x="2352" y="1810"/>      
+      </attribute>      
+      <multiplicity id="116" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2369" y="1794"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="117">    
+    <bendpoint x="2034" y="862"/>    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="118" name="user">        
+        <position height="20" width="33" x="2204" y="847"/>      
+      </attribute>      
+      <multiplicity id="119" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2252" y="904"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="120">    
+    <bendpoint x="2948" y="338"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="121" name="city">        
+        <position height="20" width="29" x="3296" y="312"/>      
+      </attribute>      
+      <multiplicity id="122" minimum="0" maximum="1">        
+        <position height="18" width="27" x="3298" y="295"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="123">    
+    <bendpoint x="2236" y="1521"/>    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="124" name="species">        
+        <position height="20" width="53" x="2322" y="1463"/>      
+      </attribute>      
+      <multiplicity id="125" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2358" y="1493"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="126">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="127" name="country"/>      
+      <multiplicity id="128" minimum="0" maximum="1">        
+        <position height="18" width="27" x="3366" y="581"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="129">    
+    <bendpoint x="2714" y="657"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="130" name="user">        
+        <position height="20" width="33" x="2667" y="648"/>      
+      </attribute>      
+      <multiplicity id="131" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="132">    
+    <bendpoint x="2757" y="754"/>    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="133" name="user">        
+        <position height="20" width="33" x="2675" y="738"/>      
+      </attribute>      
+      <multiplicity id="134" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2716" y="733"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="135">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="136" name="state">        
+        <position height="20" width="37" x="3354" y="337"/>      
+      </attribute>      
+      <multiplicity id="137" minimum="0" maximum="1">        
+        <position height="18" width="27" x="3360" y="357"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="138">    
+    <bendpoint x="2697" y="1679"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="139" name="soils">        
+        <position height="20" width="35" x="2714" y="1697"/>      
+      </attribute>      
+      <multiplicity id="140" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="141">    
+    <bendpoint x="2323" y="1043"/>    
+    <end type="SOURCE" refId="21" navigable="false">      
+      <attribute id="142" name="user">        
+        <position height="20" width="33" x="2325" y="973"/>      
+      </attribute>      
+      <multiplicity id="143" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2316" y="999"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="144">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="145" name="flowers">        
+        <position height="20" width="48" x="2447" y="1963"/>      
+      </attribute>      
+      <multiplicity id="146" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2460" y="1943"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="147">    
+    <bendpoint x="2467" y="1683"/>    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="148" name="species"/>      
+      <multiplicity id="149" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="150">    
+    <bendpoint x="2085" y="905"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="151" name="userAchievements">        
+        <position height="20" width="114" x="1904" y="898"/>      
+      </attribute>      
+      <multiplicity id="152" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="153">    
+    <bendpoint x="2709" y="1634"/>    
+    <end type="SOURCE" refId="23" navigable="false">      
+      <attribute id="154" name="species">        
+        <position height="20" width="53" x="2658" y="1565"/>      
+      </attribute>      
+      <multiplicity id="155" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2631" y="1545"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="156">    
+    <bendpoint x="2743" y="850"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="157" name="offerComments">        
+        <position height="20" width="95" x="2676" y="820"/>      
+      </attribute>      
+      <multiplicity id="158" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2766" y="840"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="159">    
+    <bendpoint x="3243" y="955"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="160" name="species">        
+        <position height="20" width="53" x="2622" y="1315"/>      
+      </attribute>      
+      <multiplicity id="161" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2622" y="1335"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="162">    
+    <bendpoint x="2215" y="1041"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="163" name="posts">        
+        <position height="20" width="40" x="2115" y="1156"/>      
+      </attribute>      
+      <multiplicity id="164" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2148" y="1126"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="165">    
+    <bendpoint x="2198" y="1347"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="166" name="posts"/>      
+      <multiplicity id="167" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="168">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="169" name="states">        
+        <position height="20" width="44" x="3436" y="565"/>      
+      </attribute>      
+      <multiplicity id="170" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="3443" y="546"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="171">    
+    <bendpoint x="3109" y="1119"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="172" name="offers">        
+        <position height="20" width="39" x="3160" y="818"/>      
+      </attribute>      
+      <multiplicity id="173" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="174">    
+    <bendpoint x="2003" y="771"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="175" name="user">        
+        <position height="20" width="33" x="1756" y="688"/>      
+      </attribute>      
+      <multiplicity id="176" minimum="0" maximum="1">        
+        <position height="18" width="27" x="1762" y="710"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="177">    
+    <bendpoint x="2726" y="706"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="178" name="offers">        
+        <position height="20" width="39" x="3013" y="682"/>      
+      </attribute>      
+      <multiplicity id="179" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="180">    
+    <bendpoint x="2701" y="1435"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="181" name="species"/>      
+      <multiplicity id="182" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="183">    
+    <bendpoint x="3045" y="850"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="184" name="requests">        
+        <position height="20" width="58" x="2960" y="865"/>      
+      </attribute>      
+      <multiplicity id="185" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2992" y="884"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="186">    
+    <bendpoint x="2170" y="729"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="187" name="flowerShop">        
+        <position height="20" width="71" x="2198" y="710"/>      
+      </attribute>      
+      <multiplicity id="188" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2242" y="690"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="189">    
+    <bendpoint x="2403" y="1234"/>    
+    <end type="SOURCE" refId="21" navigable="false">      
+      <attribute id="190" name="species"/>      
+      <multiplicity id="191" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="192">    
+    <bendpoint x="2518" y="548"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="193" name="offers">        
+        <position height="20" width="39" x="3039" y="614"/>      
+      </attribute>      
+      <multiplicity id="194" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="3015" y="611"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="195">    
+    <bendpoint x="3066" y="893"/>    
+    <end type="SOURCE" refId="19" navigable="false">      
+      <attribute id="196" name="offer">        
+        <position height="20" width="32" x="3109" y="804"/>      
+      </attribute>      
+      <multiplicity id="197" minimum="0" maximum="1">        
+        <position height="18" width="27" x="3101" y="829"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="198">    
+    <bendpoint x="2739" y="919"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="199" name="requests">        
+        <position height="20" width="58" x="2735" y="898"/>      
+      </attribute>      
+      <multiplicity id="200" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="2755" y="932"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="201">    
+    <bendpoint x="2093" y="952"/>    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="202" name="user">        
+        <position height="20" width="33" x="2211" y="909"/>      
+      </attribute>      
+      <multiplicity id="203" minimum="0" maximum="1">        
+        <position height="18" width="27" x="2244" y="843"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="204">    
+    <bendpoint x="2523" y="613"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="205" name="flowerShop">        
+        <position height="20" width="71" x="1767" y="622"/>      
+      </attribute>      
+      <multiplicity id="206" minimum="0" maximum="1">        
+        <position height="18" width="27" x="1846" y="623"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="207">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="208" name="cities">        
+        <position height="20" width="39" x="3431" y="378"/>      
+      </attribute>      
+      <multiplicity id="209" minimum="0" maximum="2147483647">        
+        <position height="18" width="25" x="3433" y="360"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.greenshare.entity.FlowerShop;
+import com.greenshare.entity.address.Address;
 import com.greenshare.entity.address.City;
 import com.greenshare.entity.address.State;
 import com.greenshare.entity.offer.Offer;
+import com.greenshare.entity.user.User;
 import com.greenshare.entity.vegetable.Species;
 import com.greenshare.enumeration.OfferStatus;
 import com.greenshare.helpers.IsHelper;
@@ -54,24 +56,29 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 
 	@Override
 	public ResponseEntity<?> save(Offer offer) {
-		if (isNotNull(offer)) {
-			Species species = offer.getSpecies();
-			if(isNotNull(species) && isNotNull(species.getId())) {
-				species = speciesRepository.findOne(species.getId());
-				if(isNotNull(species)) {
-					Offer newOffer = new Offer(offer.getUnitPrice(), offer.getRemainingAmount(), getCurrentUser(),
-							species, offer.getDescription(), getCurrentUser().getFlowerShop());
-					if (newOffer.isValid()) {
-						newOffer = offerRepository.save(offer);
-						return new ResponseEntity<Offer>(newOffer, HttpStatus.OK);
+		User currentUser = getCurrentUser();
+		if (isNotNull(currentUser) && currentUser.hasAddress()) {
+			if (isNotNull(offer)) {
+				Species species = offer.getSpecies();
+				Address offerAddress = currentUser.getAddressForOffer();
+				if (isNotNull(species.getId())) {
+					species = speciesRepository.findOne(species.getId());
+					if (isNotNull(species)) {
+						Offer newOffer = new Offer(offer.getUnitPrice(), offer.getRemainingAmount(), getCurrentUser(),
+								species, offer.getDescription(), getCurrentUser().getFlowerShop(), offerAddress, offer.getProductAge());
+						if (newOffer.isValid()) {
+							newOffer = offerRepository.save(offer);
+							return new ResponseEntity<Offer>(newOffer, HttpStatus.OK);
+						}
+						return new ResponseEntity<List<String>>(newOffer.getValidationErrors(), HttpStatus.BAD_REQUEST);
 					}
-					return new ResponseEntity<List<String>>(newOffer.getValidationErrors(), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<String>("Espécie não encontrada.", HttpStatus.NOT_FOUND);
 				}
-				return new ResponseEntity<String>("Espécie não encontrada.", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Espécie não possui identificação válida.", HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<String>("Espécie não pode ser nula.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Oferta não pode ser nula.", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>("Oferta não pode ser nula.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("Necessário endereço cadastrado.", HttpStatus.NO_CONTENT);
 	}
 
 	@Override
