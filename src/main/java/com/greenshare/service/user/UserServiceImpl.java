@@ -48,7 +48,7 @@ public class UserServiceImpl extends IsHelper implements UserService {
 					return new ResponseEntity<String>("Falha ao converter endereço", HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
-			User newUser = new User(user.getCpf(), user.getNickname(), user.getName(), user.getEmail(),
+			User newUser = new User(user.getCpf(), user.getName(), user.getEmail(),
 					user.getPassword(), user.getIsLegalPerson(), address, user.getPhoneNumber());
 			if (newUser.isValid()) {
 				newUser = userRepository.save(newUser);
@@ -107,6 +107,25 @@ public class UserServiceImpl extends IsHelper implements UserService {
 			User userDB = userRepository.findOneByEmail(email);
 			if (isNotNull(userDB)) {
 				return new ResponseEntity<User>(userDB, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Email não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+	
+	@Override
+	public ResponseEntity<?> addCPF(String cpf) {
+		if (isNotNull(cpf)) {
+			User userDB = getCurrentUser();
+			if (isNotNull(userDB)) {
+				if(isNullOrEmpty(userDB.getCpf())) {
+					userDB.setCpf(cpf);
+					if(userDB.isValid()) {
+						return new ResponseEntity<User>(userDB, HttpStatus.OK);
+					}
+					return new ResponseEntity<List<String>>(userDB.getValidationErrors(), HttpStatus.BAD_REQUEST);					
+				}
+				return new ResponseEntity<String>("Usuário já possui CPF cadastrado.", HttpStatus.CONFLICT);
 			}
 			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
 		}

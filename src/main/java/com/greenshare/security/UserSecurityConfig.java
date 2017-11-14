@@ -29,6 +29,15 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${social.security.public:/user/entity_example/}")
     private String[] securityPublicUserExemple;
     
+    @Value("${social.security.public:/country/}")
+    private String[] securityPublicAddressCountry;
+    
+    @Value("${social.security.public:/state/country/{id}}")
+    private String[] securityPublicAddressState;
+    
+    @Value("${social.security.public:/city/state/{id}}")
+    private String[] securityPublicAddressCity;
+    
 	@Autowired
 	private UserSecurityService userDetailsService;
     
@@ -47,7 +56,10 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity webSecurity) throws Exception {
 	   webSecurity.ignoring()
 	           .antMatchers(securityPublicUserRegister)
-	           .antMatchers(securityPublicUserExemple);
+	           .antMatchers(securityPublicUserExemple)
+	           .antMatchers(securityPublicAddressCountry)
+	           .antMatchers(securityPublicAddressState)
+	           .antMatchers(securityPublicAddressCity);
 	}
 	
 	@Bean

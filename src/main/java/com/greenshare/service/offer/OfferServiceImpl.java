@@ -60,7 +60,7 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 				species = speciesRepository.findOne(species.getId());
 				if(isNotNull(species)) {
 					Offer newOffer = new Offer(offer.getUnitPrice(), offer.getRemainingAmount(), getCurrentUser(),
-							species, offer.getDescription(), getCurrentUser().getFlowerShop());
+							species, offer.getDescription());
 					if (newOffer.isValid()) {
 						newOffer = offerRepository.save(offer);
 						return new ResponseEntity<Offer>(newOffer, HttpStatus.OK);

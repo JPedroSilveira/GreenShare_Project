@@ -30,4 +30,6 @@ public interface UserService {
 
 	ResponseEntity<?> deleteByCurrentUser();
 
+	ResponseEntity<?> addCPF(String cpf);
+
 }

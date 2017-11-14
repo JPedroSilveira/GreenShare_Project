@@ -40,10 +40,6 @@ import java.util.regex.Pattern;
 @Table(name = "greenshare_user")
 public class User extends AbstractPhotogenicEntity<User> implements Serializable {
 
-	public String getNickname() {
-		return nickname;
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "greenshare_user_seq";
@@ -60,12 +56,6 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Basic(optional = false)
 	@Column(name = "user_id")
 	private Long id;
-
-	@Basic(optional = false)
-	@NotNull(message = "Apelido não pode ser nulo.")
-	@Size(min = 1, max = 100, message = "O apelido deve conter entre 1 e 100 caracteres.")
-	@Column(name = "nickname", length = 100)
-	private String nickname;
 	
 	@Basic(optional = false)
 	@NotNull(message = "Nome não pode ser nulo.")
@@ -74,9 +64,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	private String name;
 
 	@Basic(optional = true)
-	@NotNull(message = "CPF não pode ser nulo.")
-	@Size(min = 11, max = 11, message = "CPF deve conter 11 digitos.")
-	@Column(name = "cpf", length = 11, unique = true)
+	@Column(name = "cpf", length = 11)
 	private String cpf;
 
 	@Basic(optional = false)
@@ -159,10 +147,9 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		super(PHOTO_TYPE, false);
 	}
 
-	public User(String cpf, String nickname, String name, String email, String password, Boolean isLegalPerson, Address address, String phoneNumber) {
+	public User(String cpf, String name, String email, String password, Boolean isLegalPerson, Address address, String phoneNumber) {
 		super(PHOTO_TYPE, true);
 		this.email = email;
-		this.nickname = nickname;
 		this.name = name;
 		this.password = password;
 		this.isLegalPerson = isNull(isLegalPerson) ? false : isLegalPerson;
@@ -180,16 +167,13 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	public boolean isValid() {
 		this.validationErrors.clear();
 
-		if(isNullOrEmpty(this.nickname) || is(this.nickname).orSmallerThan(1).orBiggerThan(100)) {
-			this.validationErrors.add("Apelido inválido.");
-		}
 		if(isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome inválido.");
 		}
 		if (isNullOrEmpty(this.email) || is(this.email).orSmallerThan(1).orBiggerThan(100) || isNotValidEmail()) {
 			this.validationErrors.add("Email inválido.");
 		}
-		if (isNotNull(this.phoneNumber) && (is(this.phoneNumber).orSmallerThan(1).orBiggerThan(20) || !StringUtils.isNumeric(this.phoneNumber))) {
+		if (isNotNull(this.phoneNumber) && ((is(this.phoneNumber).orSmallerThan(1).orBiggerThan(20) || !StringUtils.isNumeric(this.phoneNumber)))) {
 			this.validationErrors.add("Número de telefone inválido.");
 		}
 		if (hasInvalidPassword()) {
@@ -362,7 +346,6 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Override
 	public void update(User e) {
 		this.name = e.getName();
-		this.nickname = e.getNickname();
 	}
 	
 	public void clearPrivateData() {

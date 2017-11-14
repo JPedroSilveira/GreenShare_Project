@@ -21,7 +21,7 @@ import com.greenshare.helpers.IsHelper;
 @MappedSuperclass
 public abstract class AbstractEntity<Entity> extends IsHelper implements BasicEntity<Entity> {
 
-	@Basic(optional = false)
+	@Basic(optional = true)
 	@Past
 	@JsonIgnore
 	@DateTimeFormat(pattern = "dd/MM/yyyy")

@@ -64,7 +64,7 @@ public class UserControllerImpl extends IsHelper implements UserController {
 		City city = new City("String::length: >=1 and <=100", state);
 		Address address = new Address(city, 2, "String::length: >=1 and <=200", "String::length: >=1 and <=200",
 				"String::Nullable::length: <=200", "String::Nullable::length: <=200", 1);
-		User user = new User("String::length: == 11", "String::length: >= 11 and <= 100",
+		User user = new User("String::length: == 11",
 				"String::length: >= 11 and <= 100", "String::length: >=1 and <=100", "String::length: >=8 and <=250",
 				false, address, "51984401159");
 		return new ResponseEntity<User>(user, HttpStatus.OK);
