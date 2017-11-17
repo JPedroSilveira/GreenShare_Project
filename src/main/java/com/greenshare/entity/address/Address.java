@@ -3,6 +3,8 @@ package com.greenshare.entity.address;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -19,7 +21,6 @@ import com.greenshare.enumeration.AddressType;
  * Persistence class for the table address
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @Entity
 @Table(name = "address")
@@ -64,7 +65,7 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 
 	@Basic(optional = true)
 	@Column(name = "referencia", length = 200)
-	private String reference;
+	private String apartment;
 
 	@Basic(optional = false)
 	@NotNull(message = "Cidade não poder ser nula.")
@@ -96,7 +97,7 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	}
 
 	public Address(City city, Integer number, String neighborhood, String addressName, String complement,
-			String reference, Integer type) {
+			String apartment, Integer type) {
 		super(true);
 		this.city = city;
 		this.number = number;
@@ -107,12 +108,33 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		} else {
 			this.complement = complement;
 		}
-		if (isNotNull(reference) && reference.isEmpty()) {
-			this.reference = null;
+		if (isNull(apartment) || apartment.isEmpty() || type != AddressType.Apartment.getValue()) {
+			this.apartment = null;
 		} else {
-			this.reference = reference;
+			this.apartment = apartment;
 		}
 		this.type = type;
+        this.validationErrors = new ArrayList<>();
+	}
+	
+	public Address(Address address) {
+		super(true);
+		this.city = address.getCity();
+		this.number = address.getNumber();
+		this.neighborhood = address.getNeighborhood();
+		this.addressName = address.getAddressName();
+		if (isNull(address.getComplement()) || address.getComplement().isEmpty()) {
+			this.complement = null;
+		} else {
+			this.complement = address.getComplement();
+		}
+		if (isNull(address.getApartment()) || address.getApartment().isEmpty() || address.getType() != AddressType.Apartment.getValue()) {
+			this.apartment = null;
+		} else {
+			this.apartment = address.getApartment();
+		}
+		this.type = address.getType();
+        this.validationErrors = new ArrayList<>();
 	}
 
 	@Override
@@ -133,18 +155,18 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		if (isNull(this.addressName) || is(this.addressName).orSmallerThan(1).orBiggerThan(200)) {
 			this.validationErrors.add("O endereço não pode ser nulo e deve conter entre 1 e 200 caracteres.");
 		}
-		if (isNull(this.complement) || is(this.complement).orSmallerThan(1).orBiggerThan(200)) {
-			this.validationErrors.add("O complemento não pode ser nulo e deve conter entre 1 e 200 caracteres.");
+		if (isNotNull(this.complement) && is(this.complement).orSmallerThan(1).orBiggerThan(200)) {
+			this.validationErrors.add("O complemento deve conter entre 1 e 200 caracteres.");
 		}
-		if (isNull(this.reference) || is(this.reference).orSmallerThan(1).orBiggerThan(200)) {
-			this.validationErrors.add("A referencia não pode ser nula e deve conter entre 1 e 200 caracteres");
+		if ((this.type == AddressType.Apartment.getValue()) && (isNull(this.apartment) || is(this.apartment).orSmallerThan(1).orBiggerThan(200))) {
+			this.validationErrors.add("A número do apartamento não pode ser nulo e deve conter entre 1 e 200 caracteres quando o tipo de endereço for apartamento.");
 		}
-		if (isNull(this.type) || AddressType.exists(this.type)) {
+		if (isNull(this.type) || !AddressType.exists(this.type)) {
 			this.validationErrors.add("O tipo de endereço é inválido.");
 		}
-		if (isNull(this.user) && isNull(this.flowerShop)) {
-			this.validationErrors.add("O endereço deve conter um usuário ou uma floricultura.");
-		}
+		if ((isNotNull(this.user) && this.user.isNotValid()) || (isNotNull(this.flowerShop) && this.flowerShop.isNotValid())) {
+            this.validationErrors.add("O endereço deve conter um usuário ou uma floricultura.");
+        }
 		return this.validationErrors.isEmpty();
 	}
 
@@ -181,8 +203,8 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		return complement;
 	}
 
-	public String getReference() {
-		return reference;
+	public String getApartment() {
+		return apartment;
 	}
 	
 	public Offer getOffer() {
@@ -199,7 +221,7 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 		this.neighborhood = address.getNeighborhood();
 		this.addressName = address.getAddressName();
 		this.complement = address.getComplement();
-		this.reference = address.getReference();
+		this.apartment = address.getApartment();
 		this.city = address.getCity();
 		this.type = address.getType();
 	}

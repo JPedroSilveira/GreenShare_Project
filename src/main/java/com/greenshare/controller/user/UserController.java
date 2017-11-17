@@ -22,5 +22,7 @@ public interface UserController{
 	ResponseEntity<?> deleteByID(Long id);
 
 	ResponseEntity<?> deleteByCurrentUser();
+
+	ResponseEntity<?> validEmail(Email email);
 	
 }

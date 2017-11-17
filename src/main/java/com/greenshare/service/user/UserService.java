@@ -30,4 +30,8 @@ public interface UserService {
 
 	ResponseEntity<?> deleteByCurrentUser();
 
+	ResponseEntity<?> addCPF(String cpf);
+
+	ResponseEntity<?> validEmail(String email);
+
 }

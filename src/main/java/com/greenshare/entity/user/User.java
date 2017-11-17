@@ -40,10 +40,6 @@ import java.util.regex.Pattern;
 @Table(name = "greenshare_user")
 public class User extends AbstractPhotogenicEntity<User> implements Serializable {
 
-	public String getNickname() {
-		return nickname;
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	private static final String SEQUENCE_NAME = "greenshare_user_seq";
@@ -60,12 +56,6 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	@Basic(optional = false)
 	@Column(name = "user_id")
 	private Long id;
-
-	@Basic(optional = false)
-	@NotNull(message = "Apelido não pode ser nulo.")
-	@Size(min = 1, max = 100, message = "O apelido deve conter entre 1 e 100 caracteres.")
-	@Column(name = "nickname", length = 100)
-	private String nickname;
 	
 	@Basic(optional = false)
 	@NotNull(message = "Nome não pode ser nulo.")
@@ -74,9 +64,7 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	private String name;
 
 	@Basic(optional = true)
-	@NotNull(message = "CPF não pode ser nulo.")
-	@Size(min = 11, max = 11, message = "CPF deve conter 11 digitos.")
-	@Column(name = "cpf", length = 11, unique = true)
+	@Column(name = "cpf", length = 11)
 	private String cpf;
 
 	@Basic(optional = false)
@@ -104,15 +92,18 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	
 	@Basic(optional = true)
 	@Valid
-	@OneToOne
-	@JoinColumn(name = "address_id")
+	@OneToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn(name = "address_id", unique = true)
 	private Address address;
 
 	@Basic(optional = true)
 	@Valid
-	@OneToOne
+	@OneToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name = "flower_shop_id")
 	private FlowerShop flowerShop;
+	
+	@Transient
+	private String image;
 
 	@JsonIgnore
 	@Valid
@@ -159,17 +150,17 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		super(PHOTO_TYPE, false);
 	}
 
-	public User(String cpf, String nickname, String name, String email, String password, Boolean isLegalPerson, Address address, String phoneNumber) {
+	public User(String cpf, String name, String email, String password, Boolean isLegalPerson, Address address, String phoneNumber, FlowerShop flowerShop) {
 		super(PHOTO_TYPE, true);
-		this.email = email;
-		this.nickname = nickname;
-		this.name = name;
-		this.password = password;
+		this.email = email.trim();
+		this.name = name.trim();
+		this.password = password.trim();
 		this.isLegalPerson = isNull(isLegalPerson) ? false : isLegalPerson;
-		this.cpf = this.isLegalPerson ? null : cpf;
+		this.cpf = this.isLegalPerson ? null : cpf.trim();
 		this.validationErrors = new ArrayList<String>();
-		this.phoneNumber = phoneNumber;
+		this.phoneNumber = phoneNumber.trim();
 		this.hasImage = false;
+		this.flowerShop = this.isLegalPerson ? flowerShop : null;
 		if (isNotNull(this.password) && this.password.length() >= 8) {
 			this.encodePassword();
 		}
@@ -180,24 +171,25 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	public boolean isValid() {
 		this.validationErrors.clear();
 
-		if(isNullOrEmpty(this.nickname) || is(this.nickname).orSmallerThan(1).orBiggerThan(100)) {
-			this.validationErrors.add("Apelido inválido.");
-		}
 		if(isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome inválido.");
 		}
 		if (isNullOrEmpty(this.email) || is(this.email).orSmallerThan(1).orBiggerThan(100) || isNotValidEmail()) {
 			this.validationErrors.add("Email inválido.");
 		}
-		if (isNotNull(this.phoneNumber) && (is(this.phoneNumber).orSmallerThan(1).orBiggerThan(20) || !StringUtils.isNumeric(this.phoneNumber))) {
+		if (isNotNull(this.phoneNumber) && ((is(this.phoneNumber).orSmallerThan(1).orBiggerThan(20) || !StringUtils.isNumeric(this.phoneNumber)))) {
 			this.validationErrors.add("Número de telefone inválido.");
 		}
 		if (hasInvalidPassword()) {
 			this.validationErrors.add("Senha inválida.");
 		}
-		if (!this.isLegalPerson && (isNullOrEmpty(this.cpf) || !StringUtils.isNumeric(this.cpf) || CPFHelper.isNotCPF(this.cpf))) {
-			this.validationErrors.add("CPF inválido.");
-		}
+		if(!this.isLegalPerson){
+            if(isNullOrEmpty(this.cpf)){
+                this.validationErrors.add("CPF não pode ser nulo");
+            }else if(!StringUtils.isNumeric(this.cpf) || CPFHelper.isNotCPF(this.cpf)){
+                this.validationErrors.add("CPF inválido.");
+            }
+        }
 		if(!this.isLegalPerson && isNotNull(this.flowerShop)) {
 			this.validationErrors.add("O usuário físico não pode possuir floricultura.");
 		}
@@ -359,10 +351,21 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		return this.phoneNumber;
 	}
 	
+	public void setFlowerShop(FlowerShop flowerShop) {
+		this.flowerShop = flowerShop;
+	}
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
 	@Override
 	public void update(User e) {
 		this.name = e.getName();
-		this.nickname = e.getNickname();
 	}
 	
 	public void clearPrivateData() {

@@ -1,8 +1,10 @@
 package com.greenshare.controller.image;
 
-import java.awt.image.BufferedImage;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -303,14 +305,27 @@ public class ImageUploadControllerImpl extends IsHelper implements ImageUploadCo
 		try {
 			ImageHelper imageHelper = new ImageHelper(photogenicEntity);
 			try {
-				BufferedImage bufferedImage = imageHelper.getImage();
-				if(isNull(bufferedImage)) {
-					return new ResponseEntity<BufferedImage>(bufferedImage, HttpStatus.OK);
+				String base64String = imageHelper.getImage();
+				User currentUser = 	getCurrentUser();
+				currentUser.setImage(base64String);
+				if(isNotNull(base64String)) {
+					byte[] imageByteArray = Base64.getDecoder().decode(currentUser.getImage());
+
+					// Write a image byte array into file system
+					FileOutputStream imageOutFile = new FileOutputStream(
+							"dois.jpg");
+
+					imageOutFile.write(imageByteArray);
+
+					imageOutFile.close();
+					return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 				}else {
 					return new ResponseEntity<String>("Imagem não encontrada", HttpStatus.NOT_FOUND);
 				}
 			} catch (IOException e) {
 		    	return new ResponseEntity<String>("Erro ao ler imagem.", HttpStatus.INTERNAL_SERVER_ERROR);
+			} catch (JSONException e) {
+		    	return new ResponseEntity<String>("Erro ao converter imagem.", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (DirectoryException e) {
 	    	return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

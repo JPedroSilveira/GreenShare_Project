@@ -36,8 +36,8 @@ public class FlowerShopServiceImpl extends IsHelper implements FlowerShopService
 			if (isNull(flowerShopDB)) {
 				flowerShopDB = flowerShopRepository.findOneByCnpj(flowerShop.getCnpj());
 				if (isNull(flowerShopDB) || !flowerShopDB.getEnabled()) {
-					FlowerShop newFlowerShop = new FlowerShop(flowerShop.getCnpj(), flowerShop.getDescription(),
-							currentUser);
+					FlowerShop newFlowerShop = new FlowerShop(flowerShop.getCnpj(), flowerShop.getDescription(), flowerShop.getName(),
+							currentUser.getAddress());
 					if (newFlowerShop.isValid()) {
 						newFlowerShop = flowerShopRepository.save(newFlowerShop);
 						return new ResponseEntity<FlowerShop>(newFlowerShop, HttpStatus.OK);

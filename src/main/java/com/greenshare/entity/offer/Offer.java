@@ -118,8 +118,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		this.validationErrors = new ArrayList<String>();
 	}
 
-	public Offer(Float unitPrice, Integer remainingAmount, User user, Species species, String description,
-			FlowerShop flowerShop) {
+	public Offer(Float unitPrice, Integer remainingAmount, User user, Species species, String description) {
 		super(PHOTO_TYPE, true);
 		if (this.unitPrice == null || this.unitPrice == (float) 0) {
 			this.type = OfferType.Donation.getOfferType();
@@ -129,7 +128,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 			this.unitPrice = unitPrice;
 		}
 		if (user.getIsLegalPerson()) {
-			this.flowerShop = flowerShop;
+			this.flowerShop = user.getFlowerShop();
 			this.address = flowerShop.getAddress();
 		} else {
 			this.address = user.getAddress();
@@ -173,13 +172,14 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 			this.validationErrors.add("O usuário não pode ser nulo.");
 		} else if (this.user.isNotValid()) {
 			this.validationErrors.addAll(this.user.getValidationErrors());
+		} else {
+			if (this.user.getIsLegalPerson() && isNull(this.flowerShop)) {
+				this.validationErrors.add("Usuário legal sem floricultura.");
+			}
 		}
 		if (isNull(this.species)) {
 			this.validationErrors.add("A espécie não pode ser nula.");
 		} else if (this.species.isNotValid()) {
-			this.validationErrors.addAll(this.species.getValidationErrors());
-		}
-		if (isNotNull(this.flowerShop) && this.flowerShop.isNotValid()) {
 			this.validationErrors.addAll(this.species.getValidationErrors());
 		}
 		if (isNull(this.address)) {
@@ -191,6 +191,15 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 			this.validationErrors.add("Status da oferta não pode ser nulo.");
 		}else if(OfferStatus.exists(this.offerStatus)){
 			this.validationErrors.add("Status de oferta inexistente.");
+		}
+		if (isNotNull(this.flowerShop)) {
+			if(this.flowerShop.isNotValid()){
+				this.validationErrors.addAll(this.flowerShop.getValidationErrors());
+			}
+			if(!this.flowerShop.getEnabled()) {
+				this.validationErrors.clear();
+				this.validationErrors.add("Floricultura está inativa, impossível realizar proposta.");
+			}
 		}
 		return this.validationErrors.isEmpty();
 	}

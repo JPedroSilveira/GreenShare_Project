@@ -65,33 +65,32 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	@Basic(optional = false)
 	@NotNull(message = "O endereço não pode ser nulo.")
 	@Valid
-	@OneToOne
+	@OneToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name = "address_id")
 	private Address address;
 
 	@JsonIgnore
 	@Valid
-	@OneToOne
-	@Basic(optional = false)
-	@NotNull(message = "Usuário não pode ser nulo.")
-	@JoinColumn(name = "user_id", unique = true)
+	@OneToOne(mappedBy = "flowerShop")
 	private User user;
-	
+
 	@JsonIgnore
 	@Valid
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy = "user")
 	private List<Offer> offers;
 
 	protected FlowerShop() {
 		super(PHOTO_TYPE, false);
 	}
 
-	public FlowerShop(String cnpj, String description, User user) {
+	public FlowerShop(String cnpj, String description, String name, Address address) {
 		super(PHOTO_TYPE, true);
+		this.enabled = false;
 		this.cnpj = cnpj;
 		this.description = description;
-		this.user = user;
+		this.name = name;
 		this.hasImage = false;
+		this.address = address;
 	}
 
 	@Override
@@ -104,9 +103,9 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 		if (isNullOrEmpty(this.name) || is(this.name).orSmallerThan(1).orBiggerThan(100)) {
 			this.validationErrors.add("Nome inválido.");
 		}
-		if (isNull(this.user) || !this.user.getIsLegalPerson()) {
+		if (isNotNull(this.user) && !this.user.getIsLegalPerson()) {
 			this.validationErrors.add("Usuário inválido.");
-		} else if (this.user.isNotValid()) {
+		} else if (isNotNull(this.user) && this.user.isNotValid()) {
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
 		if (isNull(this.address)) {
@@ -114,7 +113,7 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 		} else if (this.address.isNotValid()) {
 			this.validationErrors.addAll(this.address.getValidationErrors());
 		}
-		if (isNull(this.cnpj) || is(this.cnpj).equal(14)) {
+		if (isNull(this.cnpj) || !is(this.cnpj).equal(14) || isNotValidCNPJ()) {
 			this.validationErrors.add("CNPJ inválido");
 		}
 		return this.validationErrors.isEmpty();
@@ -163,11 +162,11 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	public List<Offer> getOffers() {
 		return offers;
 	}
-	
+
 	public void enable() {
 		this.enabled = true;
 	}
-	
+
 	public void disable() {
 		this.enabled = false;
 	}
@@ -176,6 +175,46 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	public void update(FlowerShop e) {
 		this.address = e.getAddress();
 		this.description = e.getDescription();
+	}
+	
+	@JsonIgnore
+	public boolean isNotValidCNPJ() {
+		return !isValidCNPJ();
+	}
+
+	@JsonIgnore
+	public boolean isValidCNPJ() {
+		String str_cnpj = this.cnpj;
+		int soma = 0, dig;
+		String cnpj_calc = str_cnpj.substring(0, 12);
+
+		if (str_cnpj.length() != 14)
+			return false;
+
+		char[] chr_cnpj = str_cnpj.toCharArray();
+
+		for (int i = 0; i < 4; i++)
+			if (chr_cnpj[i] - 48 >= 0 && chr_cnpj[i] - 48 <= 9)
+				soma += (chr_cnpj[i] - 48) * (6 - (i + 1));
+		for (int i = 0; i < 8; i++)
+			if (chr_cnpj[i + 4] - 48 >= 0 && chr_cnpj[i + 4] - 48 <= 9)
+				soma += (chr_cnpj[i + 4] - 48) * (10 - (i + 1));
+		dig = 11 - (soma % 11);
+
+		cnpj_calc += (dig == 10 || dig == 11) ? "0" : Integer.toString(dig);
+
+		soma = 0;
+		for (int i = 0; i < 5; i++)
+			if (chr_cnpj[i] - 48 >= 0 && chr_cnpj[i] - 48 <= 9)
+				soma += (chr_cnpj[i] - 48) * (7 - (i + 1));
+		for (int i = 0; i < 8; i++)
+			if (chr_cnpj[i + 5] - 48 >= 0 && chr_cnpj[i + 5] - 48 <= 9)
+				soma += (chr_cnpj[i + 5] - 48) * (10 - (i + 1));
+		dig = 11 - (soma % 11);
+		cnpj_calc += (dig == 10 || dig == 11) ? "0" : Integer.toString(dig);
+
+		return str_cnpj.equals(cnpj_calc);
+
 	}
 
 }

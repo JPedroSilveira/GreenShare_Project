@@ -22,7 +22,7 @@ import com.greenshare.service.user.UserServiceImpl;
  * @author joao.silva
  */
 @RestController
-@RequestMapping("/auth/")
+@RequestMapping("/user/auth")
 public class LoginControllerImpl implements LoginController{
 
     @Autowired

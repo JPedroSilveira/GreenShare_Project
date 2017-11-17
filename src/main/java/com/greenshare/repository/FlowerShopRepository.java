@@ -1,6 +1,7 @@
 package com.greenshare.repository;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 
 import com.greenshare.entity.FlowerShop;
 import com.greenshare.entity.user.User;
@@ -10,6 +11,7 @@ import com.greenshare.entity.user.User;
  * 
  * @author joao.silva
  */
+@Repository
 public interface FlowerShopRepository extends PagingAndSortingRepository<FlowerShop, Long> {
 
 	FlowerShop findOneByUser(User user);

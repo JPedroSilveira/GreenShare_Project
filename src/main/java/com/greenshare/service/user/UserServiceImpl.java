@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.greenshare.entity.FlowerShop;
 import com.greenshare.entity.address.Address;
 import com.greenshare.entity.user.User;
 import com.greenshare.helpers.IsHelper;
@@ -17,7 +18,6 @@ import com.greenshare.service.address.AddressServiceImpl;
  * Implementation of {@link com.greenshare.service.user.UserService} interface
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @Service
 public class UserServiceImpl extends IsHelper implements UserService {
@@ -31,25 +31,23 @@ public class UserServiceImpl extends IsHelper implements UserService {
 	public ResponseEntity<?> create(User user) {
 		if (isNotNull(user)) {
 			if (!isUniqueEmail(user.getEmail())) {
-				return new ResponseEntity<String>("Email já cadastrado.", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Email já cadastrado.", HttpStatus.CONFLICT);
 			}
-			if (!isUniqueCPF(user.getCpf())) {
-				return new ResponseEntity<String>("CPF já cadastrado.", HttpStatus.BAD_REQUEST);
+			if (isNotNull(user.getCpf()) && !isUniqueCPF(user.getCpf())) {
+				return new ResponseEntity<String>("CPF já cadastrado.", HttpStatus.CONFLICT);
 			}
-			Address address = user.getAddress();
-			if (isNotNull(address)) {
-				ResponseEntity<?> response = addressService.save(address);
-				if (response.getStatusCode() != HttpStatus.OK) {
-					return response;
-				}
-				try {
-					address = (Address) response.getBody();
-				} catch (Exception ex) {
-					return new ResponseEntity<String>("Falha ao converter endereço", HttpStatus.INTERNAL_SERVER_ERROR);
-				}
+			Address address = null;
+			if(isNotNull(user.getAddress())) {
+				address = new Address(user.getAddress());
 			}
-			User newUser = new User(user.getCpf(), user.getNickname(), user.getName(), user.getEmail(),
-					user.getPassword(), user.getIsLegalPerson(), address, user.getPhoneNumber());
+			if(isNotNull(user.getFlowerShop())) {
+				FlowerShop fs = user.getFlowerShop();
+				FlowerShop flowerShop = new FlowerShop(fs.getCnpj(), fs.getDescription(), fs.getName(), address);
+				user.setFlowerShop(flowerShop);
+			}
+			User newUser = new User(user.getCpf(), user.getName(), user.getEmail(),
+					user.getPassword(), user.getIsLegalPerson(), address, user.getPhoneNumber(), user.getFlowerShop());
+			newUser.setInsertionDate();
 			if (newUser.isValid()) {
 				newUser = userRepository.save(newUser);
 				return new ResponseEntity<User>(newUser, HttpStatus.OK);
@@ -57,6 +55,16 @@ public class UserServiceImpl extends IsHelper implements UserService {
 			return new ResponseEntity<List<String>>(newUser.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>("Usuário não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+	
+	@Override
+	public ResponseEntity<String> validEmail(String email){
+		if(isNotNull(email)) {
+			if(isNull(findOneUserByEmail(email))){
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.CONFLICT);
 	}
 
 	@Override
@@ -107,6 +115,25 @@ public class UserServiceImpl extends IsHelper implements UserService {
 			User userDB = userRepository.findOneByEmail(email);
 			if (isNotNull(userDB)) {
 				return new ResponseEntity<User>(userDB, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Email não pode ser nulo.", HttpStatus.BAD_REQUEST);
+	}
+	
+	@Override
+	public ResponseEntity<?> addCPF(String cpf) {
+		if (isNotNull(cpf)) {
+			User userDB = getCurrentUser();
+			if (isNotNull(userDB)) {
+				if(isNullOrEmpty(userDB.getCpf())) {
+					userDB.setCpf(cpf);
+					if(userDB.isValid()) {
+						return new ResponseEntity<User>(userDB, HttpStatus.OK);
+					}
+					return new ResponseEntity<List<String>>(userDB.getValidationErrors(), HttpStatus.BAD_REQUEST);					
+				}
+				return new ResponseEntity<String>("Usuário já possui CPF cadastrado.", HttpStatus.CONFLICT);
 			}
 			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
 		}

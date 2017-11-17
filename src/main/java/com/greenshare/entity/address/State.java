@@ -28,7 +28,7 @@ import com.greenshare.entity.abstracts.AbstractEntity;
  * @author joao.silva
  */
 @Entity
-@Table(name = "state")
+@Table(name = "address_state")
 public class State extends AbstractEntity<State> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -47,6 +47,10 @@ public class State extends AbstractEntity<State> implements Serializable {
 	@Size(min = 1, max = 100, message = "O nome deve conter entre 1 e 100 caracteres.")
 	@Column(name = "name", length = 100)
 	private String name;
+	
+	@Basic(optional = true)
+	@Column(name = "abbreviation", length = 100)
+	private String abbreviation;
 
 	@ManyToOne
 	@Basic(optional = false)
@@ -102,6 +106,14 @@ public class State extends AbstractEntity<State> implements Serializable {
 
 	public List<City> getCities() {
 		return cities;
+	}
+	
+	public String getAbbreviation() {
+		return abbreviation;
+	}
+
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
 	}
 
 	@Override
