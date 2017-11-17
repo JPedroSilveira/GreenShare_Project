@@ -29,6 +29,9 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${social.security.public:/user/entity_example/}")
     private String[] securityPublicUserExemple;
     
+    @Value("${social.security.public:/user/valid_email/}")
+    private String[] securityPublicValidEmail;
+    
     @Value("${social.security.public:/country/}")
     private String[] securityPublicAddressCountry;
     
@@ -59,7 +62,8 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 	           .antMatchers(securityPublicUserExemple)
 	           .antMatchers(securityPublicAddressCountry)
 	           .antMatchers(securityPublicAddressState)
-	           .antMatchers(securityPublicAddressCity);
+	           .antMatchers(securityPublicAddressCity)
+	           .antMatchers(securityPublicValidEmail);
 	}
 	
 	@Bean

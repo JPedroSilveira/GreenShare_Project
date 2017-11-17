@@ -62,6 +62,7 @@ public class CountryServiceImpl extends IsHelper implements CountryService {
 	@Override
 	public ResponseEntity<?> findAll() {
 		Iterable<Country> countriesDB = countryRepository.findAll();
+		//return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<Iterable<Country>>(countriesDB, HttpStatus.OK);
 	}
 

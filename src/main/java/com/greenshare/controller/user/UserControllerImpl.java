@@ -52,6 +52,12 @@ public class UserControllerImpl extends IsHelper implements UserController {
 	}
 
 	@Override
+	@PutMapping("valid_email/")
+	public ResponseEntity<?> validEmail(@RequestBody Email email) {
+		return userService.validEmail(email.email);
+	}
+
+	@Override
 	@GetMapping("{id}")
 	public ResponseEntity<?> findOne(@PathVariable Long id) {
 		return userService.findOne(id);
@@ -66,7 +72,7 @@ public class UserControllerImpl extends IsHelper implements UserController {
 				"String::Nullable::length: <=200", "String::Nullable::length: <=200", 1);
 		User user = new User("String::length: == 11",
 				"String::length: >= 11 and <= 100", "String::length: >=1 and <=100", "String::length: >=8 and <=250",
-				false, address, "51984401159");
+				false, address, "51984401159", null);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 

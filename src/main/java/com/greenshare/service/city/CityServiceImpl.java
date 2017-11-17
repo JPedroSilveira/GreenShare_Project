@@ -38,7 +38,7 @@ public class CityServiceImpl extends IsHelper implements CityService {
 			if(isNotNull(state) && isNotNull(state.getId())) {
 				state = stateRepository.findOne(state.getId());
 				if(isNotNull(state)) {
-					City cityDB = cityRepository.findOneByStateAndNameIgnoreCase(state.getId(), city.getName());
+					City cityDB = cityRepository.findOneByStateIdAndNameIgnoreCase(state.getId(), city.getName());
 					if(isNull(cityDB)) {
 						City newCity = new City(city.getName(), state);
 						return newCity.isValid() ? new ResponseEntity<City>(cityRepository.save(newCity), HttpStatus.OK)
@@ -77,7 +77,7 @@ public class CityServiceImpl extends IsHelper implements CityService {
 	@Override
 	public ResponseEntity<?> findByState(Long id) {
 		if (isNotNull(id)) {
-			Iterable<City> cityListDB = cityRepository.findAllByState(id);
+			Iterable<City> cityListDB = cityRepository.findAllByStateId(id);
 			return new ResponseEntity<Iterable<City>>(cityListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);
@@ -86,7 +86,7 @@ public class CityServiceImpl extends IsHelper implements CityService {
 	@Override
 	public ResponseEntity<?> findByCountry(Long id) {
 		if (isNotNull(id)) {
-			Iterable<City> cityListDB = cityRepository.findAllByStateCountry(id);
+			Iterable<City> cityListDB = cityRepository.findAllByStateCountryId(id);
 			return new ResponseEntity<Iterable<City>>(cityListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("ID não pode ser nulo.", HttpStatus.BAD_REQUEST);

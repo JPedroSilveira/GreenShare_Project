@@ -15,6 +15,6 @@ public interface StateRepository extends CrudRepository<State, Long> {
 
 	State findOneByCountryAndNameIgnoreCase(Long id, String name);
 
-	Iterable<State> findAllByCountry(Long id);
+	Iterable<State> findAllByCountryId(Long id);
 
 }

@@ -25,7 +25,6 @@ import com.greenshare.repository.UserRepository;
 /**
  * Implementation of {@link com.greenshare.service.offer.OfferService} interface
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service

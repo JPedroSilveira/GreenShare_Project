@@ -43,7 +43,7 @@ public class AddressServiceImpl extends IsHelper implements AddressService {
 				if(isNotNull(city) && isNotNull(city.getId())) {
 					city = cityRepository.findOne(city.getId());
 					if(isNotNull(city)) {
-						Address newAddress = new Address(city, address.getNumber(), address.getNeighborhood(), address.getReference(),address.getAddressName(),address.getComplement(),address.getType());
+						Address newAddress = new Address(city, address.getNumber(), address.getNeighborhood(), address.getApartment(),address.getAddressName(),address.getComplement(),address.getType());
 							if (newAddress.isValid()) {
 								newAddress = addressRepository.save(newAddress);
 								return new ResponseEntity<Address>(newAddress, HttpStatus.OK);

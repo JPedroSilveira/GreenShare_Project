@@ -13,10 +13,10 @@ import com.greenshare.entity.address.City;
 @Repository
 public interface CityRepository extends CrudRepository<City, Long> {
 
-	Iterable<City> findAllByState(Long id);
+	Iterable<City> findAllByStateId(Long id);
 
-	Iterable<City> findAllByStateCountry(Long id);
+	Iterable<City> findAllByStateCountryId(Long id);
 	
-	City findOneByStateAndNameIgnoreCase(Long id, String name);
+	City findOneByStateIdAndNameIgnoreCase(Long id, String name);
 	
 }

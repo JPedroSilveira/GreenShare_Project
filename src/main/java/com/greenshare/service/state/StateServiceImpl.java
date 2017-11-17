@@ -16,7 +16,6 @@ import com.greenshare.repository.StateRepository;
 /**
  * Service class of Country
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service
@@ -76,7 +75,7 @@ public class StateServiceImpl extends IsHelper implements StateService {
 
 	@Override
 	public ResponseEntity<?> findAllByCountry(Long id) {
-		Iterable<State> stateListDB = stateRepository.findAllByCountry(id);
+		Iterable<State> stateListDB = stateRepository.findAllByCountryId(id);
 		return new ResponseEntity<Iterable<State>>(stateListDB, HttpStatus.OK);
 	}
 

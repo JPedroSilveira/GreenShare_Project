@@ -32,4 +32,6 @@ public interface UserService {
 
 	ResponseEntity<?> addCPF(String cpf);
 
+	ResponseEntity<?> validEmail(String email);
+
 }

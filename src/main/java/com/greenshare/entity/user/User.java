@@ -92,15 +92,18 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 	
 	@Basic(optional = true)
 	@Valid
-	@OneToOne
-	@JoinColumn(name = "address_id")
+	@OneToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn(name = "address_id", unique = true)
 	private Address address;
 
 	@Basic(optional = true)
 	@Valid
-	@OneToOne
+	@OneToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name = "flower_shop_id")
 	private FlowerShop flowerShop;
+	
+	@Transient
+	private String image;
 
 	@JsonIgnore
 	@Valid
@@ -147,16 +150,17 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		super(PHOTO_TYPE, false);
 	}
 
-	public User(String cpf, String name, String email, String password, Boolean isLegalPerson, Address address, String phoneNumber) {
+	public User(String cpf, String name, String email, String password, Boolean isLegalPerson, Address address, String phoneNumber, FlowerShop flowerShop) {
 		super(PHOTO_TYPE, true);
-		this.email = email;
-		this.name = name;
-		this.password = password;
+		this.email = email.trim();
+		this.name = name.trim();
+		this.password = password.trim();
 		this.isLegalPerson = isNull(isLegalPerson) ? false : isLegalPerson;
-		this.cpf = this.isLegalPerson ? null : cpf;
+		this.cpf = this.isLegalPerson ? null : cpf.trim();
 		this.validationErrors = new ArrayList<String>();
-		this.phoneNumber = phoneNumber;
+		this.phoneNumber = phoneNumber.trim();
 		this.hasImage = false;
+		this.flowerShop = this.isLegalPerson ? flowerShop : null;
 		if (isNotNull(this.password) && this.password.length() >= 8) {
 			this.encodePassword();
 		}
@@ -179,9 +183,13 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		if (hasInvalidPassword()) {
 			this.validationErrors.add("Senha inválida.");
 		}
-		if (!this.isLegalPerson && (isNullOrEmpty(this.cpf) || !StringUtils.isNumeric(this.cpf) || CPFHelper.isNotCPF(this.cpf))) {
-			this.validationErrors.add("CPF inválido.");
-		}
+		if(!this.isLegalPerson){
+            if(isNullOrEmpty(this.cpf)){
+                this.validationErrors.add("CPF não pode ser nulo");
+            }else if(!StringUtils.isNumeric(this.cpf) || CPFHelper.isNotCPF(this.cpf)){
+                this.validationErrors.add("CPF inválido.");
+            }
+        }
 		if(!this.isLegalPerson && isNotNull(this.flowerShop)) {
 			this.validationErrors.add("O usuário físico não pode possuir floricultura.");
 		}
@@ -341,6 +349,18 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 
 	public String getPhoneNumber() {
 		return this.phoneNumber;
+	}
+	
+	public void setFlowerShop(FlowerShop flowerShop) {
+		this.flowerShop = flowerShop;
+	}
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 	
 	@Override
