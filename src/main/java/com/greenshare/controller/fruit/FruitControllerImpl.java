@@ -18,7 +18,6 @@ import com.greenshare.service.fruit.FruitServiceImpl;
  * Controller class of {@link com.greenshare.entity.vegetable.Fruit}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/fruit/")

@@ -18,7 +18,6 @@ import com.greenshare.service.soil.SoilServiceImpl;
  * Controller class of {@link com.greenshare.entity.vegetable.Soil}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/soil/")

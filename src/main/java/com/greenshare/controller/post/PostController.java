@@ -9,7 +9,6 @@ import com.greenshare.entity.post.Post;
  * Controller interface of {@link com.greenshare.entity.post.Post}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface PostController extends BasicController<Post, Long>{
 

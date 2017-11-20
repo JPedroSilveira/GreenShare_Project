@@ -9,7 +9,6 @@ import com.greenshare.entity.offer.Request;
  * Controller interface of {@link com.greenshare.entity.offer.Request}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface RequestController extends BasicController<Request, Long>{
 

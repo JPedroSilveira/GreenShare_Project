@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.greenshare.entity.user.User;
 import com.greenshare.service.user.UserServiceImpl;
 
+/**
+* @author joao.silva
+*/
 public abstract class UserUtils {
 	
 	@Autowired

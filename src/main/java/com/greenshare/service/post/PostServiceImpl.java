@@ -1,7 +1,10 @@
 package com.greenshare.service.post;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,19 +16,25 @@ import org.springframework.stereotype.Service;
 
 import com.greenshare.entity.post.Post;
 import com.greenshare.entity.vegetable.Species;
+import com.greenshare.exception.DirectoryException;
+import com.greenshare.helpers.Base64MultpartFile;
+import com.greenshare.helpers.ImageHelper;
 import com.greenshare.helpers.IsHelper;
 import com.greenshare.repository.PostRepository;
 import com.greenshare.repository.SpeciesRepository;
+import com.greenshare.service.image.ImageServiceImpl;
 
 /**
  * Implementation of {@link com.greenshare.service.post.PostService} interface
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @Service
 public class PostServiceImpl extends IsHelper implements PostService {
 
+	@Autowired
+	ImageServiceImpl imageService;
+	
 	@Autowired
 	PostRepository postRepository;
 	
@@ -45,8 +54,30 @@ public class PostServiceImpl extends IsHelper implements PostService {
 				}
 			}
 			Post newPost = new Post(getCurrentUser(), species, post.getText());
-			if (newPost.isValid()) {
+			if (newPost.isValid())	 {
 				newPost = postRepository.save(newPost);
+				if(isNotNull(post.getImage())) {
+					ImageHelper imageHelper;
+					try {
+						imageHelper = new ImageHelper(newPost);
+					} catch (DirectoryException e) {
+						return new ResponseEntity<String>("Erro ao acessar diretório interno.", HttpStatus.INTERNAL_SERVER_ERROR);
+					}
+		    		byte[] decodedBytes = Base64.getDecoder().decode(post.getImage());
+		    		Base64MultpartFile multipartFile = new Base64MultpartFile(decodedBytes);
+		    		try {
+						if(imageHelper.save(multipartFile)) {
+							if(!newPost.getHasImage()){
+								newPost.setHasImage(true);
+								if(isNull(imageService.save(newPost))) {
+									return new ResponseEntity<String>("Erro ao salvar dados no banco.", HttpStatus.INTERNAL_SERVER_ERROR);
+								}
+							}
+						}
+					} catch (IOException e) {
+						return new ResponseEntity<String>("Erro ao salvar imagem no servidor.", HttpStatus.INTERNAL_SERVER_ERROR);
+					}
+				}
 				return new ResponseEntity<Post>(newPost, HttpStatus.OK);
 			}
 			return new ResponseEntity<List<String>>(newPost.getValidationErrors(), HttpStatus.BAD_REQUEST);
@@ -104,7 +135,27 @@ public class PostServiceImpl extends IsHelper implements PostService {
 		if (isValidPage(page, size)) {
 			Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
 			Page<Post> postListDB = postRepository.findAll(pageable);
-			return new ResponseEntity<Page<Post>>(postListDB, HttpStatus.OK);
+			List<Post> postList = postListDB.getContent();
+			postList.stream().forEach(post -> {
+				if(post.getHasImage()) {
+					try {
+						ImageHelper ih = new ImageHelper(post);
+						post.setImage(ih.getImage());
+					} catch (DirectoryException e) {
+					} catch (IOException e) {					
+					} catch (JSONException e) {}
+				}
+				if(post.getUser().getHasImage()) {
+					try {
+						ImageHelper ih = new ImageHelper(post.getUser());
+						post.getUser().setImage(ih.getImage());
+					} catch (DirectoryException e) {
+					} catch (IOException e) {					
+					} catch (JSONException e) {}
+				}
+				
+			});
+			return new ResponseEntity<List<Post>>(postList, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Paginação inválida.", HttpStatus.BAD_REQUEST);
 	}

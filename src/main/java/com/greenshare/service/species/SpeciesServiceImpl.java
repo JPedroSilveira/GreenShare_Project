@@ -111,6 +111,12 @@ public class SpeciesServiceImpl extends IsHelper implements SpeciesService{
 	}
 	
 	@Override
+	public ResponseEntity<?> findAll(){
+		Iterable<Species> specieList = speciesRepository.findAll();
+		return new ResponseEntity<Iterable<Species>>(specieList, HttpStatus.OK);
+	}
+	
+	@Override
 	public ResponseEntity<?> delete(Long id) {
 		if(isNotNull(id)) {
 			Species speciesDB = speciesRepository.findOne(id);

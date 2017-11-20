@@ -7,7 +7,6 @@ import com.greenshare.entity.achievement.UserAchievement;
 /**
  * Service interface of {@link com.greenshare.entity.achievement.UserAchievement}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 public interface UserAchievementService {

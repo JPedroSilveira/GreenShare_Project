@@ -18,7 +18,6 @@ import com.greenshare.repository.RequestRepository;
  * Implementation of {@link com.greenshare.service.request.RequestService}
  * interface
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service

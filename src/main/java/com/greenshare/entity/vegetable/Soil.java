@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Persistence class for the table soil
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity

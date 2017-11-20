@@ -17,7 +17,6 @@ import com.greenshare.service.flower.FlowerServiceImpl;
 /**
  * Controller class of {@link com.greenshare.entity.vegetable.Flower}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController

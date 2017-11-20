@@ -9,7 +9,6 @@ import com.greenshare.entity.post.PostComment;
  * Controller interface of {@link com.greenshare.entity.post.PostComment}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface PostCommentController extends BasicController<PostComment, Long>{
 	

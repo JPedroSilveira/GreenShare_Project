@@ -17,7 +17,6 @@ import com.greenshare.repository.PostRepository;
  * Implementation of
  * {@link com.greenshare.service.post_comment.PostCommentService} interface
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service

@@ -17,7 +17,6 @@ import com.greenshare.service.climate.ClimateService;
 /**
  * Controller class of {@link com.greenshare.entity.vegetable.Climate}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController

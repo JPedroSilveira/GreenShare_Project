@@ -1,10 +1,13 @@
 package com.greenshare.helpers;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import javax.imageio.ImageIO;
 
 import org.json.JSONException;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +64,7 @@ public class ImageHelper {
 		this.imageDirectory = getOrTryCreateImageDirectory();
 	}
 
-	public Boolean save(MultipartFile multiPartFile) throws IOException {
+	public boolean save(MultipartFile multiPartFile) throws IOException {
 		this.multiPartFile = multiPartFile;
 		this.imageFormat = this.multiPartFile.getContentType()
 				.substring(this.multiPartFile.getContentType().indexOf('/') + 1);
@@ -73,6 +76,14 @@ public class ImageHelper {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean save(byte[] file) throws IOException {
+		ByteArrayInputStream bais = new ByteArrayInputStream(file);
+		BufferedImage image = ImageIO.read(bais);
+		File directory = getDirectoryFile();
+		ImageIO.write(image, "jpg", directory);
+		return true;
 	}
 
 	public String getImage() throws IOException, JSONException {
@@ -91,13 +102,17 @@ public class ImageHelper {
 
 	private Boolean isValidImage() {
 		return this.multiPartFile != null && this.multiPartFile.getSize() <= MAX_FILE_SIZE
-				&& (this.imageFormat.equals("png") || this.imageFormat.equals("jpg")
+				&& (this.imageFormat.equalsIgnoreCase("png") || this.imageFormat.equalsIgnoreCase("jpg")
 						|| this.imageFormat.equals("jpeg"));
 	}
 
 	private File getImageFile() {
 		return new File(imageDirectory.getPath().concat("/").concat(this.photoType.getDirectoryName()).concat(".")
 				.concat(this.imageFormat));
+	}
+	
+	private File getDirectoryFile() {
+		return new File(imageDirectory.getPath().concat("/").concat(this.photoType.getDirectoryName()));
 	}
 
 	private File getOrTryCreateImageDirectory() throws DirectoryException {

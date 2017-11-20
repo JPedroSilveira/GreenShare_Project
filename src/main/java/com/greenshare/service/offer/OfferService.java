@@ -9,7 +9,6 @@ import com.greenshare.service.BasicService;
  * Service interface of {@link com.greenshare.entity.offer.Offer}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface OfferService extends BasicService<Offer, Long> {
 

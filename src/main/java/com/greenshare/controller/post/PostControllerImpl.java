@@ -18,7 +18,6 @@ import com.greenshare.service.post.PostServiceImpl;
  * Controller class of {@link com.greenshare.entity.post.Post}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/post/")

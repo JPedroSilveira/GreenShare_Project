@@ -8,7 +8,6 @@ import com.greenshare.entity.address.Address;
  * Service interface of {@link com.greenshare.entity.address.Address}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface AddressService {
 

@@ -15,7 +15,6 @@ import com.greenshare.entity.user.User;
 /**
  * Persistence class for the table request
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity

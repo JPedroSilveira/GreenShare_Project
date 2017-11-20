@@ -17,7 +17,6 @@ import com.greenshare.repository.OfferRepository;
  * Implementation of
  * {@link com.greenshare.service.offer_comment.OfferCommentService} interface
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service

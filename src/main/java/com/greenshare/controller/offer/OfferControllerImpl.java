@@ -18,7 +18,6 @@ import com.greenshare.service.offer.OfferServiceImpl;
  * Controller class of {@link com.greenshare.entity.offer.Offer}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/offer/")

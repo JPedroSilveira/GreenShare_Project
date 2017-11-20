@@ -9,7 +9,6 @@ import com.greenshare.entity.vegetable.Climate;
  * Controller Interface of {@link com.greenshare.entity.vegetable.Climate}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface ClimateController extends BasicController<Climate, Long> {
 	

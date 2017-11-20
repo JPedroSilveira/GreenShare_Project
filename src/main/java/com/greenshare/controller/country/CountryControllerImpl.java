@@ -18,7 +18,6 @@ import com.greenshare.service.country.CountryService;
  * Controller class of {@link com.greenshare.entity.address.Country}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/country/")

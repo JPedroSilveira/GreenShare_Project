@@ -17,7 +17,6 @@ import com.greenshare.service.color.ColorService;
 /**
  * Controller interface of {@link com.greenshare.entity.vegetable.Color}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController

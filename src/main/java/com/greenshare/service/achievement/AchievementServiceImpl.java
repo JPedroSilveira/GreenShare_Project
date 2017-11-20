@@ -16,7 +16,6 @@ import com.greenshare.repository.AchievementRepository;
  * {@link com.greenshare.service.achievement.AchievementService}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @Service
 public class AchievementServiceImpl extends IsHelper implements AchievementService {

@@ -18,7 +18,6 @@ import com.greenshare.service.post_comment.PostCommentServiceImpl;
  * Controller class of {@link com.greenshare.entity.post.PostComment}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/post/comment/")

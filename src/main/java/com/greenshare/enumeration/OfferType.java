@@ -4,7 +4,6 @@ package com.greenshare.enumeration;
  * Enum for Type of {@link com.greenshare.entity.offer.Offer}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public enum OfferType {
 	Donation(0), Sale(1);

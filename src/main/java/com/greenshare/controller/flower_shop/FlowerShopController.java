@@ -9,7 +9,6 @@ import com.greenshare.entity.FlowerShop;
  * Controller interface of {@link com.greenshare.entity.FlowerShop}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface FlowerShopController extends BasicController<FlowerShop, Long> {
 
