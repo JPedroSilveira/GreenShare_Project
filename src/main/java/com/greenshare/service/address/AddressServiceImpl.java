@@ -21,7 +21,6 @@ import com.greenshare.repository.UserRepository;
  * {@link com.greenshare.service.address.AddressService}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @Service
 public class AddressServiceImpl extends IsHelper implements AddressService {

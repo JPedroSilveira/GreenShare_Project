@@ -14,6 +14,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 /**
  * Persistence class for the table growth
+ * 
  * @author joao.silva
  */
 @Entity

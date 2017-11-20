@@ -18,7 +18,6 @@ import com.greenshare.service.species.SpeciesServiceImpl;
  * Controller class of {@link com.greenshare.entity.vegetable.Species}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/species/")
@@ -43,6 +42,12 @@ public class SpeciesControllerImpl implements SpeciesController{
 	@GetMapping("scientific_name/{scientificName}")
 	public ResponseEntity<?> findOneByScientificName(@PathVariable String scientificName) {
 		return speciesService.findOneByScientificName(scientificName);
+	}
+	
+	@Override
+	@GetMapping("")
+	public ResponseEntity<?> findAll() {
+		return speciesService.findAll();
 	}
 
 	@Override

@@ -30,6 +30,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 
 	private static final String SEQUENCE_NAME = "species_seq";
 
+	@Transient
 	private static final PhotoType PHOTO_TYPE = PhotoType.SPECIES;
 
 	@Id

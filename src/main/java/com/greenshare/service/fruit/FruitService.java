@@ -8,7 +8,6 @@ import com.greenshare.service.BasicService;
 /**
  * Service interface of {@link com.greenshare.entity.vegetable.Fruit}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 public interface FruitService extends BasicService<Fruit, Long> {

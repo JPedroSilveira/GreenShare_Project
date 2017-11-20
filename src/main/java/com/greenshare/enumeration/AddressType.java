@@ -4,7 +4,6 @@ package com.greenshare.enumeration;
  * Enum for Type of {@link com.greenshare.entity.address.Address}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public enum AddressType {
 	Apartment(1), House(2), Commercial(3);

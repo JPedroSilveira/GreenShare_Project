@@ -9,7 +9,6 @@ import com.greenshare.service.BasicService;
  * Service interface of {@link com.greenshare.entity.achievement.Achievement}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface AchievementService extends BasicService<Achievement, Long> {
 	

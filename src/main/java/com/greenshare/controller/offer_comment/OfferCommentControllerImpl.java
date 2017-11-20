@@ -18,7 +18,6 @@ import com.greenshare.service.offer_comment.OfferCommentServiceImpl;
  * Controller class of {@link com.greenshare.entity.offer.OfferComment}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/offer/comment/")

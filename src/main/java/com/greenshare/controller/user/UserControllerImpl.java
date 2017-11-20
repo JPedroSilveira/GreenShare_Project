@@ -24,7 +24,6 @@ import com.greenshare.service.user.UserServiceImpl;
  * Controller implementation of
  * {@link com.greenshare.controller.user.UserController}
  *
- * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController

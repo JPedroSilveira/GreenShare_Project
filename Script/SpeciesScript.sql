@@ -1,0 +1,12 @@
+﻿Select * From Species;
+Select * From Growth;
+Select * From Soil;
+Select * From Climate;
+Select * From Species_Climate;
+Select * From Species_Soil;
+Insert Into Soil Values(1,current_date, 'Solo com bastante água disponível a uma curta profundidade', 'Solo úmido');
+Insert Into Climate Values(1,current_date, 'Clima com temperaturas abaixo de 20ºC durante a maior do ano.', 'Frio');
+Insert into Growth values(1, current_date, 'Crescimento em até dois meses após o plantio em terras adequadas', 'Rápido');
+Insert into Species Values(1, current_date, false, null, true, true, 100, 'Laranjeira', 'Cuidar com carinho', 'Árvore linda e de bons frutos', true, true, true, 10, 'Laranjaus', null, null, 1);
+Insert into Species_Climate Values(1,1);
+Insert into Species_Soil Values(1,1);

@@ -8,7 +8,6 @@ import com.greenshare.entity.address.City;
 /**
  * Controller Interface of {@link com.greenshare.entity.address.City}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 public interface CityController extends BasicController<City, Long> {

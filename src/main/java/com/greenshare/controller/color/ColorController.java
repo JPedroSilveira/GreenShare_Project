@@ -8,7 +8,6 @@ import com.greenshare.entity.vegetable.Color;
 /**
  * Controller interface of {@link com.greenshare.entity.vegetable.Color}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 public interface ColorController extends BasicController<Color, Long> {

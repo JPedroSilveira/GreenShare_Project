@@ -15,7 +15,6 @@ import com.greenshare.entity.vegetable.Species;
 /**
  * Persistence class for the table suggestion
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity

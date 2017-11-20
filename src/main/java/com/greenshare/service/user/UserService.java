@@ -7,7 +7,6 @@ import com.greenshare.entity.user.User;
 /**
  * Service interface of {@link com.greenshare.entity.user.User}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 public interface UserService {

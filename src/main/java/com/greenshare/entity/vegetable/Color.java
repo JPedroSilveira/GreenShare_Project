@@ -23,7 +23,6 @@ import com.greenshare.entity.abstracts.AbstractEntity;
 /**
  * Persistence class for the table color
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity

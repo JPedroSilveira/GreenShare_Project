@@ -25,7 +25,6 @@ import com.greenshare.entity.vegetable.Fruit;
 /**
  * Persistence class for the table month
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity

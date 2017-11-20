@@ -9,7 +9,6 @@ import com.greenshare.entity.vegetable.Fruit;
  * Controller interface of {@link com.greenshare.entity.vegetable.Fruit}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface FruitController extends BasicController<Fruit, Long> {
 

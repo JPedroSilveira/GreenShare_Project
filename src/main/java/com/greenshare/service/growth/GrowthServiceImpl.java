@@ -14,7 +14,6 @@ import com.greenshare.repository.GrowthRepository;
 /**
  * Service implementation of {@link com.greenshare.service.growth.GrowthService}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service

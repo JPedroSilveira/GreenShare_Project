@@ -9,7 +9,6 @@ import com.greenshare.service.BasicService;
  * Service interface of {@link com.greenshare.entity.post.Post} entity
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface PostService extends BasicService<Post,Long>{
 

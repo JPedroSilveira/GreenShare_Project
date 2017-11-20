@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,7 +30,6 @@ import com.greenshare.enumeration.PhotoType;
  * Persistence class for the table post
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @Entity
 @Table(name = "post")
@@ -55,7 +55,6 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 
 	@ManyToOne
 	@Basic(optional = true)
-	@NotNull(message = "A especie não pode ser nula.")
 	@Valid
 	@JoinColumn(name = "species_id")
 	private Species species;
@@ -65,6 +64,9 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 	@Size(min = 1, max = 500, message = "O texto deve conter entre 1 e 500 caracteres.")
 	@Column(name = "text", columnDefinition = "TEXT", length = 500)
 	private String text;
+	
+	@Transient
+	private String image;
 
 	@Valid
 	@OneToMany(mappedBy = "post")
@@ -130,6 +132,14 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 
 	public List<PostComment> getPostComments() {
 		return postComments;
+	}
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public void update(Post post) {

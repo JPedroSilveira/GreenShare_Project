@@ -8,7 +8,6 @@ import com.greenshare.entity.address.Country;
 /**
  * Controller interface of {@link com.greenshare.entity.address.Country}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 public interface CountryController extends BasicController<Country, Long> {

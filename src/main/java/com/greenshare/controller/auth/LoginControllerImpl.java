@@ -18,7 +18,6 @@ import com.greenshare.service.user.UserServiceImpl;
 /**
  * Controller class for login of {@link com.greenshare.entity.user.User}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController

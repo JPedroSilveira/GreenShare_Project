@@ -18,7 +18,6 @@ import com.greenshare.service.request.RequestServiceImpl;
  * Controller class of {@link com.greenshare.entity.offer.Request}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/request/")

@@ -4,7 +4,6 @@ package com.greenshare.enumeration;
  * Enum for type(Entity) of image
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public enum PhotoType {
 	USER(0, "User"), POST(1, "Post"), FLOWER_SHOP(2, "FlowerShop"), SPECIES(3, "Species"), ACHIEVEMENT(4,

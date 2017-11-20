@@ -8,7 +8,6 @@ import com.greenshare.service.BasicService;
 /**
  * Service Interface of {@link com.greenshare.entity.address.City}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 public interface CityService extends BasicService<City, Long> {

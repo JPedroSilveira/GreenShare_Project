@@ -18,7 +18,6 @@ import com.greenshare.service.flower_shop.FlowerShopServiceImpl;
  * Controller class of {@link com.greenshare.entity.FlowerShop}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @RestController
 @RequestMapping("/flowerShop/")

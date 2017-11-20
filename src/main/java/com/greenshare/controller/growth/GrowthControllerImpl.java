@@ -17,7 +17,6 @@ import com.greenshare.service.growth.GrowthServiceImpl;
 /**
  * Controller class of {@link com.greenshare.entity.vegetable.Growth}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController

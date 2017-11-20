@@ -14,7 +14,6 @@ import com.greenshare.repository.SoilRepository;
 /**
  * Implementation of {@link com.seedshare.service.request.SoilService} interface
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service

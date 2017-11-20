@@ -8,7 +8,6 @@ import com.greenshare.entity.vegetable.Species;
  * Controller interface of {@link com.greenshare.entity.vegetable.Species}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface SpeciesController {
 
@@ -25,5 +24,7 @@ public interface SpeciesController {
 	ResponseEntity<?> save(Species species);
 	
 	ResponseEntity<?> delete(Long id);
+
+	ResponseEntity<?> findAll();
 	
 }

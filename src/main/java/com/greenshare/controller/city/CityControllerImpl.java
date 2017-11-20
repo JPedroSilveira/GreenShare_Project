@@ -17,7 +17,6 @@ import com.greenshare.service.city.CityServiceImpl;
 /**
  * Controller Class of {@link com.greenshare.entity.address.City}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @RestController

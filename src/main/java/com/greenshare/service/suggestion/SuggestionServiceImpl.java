@@ -33,7 +33,6 @@ import com.greenshare.repository.SuggestionRepository;
 /**
  * Implementation of SuggestionService interface
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service

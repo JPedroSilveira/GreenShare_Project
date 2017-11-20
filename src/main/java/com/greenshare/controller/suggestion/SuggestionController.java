@@ -7,7 +7,6 @@ import com.greenshare.entity.Suggestion;
 /**
  * Interface controller of {@link com.greenshare.entity.Suggestion}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 public interface SuggestionController {

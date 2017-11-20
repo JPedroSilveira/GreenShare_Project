@@ -20,7 +20,6 @@ import com.greenshare.enumeration.PhotoType;
 /**
  * Persistence class for the table flower_shop
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Entity

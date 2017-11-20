@@ -20,7 +20,6 @@ import com.greenshare.repository.UserAchievementRepository;
  * interface
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 @Service
 public class UserAchievementServiceImpl extends IsHelper implements UserAchievementService {

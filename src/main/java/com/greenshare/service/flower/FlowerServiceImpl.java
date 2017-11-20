@@ -16,7 +16,6 @@ import com.greenshare.repository.MonthRepository;
 /**
  * Service implementation of {@link com.greenshare.service.flower.FlowerService}
  * 
- * @author gabriel.schneider
  * @author joao.silva
  */
 @Service

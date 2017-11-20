@@ -9,7 +9,6 @@ import com.greenshare.service.BasicService;
  * Service interface of {@link com.greenshare.entity.address.Country}
  * 
  * @author joao.silva
- * @author gabriel.schneider
  */
 public interface CountryService extends BasicService<Country, Long> {
 	
