@@ -49,13 +49,13 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	@Column(name = "attract_birds")
 	private Boolean attractBirds;
 
-	@Basic(optional = false)
+	@Basic(optional = true)
 	@NotNull(message = "A descrição não pode ser nula.")
 	@Size(min = 1, max = 2500, message = "A descrição deve conter entre 1 e 2500 caracteres.")
 	@Column(name = "description", columnDefinition = "TEXT", length = 2500)
 	private String description;
 
-	@Basic(optional = false)
+	@Basic(optional = true)
 	@NotNull(message = "O guia de cultivo não pode ser nulo.")
 	@Size(min = 1, max = 5000, message = "O guia de cultivo deve conter entre 1 e 5000 caracteres.")
 	@Column(name = "cultivation_guide", columnDefinition = "TEXT", length = 5000)

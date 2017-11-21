@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -113,27 +114,46 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 	public ResponseEntity<?> search(Integer page, Integer size, SearchClass searchClass) {
 		if(isNotNull(searchClass) && isNotNull(page) && isNotNull(size)){
 			Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "insertionDate"));
-			List<Offer> retorno = new ArrayList<>();
+			List<Offer> retorno = null;
 			if(isNull(searchClass.rootDepth) || searchClass.rootDepth == 0) {
-				searchClass.rootDepth = 999999999;
+				searchClass.rootDepth = 50000;
 			}
 			if(isNull(searchClass.averageHeight) || searchClass.averageHeight == 0) {
-				searchClass.averageHeight = 999999999;
+				searchClass.averageHeight = 50000;
 			}
 			if(isNotNull(searchClass.species)) {
-				retorno = offerRepository.findAllBySpeciesAndOfferStatus(searchClass.species.getId(), OfferStatus.Active.getValue());
+				Species species = searchClass.species;
+				retorno = offerRepository.findAllBySpecies(species, pageable);
 			}else {
 				if(searchClass.hasFlower && searchClass.hasFruit) {
-					retorno = offerRepository.findAllBySpeciesGrowthInAndSpeciesSoilsInAndSpeciesClimatesInAndSpeciesIsMedicinalAndSpeciesAttractBirdsAndSpeciesAttractBeesAndSpeciesIsOrnamentalAndOfferStatus(searchClass.growth, searchClass.soil, searchClass.climate, searchClass.isMedicinal, searchClass.attractBirds, searchClass.attractBees, searchClass.isOrnamental, searchClass.rootDepth, searchClass.averageHeight,  OfferStatus.Active.getValue(), pageable);
+					retorno = offerRepository.findAllBySpeciesGrowthInAndSpeciesSoilsInAndSpeciesClimatesInAndSpeciesIsMedicinalAndSpeciesAttractBirdsAndSpeciesAttractBeesAndSpeciesIsOrnamental(searchClass.growth, searchClass.soil, searchClass.climate, searchClass.isMedicinal, searchClass.attractBirds, searchClass.attractBees, searchClass.isOrnamental, searchClass.rootDepth, searchClass.averageHeight,  pageable);
 				} else if(searchClass.hasFlower) {
-					retorno = offerRepository.findAllBySpeciesGrowthInAndSpeciesSoilsInAndSpeciesClimatesInAndSpeciesIsMedicinalAndSpeciesAttractBirdsAndSpeciesAttractBeesAndSpeciesIsOrnamentalAndOfferStatusAndSpeciesFruitIsNull(searchClass.growth, searchClass.soil, searchClass.climate, searchClass.isMedicinal, searchClass.attractBirds, searchClass.attractBees, searchClass.isOrnamental, searchClass.rootDepth, searchClass.averageHeight,  OfferStatus.Active.getValue(), pageable);
+					retorno = offerRepository.findAllBySpeciesGrowthInAndSpeciesSoilsInAndSpeciesClimatesInAndSpeciesIsMedicinalAndSpeciesAttractBirdsAndSpeciesAttractBeesAndSpeciesIsOrnamentalAndSpeciesFruitIsNull(searchClass.growth, searchClass.soil, searchClass.climate, searchClass.isMedicinal, searchClass.attractBirds, searchClass.attractBees, searchClass.isOrnamental, searchClass.rootDepth, searchClass.averageHeight,  pageable);
 				} else if(searchClass.hasFruit) {
-					retorno = offerRepository.findAllBySpeciesGrowthInAndSpeciesSoilsInAndSpeciesClimatesInAndSpeciesIsMedicinalAndSpeciesAttractBirdsAndSpeciesAttractBeesAndSpeciesIsOrnamentalAndOfferStatusAndSpeciesFlowerIsNull(searchClass.growth, searchClass.soil, searchClass.climate, searchClass.isMedicinal, searchClass.attractBirds, searchClass.attractBees, searchClass.isOrnamental, searchClass.rootDepth, searchClass.averageHeight,  OfferStatus.Active.getValue(), pageable);
+					retorno = offerRepository.findAllBySpeciesGrowthInAndSpeciesSoilsInAndSpeciesClimatesInAndSpeciesIsMedicinalAndSpeciesAttractBirdsAndSpeciesAttractBeesAndSpeciesIsOrnamentalAndSpeciesFlowerIsNull(searchClass.growth, searchClass.soil, searchClass.climate, searchClass.isMedicinal, searchClass.attractBirds, searchClass.attractBees, searchClass.isOrnamental, searchClass.rootDepth, searchClass.averageHeight,  pageable);
 				} else {
-					retorno = offerRepository.findAllBySpeciesGrowthInAndSpeciesSoilsInAndSpeciesClimatesInAndSpeciesIsMedicinalAndSpeciesAttractBirdsAndSpeciesAttractBeesAndSpeciesIsOrnamentalAndOfferStatusAndSpeciesFruitIsNullAndSpeciesFlowerIsNull(searchClass.growth, searchClass.soil, searchClass.climate, searchClass.isMedicinal, searchClass.attractBirds, searchClass.attractBees, searchClass.isOrnamental, searchClass.rootDepth, searchClass.averageHeight,  OfferStatus.Active.getValue(), pageable);
+					retorno = offerRepository.findAllBySpeciesGrowthInAndSpeciesSoilsInAndSpeciesClimatesInAndSpeciesIsMedicinalAndSpeciesAttractBirdsAndSpeciesAttractBeesAndSpeciesIsOrnamentalAndSpeciesFruitIsNullAndSpeciesFlowerIsNull(searchClass.growth, searchClass.soil, searchClass.climate, searchClass.isMedicinal, searchClass.attractBirds, searchClass.attractBees, searchClass.isOrnamental, searchClass.rootDepth, searchClass.averageHeight,  pageable);
 				}
 			}
 			retorno.stream().filter(s -> s.getSpecies().getRootDepth() < searchClass.rootDepth && s.getSpecies().getAverageHeight() < searchClass.averageHeight);
+			retorno.stream().forEach(offer -> {
+				if(offer.getHasImage()) {
+					try {
+						ImageHelper ih = new ImageHelper(offer);
+						offer.setImage(ih.getImage());
+					} catch (DirectoryException e) {
+					} catch (IOException e) {					
+					} catch (JSONException e) {}
+				}
+				if(offer.getUser().getHasImage()) {
+					try {
+						ImageHelper ih = new ImageHelper(offer.getUser());
+						offer.getUser().setImage(ih.getImage());
+					} catch (DirectoryException e) {
+					} catch (IOException e) {					
+					} catch (JSONException e) {}
+				}
+			});
 			return new ResponseEntity<List<Offer>>(retorno, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Objeto de pesquisa e/ou paginação não podem ser nulos.", HttpStatus.BAD_REQUEST);
@@ -168,10 +188,11 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 
 	@Override
 	public ResponseEntity<?> findAllByUser(Long id) {
+		Pageable pageable = new PageRequest(1, 5, new Sort(Sort.Direction.DESC, "insertionDate"));
 		if (isNotNull(id)) {
-			Iterable<Offer> offerListDB = offerRepository.findAllByUserAndOfferStatus(id, 0);
+			List<Offer> offerListDB = offerRepository.findAllByUser(id, pageable);
 			if (isNotNull(offerListDB)) {
-				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
+				return new ResponseEntity<List<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
 		}
@@ -189,12 +210,13 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 
 	@Override
 	public ResponseEntity<?> findAllByFlowerShop(Long id) {
+		Pageable pageable = new PageRequest(1, 5, new Sort(Sort.Direction.DESC, "insertionDate"));
 		if (isNotNull(id)) {
 			FlowerShop flowerShopDB = flowerShopRepository.findOne(id);
 			if (isNotNull(flowerShopDB)) {
-				Iterable<Offer> offerListDB = offerRepository.findAllByUserAndOfferStatus(getCurrentUserId(),
-						OfferStatus.Active.getValue());
-				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
+				List<Offer> offerListDB = offerRepository.findAllByUser(getCurrentUserId(),
+						pageable);
+				return new ResponseEntity<List<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Floricultura não encontrada.", HttpStatus.NOT_FOUND);
 		}
@@ -203,12 +225,12 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 
 	@Override
 	public ResponseEntity<?> findAllBySpecies(Long id) {
+		Pageable pageable = new PageRequest(1, 5, new Sort(Sort.Direction.DESC, "insertionDate"));
 		if (isNotNull(id)) {
 			Species speciesDB = speciesRepository.findOne(id);
 			if (isNotNull(speciesDB)) {
-				Iterable<Offer> offerListDB = offerRepository.findAllBySpeciesAndOfferStatus(speciesDB.getId(),
-						OfferStatus.Active.getValue());
-				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
+				List<Offer> offerListDB = offerRepository.findAllBySpecies(speciesDB, pageable);
+				return new ResponseEntity<List<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Espécie não encontrada.", HttpStatus.NOT_FOUND);
 		}
@@ -217,12 +239,13 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 
 	@Override
 	public ResponseEntity<?> findAllByState(Long id) {
+		Pageable pageable = new PageRequest(1, 5, new Sort(Sort.Direction.DESC, "insertionDate"));
 		if (isNotNull(id)) {
 			State stateDB = stateRepository.findOne(id);
 			if (isNotNull(stateDB)) {
-				Iterable<Offer> offerListDB = offerRepository.findAllByUserAddressCityStateAndOfferStatus(stateDB.getId(),
-						OfferStatus.Active.getValue());
-				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
+				List<Offer> offerListDB = offerRepository.findAllByUserAddressCityState(stateDB.getId(),
+						pageable);
+				return new ResponseEntity<List<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Estado não encontrado.", HttpStatus.NOT_FOUND);
 		}
@@ -231,12 +254,13 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 
 	@Override
 	public ResponseEntity<?> findAllByCity(Long id) {
+		Pageable pageable = new PageRequest(1, 5, new Sort(Sort.Direction.DESC, "insertionDate"));
 		if (isNotNull(id)) {
 			City cityDB = cityRepository.findOne(id);
 			if (isNotNull(cityDB)) {
-				Iterable<Offer> offerListDB = offerRepository.findAllByUserAddressCityAndOfferStatus(cityDB.getId(),
-						OfferStatus.Active.getValue());
-				return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
+				List<Offer> offerListDB = offerRepository.findAllByUserAddressCity(cityDB.getId(),
+						pageable);
+				return new ResponseEntity<List<Offer>>(offerListDB, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Cidade não encontrada.", HttpStatus.NOT_FOUND);
 		}
@@ -245,10 +269,11 @@ public class OfferServiceImpl extends IsHelper implements OfferService {
 
 	@Override
 	public ResponseEntity<?> findAllByCurrentUser() {
+		Pageable pageable = new PageRequest(1, 5, new Sort(Sort.Direction.DESC, "insertionDate"));
 		Long currentUserID = getCurrentUserId();
 		if (isNotNull(currentUserID)) {
-			Iterable<Offer> offerListDB = offerRepository.findAllByUser(currentUserID);
-			return new ResponseEntity<Iterable<Offer>>(offerListDB, HttpStatus.OK);
+			List<Offer> offerListDB = offerRepository.findAllByUser(currentUserID, pageable);
+			return new ResponseEntity<List<Offer>>(offerListDB, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Nenhum usuário logado.", HttpStatus.BAD_REQUEST);
 	}

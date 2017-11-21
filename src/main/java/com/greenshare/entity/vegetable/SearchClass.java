@@ -9,7 +9,6 @@ import java.util.List;
  * @author joao.silva
  */
 public class SearchClass implements Serializable {
-	private static final long serialVersionUID = 1L;
 	public List<Growth> growth;
     public Species species;
     public List<Soil> soil;

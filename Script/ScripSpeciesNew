@@ -4,8 +4,10 @@ Select * From Soil;
 Select * From Growth;
 Select * From Climate;
 Select * From Species;
+Insert into Climate Values(1, current_date, 'Clima com temperaturas elevadas', 'Frio');
 Insert into Climate Values(2, current_date, 'Clima com temperaturas elevadas', 'Quente');
 Insert into Climate Values(3, current_date, 'Clima grande humidade no ar', 'Úmido');
+Insert into Growth Values(1, current_date, 'Crescimento de tempo rápido, de um meses a dois ano', 'Rápido');
 Insert into Growth Values(2, current_date, 'Crescimento de tempo médiano, entre dois meses a um ano', 'Médio');
 Insert into Growth Values(3, current_date, 'Crescimento lento, com demora superior a um ano', 'Lento');
 Insert into Soil Values(1, current_date, 'Solo com grande quantidade de umidade.','Úmido');
@@ -38,7 +40,6 @@ Select * From Species;
 	(15, current_date, false, null, false, true, 4000, 'Timbaúva', '' , '' , true, false, true, 7, 'Enterolobium contortisiliquum', null, null,1);
     
     Update species set flower_id = null where species_id = 5;
-  Select * From Species_Climate;
   
   Insert into Species_Climate Values(1,2);
     Insert into Species_Climate Values(2,1);
@@ -74,4 +75,3 @@ Select * From Species;
                                                              
                                                              
 Select * From Species;
-Drop database 
