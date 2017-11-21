@@ -25,6 +25,5 @@ public interface SpeciesController {
 	
 	ResponseEntity<?> delete(Long id);
 
-	ResponseEntity<?> findAll();
-	
+	ResponseEntity<?> findAll();	
 }

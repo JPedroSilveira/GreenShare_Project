@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenshare.entity.Month;
 import com.greenshare.entity.abstracts.AbstractPhotogenicEntity;
 import com.greenshare.enumeration.PhotoType;
@@ -53,6 +54,7 @@ public class Flower extends AbstractPhotogenicEntity<Flower> implements Serializ
 	@Column(name = "name", length = 100)
 	private String name;
 
+	@JsonIgnore
 	@OneToOne(mappedBy = "flower")
 	@NotNull(message = "A espécie não pode ser nula.")
 	@Valid

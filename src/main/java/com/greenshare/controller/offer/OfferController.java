@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.greenshare.controller.BasicController;
 import com.greenshare.entity.offer.Offer;
+import com.greenshare.entity.vegetable.SearchClass;
 
 /**
  * Controller interface of {@link com.greenshare.entity.offer.Offer}
@@ -25,5 +26,9 @@ public interface OfferController extends BasicController<Offer, Long>{
 	ResponseEntity<?> findAllByCity(Long id);
 	
 	ResponseEntity<?> findAllByCurrentUser();
+
+	ResponseEntity<?> findAll();
+
+	ResponseEntity<?> search(Integer page, Integer size, SearchClass searchClass);
 	
 }

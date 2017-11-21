@@ -3,7 +3,6 @@ package com.greenshare.entity;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -13,7 +12,6 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenshare.entity.abstracts.AbstractPhotogenicEntity;
 import com.greenshare.entity.address.Address;
-import com.greenshare.entity.offer.Offer;
 import com.greenshare.entity.user.User;
 import com.greenshare.enumeration.PhotoType;
 
@@ -72,11 +70,6 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 	@Valid
 	@OneToOne(mappedBy = "flowerShop")
 	private User user;
-
-	@JsonIgnore
-	@Valid
-	@OneToMany(mappedBy = "user")
-	private List<Offer> offers;
 
 	protected FlowerShop() {
 		super(PHOTO_TYPE, false);
@@ -156,10 +149,6 @@ public class FlowerShop extends AbstractPhotogenicEntity<FlowerShop> implements 
 
 	public Address getAddress() {
 		return address;
-	}
-
-	public List<Offer> getOffers() {
-		return offers;
 	}
 
 	public void enable() {

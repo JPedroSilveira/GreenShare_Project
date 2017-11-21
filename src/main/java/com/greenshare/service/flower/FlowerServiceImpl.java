@@ -26,13 +26,14 @@ public class FlowerServiceImpl extends IsHelper implements FlowerService {
 	
 	@Autowired
 	MonthRepository monthRepository;
-
+	
+	/*TO-DO getSpecies*/
 	@Override
 	public ResponseEntity<?> save(Flower flower) {
 		if (isNotNull(flower)) {
 			List<Month> MonthListDB = monthRepository.findAllByNumberIn(flower.getMonthNumbers());
 			Flower newFlower = new Flower(flower.getIsAromatic(), flower.getDescription(), flower.getName(),
-					flower.getSpecies(), flower.getColors(), MonthListDB);
+					null, flower.getColors(), MonthListDB);
 			return newFlower.isValid() ? new ResponseEntity<Flower>(flowerRepository.save(newFlower), HttpStatus.OK)
 					: new ResponseEntity<List<String>>(newFlower.getValidationErrors(), HttpStatus.BAD_REQUEST);
 		}

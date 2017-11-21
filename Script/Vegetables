@@ -1,0 +1,76 @@
+Select * From Flower;
+Select * From Fruit;
+Select * From Soil;
+Select * From Growth;
+Select * From Climate;
+Select * From Species;
+Insert into Climate Values(2, current_date, 'Clima com temperaturas elevadas', 'Quente');
+Insert into Climate Values(3, current_date, 'Clima grande humidade no ar', 'Úmido');
+Insert into Growth Values(2, current_date, 'Crescimento de tempo médiano, entre dois meses a um ano', 'Médio');
+Insert into Growth Values(3, current_date, 'Crescimento lento, com demora superior a um ano', 'Lento');
+Insert into Soil Values(1, current_date, 'Solo com grande quantidade de umidade.','Úmido');
+Insert into Soil Values(2, current_date, 'Solo com úmidade razoável ideal para raizes mais profundas.','Pedregoso');
+Insert into Soil Values(3, current_date, 'Solo de baixa umidade que requer plantar melhor adaptadas a sobrevivência com pouca água.','Seco');
+Insert into Flower Values(1, current_date, false, null, 'Esta planta perene com flores vistosas pertence ao gênero de Tulipa. Da Ásia à África, a tulipa é uma entre as mais cultivadas flores. E várias espécies e híbridos, desta flor excepcionalmente bonita, podem ser vistas em jardim como flores de corte ou como plantas de pote.', true, 'Tulipa');
+Insert into Flower Values(2, current_date, false, null, 'As orquídeas têm uma quantidade inacreditável de variedades, mais de 25.000 espécies em 800 gêneros. Esta planta pode facilmente se adaptar ao ambiente dela e então é disponível em quase todo o mundo; algumas orquídeas têm 30 polegadas de pétalas e podem pesar cerca de uma 1kg.', false, 'Orquídeas');
+Insert into Flower Values(3, current_date, false, null, 'Nomeada após Anders Dahl, um botânico, esta planta perene espessa tuberosa é geralmente encontrada no México, Colômbia, e América Central. Esta flor tem mais de 30 espécies. E um detalhe interessante sobre a mesma é que vem em uma variedade enorme de tamanhos.', true, 'Dália');
+Insert into Flower Values(4, current_date, false, null, 'Carolus Linnaeus, pai da taxonomia moderna, deu esta linda flor o nome que significa flor de ouro, em grego. Estas flores vêm em um número variados de formas, estas podem ser botões, pomposas, decorativas ou como margarida.', false, 'Crisântemo');
+Insert into Fruit Values(1, current_date, false, null, 'Com alto teor de antioxidantes, é recomendada para melhorar o metabolismo.', true, true, 'Rambutã');
+Insert into Fruit Values(2, current_date, false, null, 'A Buah naga é da mesma família da pitaia, encontrada na Colômbia, igualmente doce e com um interior de seda e uma explosão de cores.', true, false, 'Pitaia ');
+
+Select * From Species;
+
+	INSERT INTO species VALUES 
+	(1, current_date, false, null, true, false, 3000, 'Açoita-cavalo', '' , '' , true, true, true, 3, 'Luehea divaricata', 1, 1, 1),
+	(2, current_date, false, null, true, true, 1000, 'Araçá', '' , '' , true, true, true, 5, 'Psidium cattleyanum ', 2, 2,2),
+	(3, current_date, false, null, false, false, 3000, 'Canela', '' , '' , true, false, false, 3, 'Nectandra lanceolata', 3, null,1),
+	(4, current_date, false, null, false, false, 4000, 'Cedro', '' , '' , true, true, true, 4, 'Cedrela fissilis Vell.', 4, null,1),
+	(5, current_date, false, null, true, false, 2000, 'Cerejeira-do-mato', '' , '' , true, false, true, 31, 'Eugenia involucrata', 4, null,2),
+	(6, current_date, false, null, true, true, 2500, 'Guabiroba', '' , '' , true, true, true, 2, 'Hexachlamys edulis', null, null,1),
+	(7, current_date, false, null, false, true, 3500, 'Guajuvira', '' , '' , true, true, false, 8, 'Patagonula Americana', null, null,1),
+	(8, current_date, false, null, true, false, 2500, 'Ingá', '' , '' , true, true, false, 9, 'Inga marginata Will', null, null,1),
+	(9, current_date, false, null, false, true, 2000, 'Ipê-Amarelo', '' , '' , true, false, true, 13, 'Tabebuia umbellata', null, null,1),
+	(10, current_date, false, null, false, false, 3500, 'Ipê-Roxo', '' , '' , true, true, true, 4, 'Tabebuia heptaphylla', null, null,2),
+	(11, current_date, false, null, true, false, 1500, 'Jabuticaba', '' , '' , true, false, true, 8, 'Plinia trunciflora', null, null,2),
+	(12, current_date, false, null, true, false, 3000, 'Louro', '' , '' , true, false, true, 2, 'Cordia trichotoma', null, null,1),
+	(13, current_date, false, null, false, true, 2500, 'Pau-Ferro', '' , '' , true, false, false, 3, 'Austronium balansae', null, null,1),
+	(14, current_date, false, null, true, true, 1200, 'Pitanga', '' , '' , true, true, true, 4, 'Eugenia uniflora', null, null,2),
+	(15, current_date, false, null, false, true, 4000, 'Timbaúva', '' , '' , true, false, true, 7, 'Enterolobium contortisiliquum', null, null,1);
+    
+    Update species set flower_id = null where species_id = 5;
+  Select * From Species_Climate;
+  
+  Insert into Species_Climate Values(1,2);
+    Insert into Species_Climate Values(2,1);
+      Insert into Species_Climate Values(3,3);
+        Insert into Species_Climate Values(4,1);
+          Insert into Species_Climate Values(5,3);
+            Insert into Species_Climate Values(6,2);
+              Insert into Species_Climate Values(7,1);
+                Insert into Species_Climate Values(8,3);
+                  Insert into Species_Climate Values(9,2);
+                    Insert into Species_Climate Values(10,2);
+                      Insert into Species_Climate Values(11,1);
+                        Insert into Species_Climate Values(12,3);
+                          Insert into Species_Climate Values(13,1);
+                            Insert into Species_Climate Values(14,2);
+                              Insert into Species_Climate Values(15,1);
+                              
+	Insert into Species_Soil Values(1,2);
+    	Insert into Species_Soil Values(2,2);
+        	Insert into Species_Soil Values(3,1);
+            	Insert into Species_Soil Values(4,2);
+                	Insert into Species_Soil Values(5,1);
+                    	Insert into Species_Soil Values(6,3);
+                        	Insert into Species_Soil Values(7,1);
+                            	Insert into Species_Soil Values(8,1);
+                                	Insert into Species_Soil Values(9,3);
+                                    	Insert into Species_Soil Values(10,2);
+                                        	Insert into Species_Soil Values(11,2);
+                                            	Insert into Species_Soil Values(12,3);
+                                                	Insert into Species_Soil Values(13,1);
+                                                    	Insert into Species_Soil Values(14,1);
+                                                             Insert into Species_Soil Values(15,3);
+                                                             
+                                                             
+Select * From Species;

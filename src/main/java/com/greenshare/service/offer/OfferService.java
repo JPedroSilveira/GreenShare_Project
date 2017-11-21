@@ -3,6 +3,7 @@ package com.greenshare.service.offer;
 import org.springframework.http.ResponseEntity;
 
 import com.greenshare.entity.offer.Offer;
+import com.greenshare.entity.vegetable.SearchClass;
 import com.greenshare.service.BasicService;
 
 /**
@@ -25,5 +26,9 @@ public interface OfferService extends BasicService<Offer, Long> {
 	ResponseEntity<?> findAllByCity(Long id);
 	
 	ResponseEntity<?> findAllByCurrentUser();
+
+	ResponseEntity<?> findAll();
+
+	ResponseEntity<?> search(Integer page, Integer size, SearchClass searchClass);
 	
 }

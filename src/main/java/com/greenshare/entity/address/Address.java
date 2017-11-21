@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.greenshare.entity.FlowerShop;
 import com.greenshare.entity.abstracts.AbstractEntity;
-import com.greenshare.entity.offer.Offer;
 import com.greenshare.entity.user.User;
 import com.greenshare.enumeration.AddressType;
 
@@ -79,12 +78,6 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 	@OneToOne(mappedBy = "address")
 	@Valid
 	private User user;
-
-	@JsonIgnore
-	@Basic(optional = true)
-	@Valid
-	@OneToOne(mappedBy = "address")
-	private Offer offer;
 
 	@JsonIgnore
 	@Basic(optional = true)
@@ -202,10 +195,6 @@ public class Address extends AbstractEntity<Address> implements Serializable {
 
 	public String getApartment() {
 		return apartment;
-	}
-	
-	public Offer getOffer() {
-		return offer;
 	}
 
 	public FlowerShop getFlowerShop() {

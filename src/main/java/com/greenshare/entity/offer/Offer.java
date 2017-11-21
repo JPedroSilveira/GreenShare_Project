@@ -11,9 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.greenshare.entity.FlowerShop;
 import com.greenshare.entity.abstracts.AbstractPhotogenicEntity;
-import com.greenshare.entity.address.Address;
 import com.greenshare.entity.user.User;
 import com.greenshare.entity.vegetable.Species;
 import com.greenshare.enumeration.OfferStatus;
@@ -62,6 +60,9 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	@Min(1)
 	@Max(9999)
 	private Integer initialAmount;
+	
+	@Transient
+	private String image;
 
 	@Basic(optional = false)
 	@Column(name = "offer_status", columnDefinition = "TEXT")
@@ -75,7 +76,7 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	@Basic(optional = false)
 	@NotNull(message = "O usuário não pode ser nulo.")
 	@Valid
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", unique = false)
 	private User user;
 
 	@Valid
@@ -83,24 +84,11 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	private List<OfferComment> offerComments;
 
 	@ManyToOne
-	@Basic(optional = true)
-	@Valid
-	@JoinColumn(name = "flower_shop_id")
-	private FlowerShop flowerShop;
-
-	@ManyToOne
 	@Basic(optional = false)
 	@NotNull(message = "A espécie não pode ser nula.")
 	@Valid
 	@JoinColumn(name = "species_id")
 	private Species species;
-
-	@Basic(optional = false)
-	@NotNull(message = "O endereço não pode ser nulo.")
-	@Valid
-	@OneToOne
-	@JoinColumn(name = "address_id")
-	private Address address;
 
 	@JsonIgnore
 	@Valid
@@ -127,17 +115,12 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 			this.type = OfferType.Sale.getOfferType();
 			this.unitPrice = unitPrice;
 		}
-		if (user.getIsLegalPerson()) {
-			this.flowerShop = user.getFlowerShop();
-			this.address = flowerShop.getAddress();
-		} else {
-			this.address = user.getAddress();
-		}
 		this.remainingAmount = remainingAmount;
 		this.initialAmount = remainingAmount;
 		this.species = species;
 		this.offerStatus = OfferStatus.Active.getValue();
 		this.description = description;
+		this.user = user;
 	}
 
 	@JsonIgnore
@@ -168,38 +151,10 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 		if (isNull(this.initialAmount) || is(this.initialAmount).orSmallerThan(1).orBiggerThan(9999)) {
 			this.validationErrors.add("Quantidade inicial inválida.");
 		}
-		if (isNull(this.user)) {
-			this.validationErrors.add("O usuário não pode ser nulo.");
-		} else if (this.user.isNotValid()) {
-			this.validationErrors.addAll(this.user.getValidationErrors());
-		} else {
-			if (this.user.getIsLegalPerson() && isNull(this.flowerShop)) {
-				this.validationErrors.add("Usuário legal sem floricultura.");
-			}
-		}
-		if (isNull(this.species)) {
-			this.validationErrors.add("A espécie não pode ser nula.");
-		} else if (this.species.isNotValid()) {
-			this.validationErrors.addAll(this.species.getValidationErrors());
-		}
-		if (isNull(this.address)) {
-			this.validationErrors.add("O endereço não pode ser nulo.");
-		} else if (this.address.isNotValid()) {
-			this.validationErrors.addAll(this.address.getValidationErrors());
-		}
 		if(isNull(this.offerStatus)) {
 			this.validationErrors.add("Status da oferta não pode ser nulo.");
-		}else if(OfferStatus.exists(this.offerStatus)){
+		}else if(!OfferStatus.exists(this.offerStatus)){
 			this.validationErrors.add("Status de oferta inexistente.");
-		}
-		if (isNotNull(this.flowerShop)) {
-			if(this.flowerShop.isNotValid()){
-				this.validationErrors.addAll(this.flowerShop.getValidationErrors());
-			}
-			if(!this.flowerShop.getEnabled()) {
-				this.validationErrors.clear();
-				this.validationErrors.add("Floricultura está inativa, impossível realizar proposta.");
-			}
 		}
 		return this.validationErrors.isEmpty();
 	}
@@ -263,17 +218,13 @@ public class Offer extends AbstractPhotogenicEntity<Offer> implements Serializab
 	public List<OfferComment> getOfferComments() {
 		return offerComments;
 	}
-
-	public FlowerShop getFlowerShop() {
-		return flowerShop;
+	
+	public String getImage() {
+		return image;
 	}
 
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	@Override

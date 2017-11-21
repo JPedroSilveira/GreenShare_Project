@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.greenshare.entity.offer.Offer;
+import com.greenshare.entity.vegetable.SearchClass;
 import com.greenshare.service.offer.OfferServiceImpl;
 
 /**
@@ -49,6 +50,12 @@ public class OfferControllerImpl implements OfferController {
 	public ResponseEntity<?> findAllByUser(@PathVariable Long id) {
 		return offerService.findAllByUser(id);
 	}
+	
+	@Override
+	@PutMapping("search/{page}/{size}")
+	public ResponseEntity<?> search(@PathVariable Integer page, @PathVariable Integer size, @RequestBody SearchClass searchClass) {
+		return offerService.search(page, size, searchClass);
+	}
 
 	@Override
 	@GetMapping("flower_shop/{id}")
@@ -78,6 +85,12 @@ public class OfferControllerImpl implements OfferController {
 	@GetMapping("city/{id}")
 	public ResponseEntity<?> findAllByCity(@PathVariable Long id) {
 		return offerService.findAllByCity(id);
+	}
+	
+	@Override
+	@GetMapping("")
+	public ResponseEntity<?> findAll() {
+		return offerService.findAll();
 	}
 
 	@Override

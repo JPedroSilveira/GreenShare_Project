@@ -100,9 +100,6 @@ public class Post extends AbstractPhotogenicEntity<Post> implements Serializable
 		} else if (this.user.isNotValid()) {
 			this.validationErrors.addAll(this.user.getValidationErrors());
 		}
-		if (isNotNull(this.species) && this.species.isNotValid()) {
-			this.validationErrors.addAll(this.species.getValidationErrors());
-		}
 		return this.validationErrors.isEmpty();
 	}
 

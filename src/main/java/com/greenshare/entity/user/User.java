@@ -274,9 +274,11 @@ public class User extends AbstractPhotogenicEntity<User> implements Serializable
 		return this.flowerShop;
 	}
 
+	
 	public List<Offer> getOffers() {
 		return this.offers;
 	}
+	
 
 	public List<Request> getRequests() {
 		return this.requests;

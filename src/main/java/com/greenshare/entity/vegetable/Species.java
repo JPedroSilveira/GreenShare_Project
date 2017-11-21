@@ -130,6 +130,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	@Valid
 	private Fruit fruit;
 
+	/*
 	@JsonIgnore
 	@Valid
 	@OneToMany(mappedBy = "species")
@@ -139,7 +140,9 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	@Valid
 	@OneToMany(mappedBy = "species")
 	private List<Post> posts;
-
+	*/
+	
+	
 	@JsonIgnore
 	@Valid
 	@OneToOne(mappedBy = "species")
@@ -294,6 +297,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 		return this.fruit;
 	}
 
+	/*
 	public List<Offer> getOffers() {
 		return this.offers;
 	}
@@ -301,6 +305,7 @@ public class Species extends AbstractPhotogenicEntity<Species> implements Serial
 	public List<Post> getPosts() {
 		return this.posts;
 	}
+	*/
 
 	public Suggestion getSuggestions() {
 		return this.suggestions;
